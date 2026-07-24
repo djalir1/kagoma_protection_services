@@ -1,0 +1,222 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * KAGOMA Protection Services — Design System
+ * Palette: Black · Gold · Red (from the logo)
+ * Fonts loaded via <link> in __root.tsx head: Cinzel (display) + Inter (body)
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-ring-offset-background: var(--background);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-blood: var(--blood);
+  --color-blood-soft: var(--blood-soft);
+  --color-ink: var(--ink);
+  --color-onyx: var(--onyx);
+  --font-display: "Cinzel", ui-serif, Georgia, serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  --radius: 0.5rem;
+
+  /* Brand tokens */
+  --ink: oklch(0.08 0.005 60);           /* near-black */
+  --onyx: oklch(0.14 0.008 60);          /* card black */
+  --gold: oklch(0.82 0.14 88);           /* rich gold */
+  --gold-soft: oklch(0.9 0.09 90);
+  --blood: oklch(0.55 0.22 27);          /* deep red */
+  --blood-soft: oklch(0.68 0.2 28);
+
+  /* Dark-first shadcn mapping */
+  --background: var(--ink);
+  --foreground: oklch(0.96 0.01 90);
+  --card: var(--onyx);
+  --card-foreground: oklch(0.96 0.01 90);
+  --popover: var(--onyx);
+  --popover-foreground: oklch(0.96 0.01 90);
+  --primary: var(--gold);
+  --primary-foreground: oklch(0.1 0.01 60);
+  --secondary: oklch(0.2 0.01 60);
+  --secondary-foreground: oklch(0.96 0.01 90);
+  --muted: oklch(0.18 0.008 60);
+  --muted-foreground: oklch(0.72 0.02 80);
+  --accent: var(--blood);
+  --accent-foreground: oklch(0.98 0.01 90);
+  --destructive: oklch(0.6 0.24 27);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.28 0.02 70 / 60%);
+  --input: oklch(0.25 0.02 70);
+  --ring: var(--gold);
+
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: var(--onyx);
+  --sidebar-foreground: oklch(0.96 0.01 90);
+  --sidebar-primary: var(--gold);
+  --sidebar-primary-foreground: oklch(0.1 0.01 60);
+  --sidebar-accent: oklch(0.2 0.01 60);
+  --sidebar-accent-foreground: oklch(0.96 0.01 90);
+  --sidebar-border: oklch(0.28 0.02 70 / 60%);
+  --sidebar-ring: var(--gold);
+}
+
+.light {
+  /* Light theme — warm ivory / deep amber / blood red. Preserves brand. */
+  /* Deepen the brand golds so gradient text stays legible on cream. */
+  --gold: oklch(0.62 0.16 72);
+  --gold-soft: oklch(0.78 0.15 82);
+  --blood: oklch(0.52 0.22 27);
+  --blood-soft: oklch(0.6 0.21 28);
+
+  --background: oklch(0.985 0.008 88);
+  --foreground: oklch(0.18 0.015 60);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.015 60);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.015 60);
+  --primary: oklch(0.6 0.15 72);
+  --primary-foreground: oklch(0.99 0.005 90);
+  --secondary: oklch(0.94 0.012 82);
+  --secondary-foreground: oklch(0.18 0.015 60);
+  --muted: oklch(0.955 0.01 82);
+  --muted-foreground: oklch(0.38 0.02 65);
+  --accent: var(--blood);
+  --accent-foreground: oklch(0.99 0.005 90);
+  --destructive: oklch(0.55 0.22 27);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.25 0.03 68 / 22%);
+  --input: oklch(0.88 0.012 78);
+  --ring: var(--primary);
+  --onyx: oklch(0.93 0.014 78);
+  --ink: oklch(0.98 0.006 88);
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(0.18 0.015 60);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: oklch(0.99 0.005 90);
+  --sidebar-accent: oklch(0.94 0.012 82);
+  --sidebar-accent-foreground: oklch(0.18 0.015 60);
+  --sidebar-border: oklch(0.25 0.03 68 / 22%);
+  --sidebar-ring: var(--primary);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+    letter-spacing: 0.01em;
+  }
+
+  ::selection {
+    background: var(--gold);
+    color: var(--ink);
+  }
+}
+
+@utility text-gradient-gold {
+  background: linear-gradient(135deg, var(--gold-soft) 0%, var(--gold) 45%, var(--blood) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility bg-radial-gold {
+  background-image: radial-gradient(ellipse at top, color-mix(in oklab, var(--gold) 25%, transparent), transparent 60%);
+}
+
+@utility hairline {
+  background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--gold) 60%, transparent), transparent);
+  height: 1px;
+  width: 100%;
+}
+
+@utility shield-shadow {
+  box-shadow:
+    0 30px 60px -20px color-mix(in oklab, var(--blood) 40%, transparent),
+    0 0 0 1px color-mix(in oklab, var(--gold) 25%, transparent) inset;
+}
+
+@keyframes kagoma-scan {
+  0% { transform: translateY(-100%); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+
+@keyframes kagoma-pulse-ring {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+@keyframes kagoma-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@utility animate-scan {
+  animation: kagoma-scan 3s ease-in-out infinite;
+}
+
+@utility animate-pulse-ring {
+  animation: kagoma-pulse-ring 2.4s ease-out infinite;
+}
+
+@utility animate-marquee {
+  animation: kagoma-marquee 40s linear infinite;
+}
