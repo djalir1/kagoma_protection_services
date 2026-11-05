@@ -1,0 +1,2148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kagoma Protection Services — Security Management &amp; Consultancy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="var(--kg-bg)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Kagoma">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+@font-face{
+  font-family:'Bricolage Grotesque';
+  src:url('fonts/BricolageGrotesque.woff2') format('woff2-variations');
+  font-weight:200 800;
+  font-stretch:75% 100%;
+  font-display:swap;
+}
+
+/* ============================================================
+   KAGOMA — theme tokens
+
+   One scale, two settings. Gold and red never move: a brand that
+   changes colour is not a brand. What flips is the ground and the
+   type on it.
+
+   Dark is the default. Light exists because an officer reading
+   forty lessons in Kigali daylight cannot see a dark screen.
+   ============================================================ */
+:root{
+  --kg-gold:#f4d332;
+  --kg-gold-dim:#c9a227;
+  --kg-red:#c90000;
+  --kg-red-dim:#8e0000;
+
+  --kg-bg:#000000;
+  --kg-surface:#0d0d0d;
+  --kg-surface-2:#151515;
+  --kg-border:#262626;
+  --kg-border-2:#3a3a3a;
+  --kg-text:#ffffff;
+  --kg-text-dim:#9c9c9c;
+  --kg-shadow:rgba(0,0,0,.55);
+}
+[data-theme="light"]{
+  --kg-bg:#ffffff;
+  --kg-surface:#f6f4ef;
+  --kg-surface-2:#ece9e1;
+  --kg-border:#ddd8cc;
+  --kg-border-2:#bdb6a5;
+  --kg-text:#141210;
+  --kg-text-dim:#5f5b54;
+  --kg-shadow:rgba(0,0,0,.14);
+  /* the brand red is too light-on-light for small type; the deeper
+     one keeps the hue and stays readable */
+  --kg-red:#b00000;
+  --kg-gold-dim:#8a6f10;
+}
+html,body{background:var(--kg-bg);color:var(--kg-text)}
+
+  :root{
+    /* Kagoma: four brand colours, plus two neutrals mixed from them.
+       The ground is paper, not the near-black every security site uses.
+       Kagoma issues documents; the site should look like what it issues. */
+    --ink:var(--kg-bg);
+    --paper:var(--kg-text);
+    --signal:var(--kg-red);
+    --gold:var(--kg-gold);
+
+    /* Black is the ground. Gold carries the brand, red marks action
+       and status, white is the reading colour. The greys below are
+       black lifted toward white, so nothing sits outside the four. */
+    --band:var(--kg-surface);      /* panels lifted off the ground              */
+    --band-2:var(--kg-surface);    /* one step further up                       */
+    --rule:var(--kg-border);      /* hairline                                  */
+    --smoke:var(--kg-text-dim);     /* secondary type                            */
+    --ash:var(--kg-text);       /* reading colour                            */
+
+    /* the page was built against an older set of names; these map them
+       onto the palette above so nothing is left without a colour */
+    --body:'EB Garamond', Georgia, serif;
+    --display:'Archivo', 'Helvetica Neue', Arial, sans-serif;
+    --mono:'Archivo', Arial, sans-serif;
+    --ink-on-paper:var(--ash);
+    --panel:var(--band);
+    --steel:var(--smoke);
+    --fog:var(--ash);
+    --fog-dim:var(--smoke);
+    --line:var(--rule);
+    --line-strong:var(--kg-border-2);
+    --line-dark:var(--kg-border-2);
+    --signal-bright:var(--kg-red);
+    --signal-dim:var(--kg-red-dim);
+    --radius:2px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important;}
+  }
+  body{
+    background:var(--paper);
+    color:var(--fog);
+    font-family:var(--body);
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  img,svg{display:block;max-width:100%;}
+  a{color:inherit;text-decoration:none;}
+  ul{list-style:none;}
+  button{font-family:inherit;cursor:pointer;}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px;}
+
+  /* ---------- Course catalogue ---------- */
+  .course-group{margin-bottom:34px;}
+  .course-group:last-child{margin-bottom:0;}
+  .course-group-h{
+    font-family:var(--mono);
+    font-size:11px;letter-spacing:0.18em;text-transform:uppercase;
+    color:var(--signal);
+    padding-bottom:10px;margin-bottom:6px;
+    border-bottom:1px solid var(--line-strong);
+  }
+  .cspec{
+    display:inline-block;margin-top:7px;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:0.07em;
+    color:var(--fog-dim);
+    border:1px solid var(--line-strong);
+    padding:3px 8px;border-radius:var(--radius);
+  }
+  .prac{color:var(--signal);font-size:9px;vertical-align:middle;cursor:help;}
+  .course-legend{
+    margin-top:20px;font-family:var(--body);font-size:12.5px;
+    color:var(--fog-dim);display:flex;align-items:center;gap:8px;
+  }
+
+  /* ---------- Ops status bar (signature element) ---------- */
+  .ops-bar .wrap{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    height:34px;
+    gap:16px;
+  }
+  @keyframes pulse{
+    0%,100%{opacity:1;}
+    50%{opacity:0.35;}
+  }
+  @media (max-width:720px){
+    .ops-right span:not(.ops-clock){display:none;}
+  }
+
+  /* ---------- Nav ---------- */
+  header.site-nav{
+    position:sticky;top:0;
+    background:rgba(10,16,28,0.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+    z-index:50;
+  }
+  .nav-row{
+    display:flex;align-items:center;justify-content:space-between;
+    height:76px;
+  }
+  .brand{
+    display:flex;flex-direction:row;align-items:center;gap:12px;line-height:1.1;
+  }
+  .brand img{height:46px;width:auto;flex:none;}
+  .brand .brand-text{display:flex;flex-direction:column;}
+  .brand .mark{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:22px;
+    letter-spacing:0.04em;
+    color:var(--kg-text);
+  }
+  .brand .sub{
+    font-family:var(--mono);
+    font-size:9.5px;
+    letter-spacing:0.14em;
+    color:var(--signal);
+    text-transform:uppercase;
+    margin-top:3px;
+  }
+  nav.primary{display:flex;align-items:center;gap:2px;}
+  nav.primary a{
+    font-family:var(--body);
+    font-weight:600;
+    font-size:13px;
+    letter-spacing:0.01em;
+    white-space:nowrap;
+    color:var(--fog-dim);
+    padding:9px 11px;
+    border-radius:var(--radius);
+    transition:color .18s ease, background .18s ease;
+  }
+  nav.primary a:hover{color:var(--kg-text);background:var(--panel-2);}
+  .nav-actions{display:flex;align-items:center;gap:10px;}
+  .lang-toggle{
+    font-family:var(--mono);
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:0.08em;
+    color:var(--fog);
+    background:transparent;
+    border:1px solid var(--line-strong);
+    padding:8px 12px;
+    border-radius:var(--radius);
+    transition:border-color .18s ease, color .18s ease;
+  }
+  .lang-toggle:hover{border-color:var(--signal);color:var(--signal-bright);}
+  .nav-cta{
+    display:none;
+    font-family:var(--body);
+    font-weight:600;
+    font-size:13.5px;
+    color:var(--ink);
+    background:var(--signal);
+    padding:10px 16px;
+    border-radius:var(--radius);
+  }
+  @media (min-width:860px){ .nav-cta{display:inline-block;} }
+  .burger{
+    display:flex;flex-direction:column;gap:4px;
+    background:transparent;border:none;padding:8px;
+  }
+  .burger span{width:20px;height:2px;background:var(--kg-text);display:block;}
+  nav.primary, .nav-cta{ }
+  @media (max-width:1140px){
+    nav.primary{display:none;}
+    .nav-more{display:none;}
+    .burger{display:flex;}
+  }
+  @media (min-width:1141px){ .burger{display:none;} }
+
+  /* ---------- More dropdown ---------- */
+  .nav-more{position:relative;}
+  .nav-more>button{
+    font-family:var(--body);font-weight:600;font-size:13px;
+    color:var(--fog-dim);background:transparent;
+    border:1px solid var(--line-strong);
+    padding:8px 12px;border-radius:var(--radius);
+    display:flex;align-items:center;gap:6px;white-space:nowrap;
+    transition:border-color .18s ease,color .18s ease;
+  }
+  .nav-more>button:hover,.nav-more>button[aria-expanded="true"]{
+    color:var(--kg-text);border-color:var(--signal);
+  }
+  .nav-more>button svg{width:9px;height:9px;transition:transform .18s ease;}
+  .nav-more>button[aria-expanded="true"] svg{transform:rotate(180deg);}
+  .nav-more-panel{
+    display:none;position:absolute;right:0;top:calc(100% + 8px);
+    min-width:210px;background:var(--panel);
+    border:1px solid var(--line-strong);border-radius:var(--radius);
+    padding:6px;flex-direction:column;
+    box-shadow:0 18px 40px rgba(0,0,0,.5);z-index:60;
+  }
+  .nav-more-panel.open{display:flex;}
+  .nav-more-panel a{
+    font-family:var(--body);font-weight:600;font-size:13px;
+    color:var(--fog-dim);padding:10px 12px;border-radius:var(--radius);
+    white-space:nowrap;transition:color .16s ease,background .16s ease;
+  }
+  .nav-more-panel a:hover,.nav-more-panel a:focus-visible{color:var(--kg-text);background:var(--panel-2);}
+  .nav-more-panel hr{border:0;border-top:1px solid var(--line);margin:5px 8px;}
+
+  .mobile-menu{
+    display:none;
+    flex-direction:column;
+    border-bottom:1px solid var(--line);
+    background:var(--panel);
+  }
+  .mobile-menu.open{display:flex;}
+  .mobile-menu a{
+    padding:14px 28px;
+    border-bottom:1px solid var(--line);
+    font-weight:600;
+    font-size:14px;
+  }
+
+  /* ---------- Section furniture (dossier framing) ---------- */
+  .sec-label{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:0.14em;
+    color:var(--signal);
+    text-transform:uppercase;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .sec-label::after{
+    content:'';
+    height:1px;
+    flex:1;
+    background:var(--line-strong);
+  }
+  .sec-title{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:clamp(28px,4vw,42px);
+    letter-spacing:0.01em;
+    color:var(--kg-text);
+    max-width:820px;
+    text-transform:uppercase;
+  }
+  .sec-sub{
+    font-size:16px;
+    color:var(--fog-dim);
+    max-width:620px;
+    margin-top:16px;
+  }
+  section{padding:100px 0;border-bottom:1px solid var(--line);}
+  section.on-paper{background:var(--paper);color:var(--ink-on-paper);border-bottom:none;}
+  section.on-paper .sec-title{color:var(--ink-on-paper);}
+  section.on-paper .sec-sub{color:var(--kg-border-2);}
+  section.on-paper .sec-label{color:var(--signal-dim);}
+  section.on-paper .sec-label::after{background:var(--line-dark);}
+
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    padding:64px 0 96px;
+    border-bottom:1px solid var(--line);
+    position:relative;
+    overflow:hidden;
+  }
+  .hero .wrap{
+    display:grid;
+    grid-template-columns:1.15fr 0.85fr;
+    gap:56px;
+    align-items:center;
+  }
+  @media (max-width:900px){ .hero .wrap{grid-template-columns:1fr;} }
+  .hero-title{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:clamp(38px,6vw,64px);
+    line-height:1.04;
+    letter-spacing:0.005em;
+    color:var(--kg-text);
+    text-transform:uppercase;
+  }
+  .hero-title .accent{color:var(--signal);}
+  .hero-sub{
+    margin-top:24px;
+    font-size:17px;
+    color:var(--fog);
+    max-width:520px;
+  }
+  .hero-ctas{display:flex;gap:14px;margin-top:36px;flex-wrap:wrap;}
+  .btn{
+    font-family:var(--body);
+    font-weight:600;
+    font-size:14px;
+    padding:14px 22px;
+    border-radius:var(--radius);
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    letter-spacing:0.01em;
+    transition:transform .16s ease, background .16s ease, border-color .16s ease;
+  }
+  .btn-primary{background:var(--signal);color:var(--kg-gold-dim);}
+  .btn-primary:hover{background:var(--signal-bright);transform:translateY(-1px);}
+  .btn-ghost{border:1px solid var(--line-strong);color:var(--kg-text);}
+  .btn-ghost:hover{border-color:var(--signal);color:var(--signal-bright);transform:translateY(-1px);}
+
+  .hero-visual{
+    position:relative;
+    aspect-ratio:1/1;
+    border:1px solid var(--line-strong);
+    background:radial-gradient(circle at 50% 50%, rgba(244,211,50,0.08), transparent 65%), var(--panel);
+    border-radius:4px;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .corner{position:absolute;width:14px;height:14px;border-color:var(--signal);}
+  .corner.tl{top:-1px;left:-1px;border-top:2px solid;border-left:2px solid;}
+  .corner.tr{top:-1px;right:-1px;border-top:2px solid;border-right:2px solid;}
+  .corner.bl{bottom:-1px;left:-1px;border-bottom:2px solid;border-left:2px solid;}
+  .corner.br{bottom:-1px;right:-1px;border-bottom:2px solid;border-right:2px solid;}
+  .radar-sweep{transform-origin:50% 50%;animation:spin 6s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .blip{animation:blip 3s ease-in-out infinite;}
+  @keyframes blip{0%,100%{opacity:0.25;}50%{opacity:1;}}
+  .hero-logo{
+    position:relative;
+    width:52%;
+    max-width:230px;
+    filter:drop-shadow(0 12px 30px rgba(0,0,0,0.55));
+  }
+
+  /* ---------- Value / feature grid ---------- */
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);margin-top:56px;border:1px solid var(--line);}
+  @media (max-width:760px){ .grid-3{grid-template-columns:1fr;} }
+  .grid-3 .cell{background:var(--panel);padding:32px 28px;}
+  .cell h3{font-family:var(--display);font-size:19px;letter-spacing:0.01em;text-transform:uppercase;color:var(--kg-text);margin-top:14px;}
+  .cell p{margin-top:10px;font-size:14.5px;color:var(--fog-dim);}
+
+  /* ---------- About layout ---------- */
+  .about-layout{display:grid;grid-template-columns:1fr 1fr;gap:64px;margin-top:44px;align-items:start;}
+  @media (max-width:860px){.about-layout{grid-template-columns:1fr;}}
+  .about-copy p{margin-top:16px;font-size:16px;}
+  .about-copy p:first-child{margin-top:0;}
+  .values-list{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--line);}
+  .values-list .value{padding:22px 0;border-bottom:1px solid var(--line);display:flex;gap:18px;align-items:baseline;}
+  .values-list .value .vnum{font-family:var(--mono);font-size:13px;color:var(--signal);width:34px;flex:none;}
+  .values-list .value h4{font-family:var(--display);font-size:16px;letter-spacing:0.03em;text-transform:uppercase;color:var(--kg-text);}
+  .values-list .value p{font-size:14px;color:var(--fog-dim);margin-top:6px;}
+
+  /* ---------- Card grids ---------- */
+  .card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:48px;}
+  @media (max-width:920px){.card-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:620px){.card-grid{grid-template-columns:1fr;}}
+  .svc-card{
+    position:relative;
+    background:var(--panel);
+    border:1px solid var(--line);
+    padding:26px 24px;
+    transition:border-color .18s ease, transform .18s ease;
+  }
+  .svc-card:hover{border-color:var(--signal);transform:translateY(-2px);}
+  .svc-card .code{font-family:var(--mono);font-size:11px;color:var(--signal);letter-spacing:0.12em;}
+  .svc-card h3{font-family:var(--display);font-size:18px;text-transform:uppercase;letter-spacing:0.01em;color:var(--kg-text);margin-top:12px;}
+  .svc-card p{font-size:14.5px;color:var(--fog-dim);margin-top:10px;}
+
+  /* ---------- Training section ---------- */
+  section.training{background:var(--panel);}
+  .training-positioning{
+    margin-top:28px;
+    max-width:760px;
+    padding:22px 24px;
+    border-left:2px solid var(--signal);
+    background:rgba(244,211,50,0.06);
+    font-size:15.5px;
+    color:var(--kg-text);
+  }
+  .course-list{margin-top:50px;border-top:1px solid var(--line);}
+  .course-row{
+    display:grid;
+    /* cover · code · title and description · arrow */
+    grid-template-columns:86px 82px 1fr auto;
+    gap:18px;
+    align-items:center;
+    padding:18px 0;
+    border-bottom:1px solid var(--line);
+  }
+  @media(max-width:700px){
+    /* on a phone the cover and the text sit on one line, with the
+       code above the title rather than beside it */
+    .course-row{grid-template-columns:62px 1fr;gap:13px;align-items:start;padding:16px 0}
+    .course-row .ccover{width:62px;height:35px;margin-top:2px}
+    .course-row .ccode{grid-column:2;grid-row:1;font-size:10.5px;margin:0 0 4px}
+    .course-row .cbody{grid-column:2;grid-row:2}
+    .course-row .carrow{display:none}
+    .course-row .cbody h4{font-size:15px;line-height:1.32}
+    .course-row .cbody p{font-size:13px;line-height:1.55;margin-top:4px}
+  }
+  @media (max-width:640px){
+    .course-row{grid-template-columns:60px 1fr;}
+    /* the button moves under the title rather than disappearing */
+    .course-row .course-enrol{grid-column:2;justify-self:start;margin-top:10px}
+  }
+  .course-row .ccode{font-family:var(--mono);font-size:12px;color:var(--signal);}
+  .course-row h4{font-family:var(--display);font-size:17px;letter-spacing:0.01em;text-transform:uppercase;color:var(--kg-text);}
+  .course-row p{font-size:13.5px;color:var(--fog-dim);margin-top:4px;}
+  .course-enrol{
+    display:inline-block;white-space:nowrap;text-decoration:none;
+    font-family:var(--display);font-size:12.5px;font-weight:700;letter-spacing:.04em;
+    padding:9px 16px;border:1px solid var(--kg-border-2);border-radius:2px;
+    color:var(--kg-text);background:transparent;transition:.15s;
+  }
+  .course-enrol:hover{background:var(--gold);color:var(--kg-bg);border-color:var(--gold)}
+  .course-enrol:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .training-cta-row{margin-top:40px;display:flex;justify-content:flex-start;gap:14px;flex-wrap:wrap;}
+
+  /* ---------- Industries ---------- */
+  .industry-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:48px;}
+  @media (max-width:900px){.industry-grid{grid-template-columns:repeat(2,1fr);}}
+  .industry-cell{background:var(--ink);padding:26px 20px;min-height:120px;display:flex;flex-direction:column;justify-content:space-between;}
+  .industry-cell .ind-num{font-family:var(--mono);font-size:11px;color:var(--signal);}
+  .industry-cell h4{font-family:var(--display);font-size:15.5px;text-transform:uppercase;letter-spacing:0.01em;color:var(--kg-text);margin-top:16px;line-height:1.25;}
+
+  /* ---------- Portfolio ---------- */
+  section.portfolio{background:var(--paper);color:var(--ink-on-paper);border-bottom:none;}
+  .portfolio-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:48px;}
+  @media (max-width:760px){.portfolio-grid{grid-template-columns:1fr;}}
+  .pf-card{
+    background:var(--kg-text);
+    border:1px solid var(--line-dark);
+    padding:30px 26px;
+    position:relative;
+  }
+  .pf-card .pf-tag{font-family:var(--display);font-size:11px;letter-spacing:0.1em;color:var(--signal);text-transform:uppercase;}
+  .pf-card h3{font-family:var(--display);font-size:20px;text-transform:uppercase;letter-spacing:0.01em;color:var(--ink-on-paper);margin-top:12px;}
+  .pf-card p{font-size:14.5px;color:var(--kg-border-2);margin-top:10px;}
+  .pf-card .corner{border-color:var(--signal-dim);}
+
+  /* ---------- Resources ---------- */
+  .resource-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:48px;}
+  @media (max-width:920px){.resource-grid{grid-template-columns:repeat(2,1fr);}}
+  @media (max-width:560px){.resource-grid{grid-template-columns:1fr;}}
+  .res-card{border:1px solid var(--line);padding:24px 20px;background:var(--panel);}
+  .res-card .res-tag{
+    display:inline-block;
+    font-family:var(--mono);
+    font-size:10px;
+    letter-spacing:0.08em;
+    color:var(--signal-bright);
+    border:1px solid var(--signal-dim);
+    padding:3px 8px;
+    text-transform:uppercase;
+    margin-bottom:14px;
+  }
+  .res-card h4{font-family:var(--display);font-size:16px;text-transform:uppercase;color:var(--kg-text);line-height:1.25;}
+  .res-card p{font-size:13.5px;color:var(--fog-dim);margin-top:8px;}
+
+  /* ---------- Contact ---------- */
+  .contact-layout{display:grid;grid-template-columns:1fr 1fr;gap:64px;margin-top:48px;}
+  @media (max-width:900px){.contact-layout{grid-template-columns:1fr;}}
+
+  .request-form{margin-top:44px;max-width:820px;}
+  .request-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 24px;}
+  @media (max-width:640px){.request-grid{grid-template-columns:1fr;}}
+  .request-form .status-msg{
+    font-size:13px;margin-top:14px;padding:10px 12px;border-radius:3px;display:none;
+  }
+  .request-form .status-msg.show{display:block;}
+  .request-form .status-msg.ok{background:rgba(47,168,79,0.12);color:var(--kg-gold);border:1px solid rgba(47,168,79,0.35);}
+  .request-form .status-msg.err{background:rgba(201,0,0,0.12);color:var(--kg-red);border:1px solid rgba(201,0,0,0.35);}
+  .field{margin-bottom:18px;}
+  .field label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--fog-dim);margin-bottom:8px;}
+  .field input, .field textarea, .field select{
+    width:100%;
+    background:var(--panel);
+    border:1px solid var(--line-strong);
+    color:var(--kg-text);
+    padding:12px 14px;
+    font-family:var(--body);
+    font-size:14.5px;
+    border-radius:var(--radius);
+  }
+  .field input:focus, .field textarea:focus, .field select:focus{
+    outline:2px solid var(--signal);
+    outline-offset:1px;
+    border-color:var(--signal);
+  }
+  .field textarea{min-height:120px;resize:vertical;}
+  .contact-info h3{font-family:var(--display);font-size:17px;text-transform:uppercase;letter-spacing:0.02em;color:var(--kg-text);margin-bottom:20px;}
+  .contact-info .row{display:flex;gap:16px;padding:16px 0;border-top:1px solid var(--line);}
+  .contact-info .row:last-of-type{border-bottom:1px solid var(--line);}
+  .contact-info .row .k{font-family:var(--mono);font-size:11px;color:var(--signal);letter-spacing:0.08em;width:90px;flex:none;padding-top:2px;}
+  .contact-info .row .v{font-size:14.5px;color:var(--fog);}
+  .form-note{margin-top:16px;font-size:12.5px;color:var(--fog-dim);}
+
+  /* ---------- Footer ---------- */
+  footer{padding:44px 0;background:var(--kg-bg);}
+  footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;}
+  footer .fmark{font-family:var(--display);font-weight:600;font-size:15px;color:var(--kg-text);letter-spacing:0.02em;}
+  footer .ftag{font-family:var(--mono);font-size:11px;color:var(--fog-dim);margin-top:4px;}
+  footer .rights{font-family:var(--mono);font-size:11px;color:var(--steel);}
+  .contact-info .v a{color:var(--fog);text-decoration:none;
+    border-bottom:1px solid var(--line-strong);transition:color .15s ease,border-color .15s ease}
+  .contact-info .v a:hover{color:var(--signal);border-color:var(--signal)}
+  .contact-info .v a:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+  .fcontact{font-size:12.5px;color:var(--fog-dim);line-height:2;
+    display:flex;flex-wrap:wrap;align-items:center;gap:0 10px;justify-content:center}
+  .fcontact a{color:var(--fog-dim);text-decoration:none;
+    border-bottom:1px solid transparent;transition:color .15s ease,border-color .15s ease}
+  .fcontact a:hover{color:var(--signal);border-color:var(--signal)}
+  .fcontact a:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+  .fcontact .sep{opacity:.4}
+  @media (max-width:640px){
+    .fcontact{flex-direction:column;gap:2px;line-height:1.7}
+    .fcontact .sep{display:none}
+  }
+  /* ---------- Company badge ---------- */
+  .kps-stage{position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .kps-particles{position:absolute;inset:0;pointer-events:none}
+  .kps-particles i{position:absolute;left:50%;top:50%;width:3px;height:3px;border-radius:50%;
+    background:var(--signal);box-shadow:0 0 6px 2px rgba(244,211,50,.75);opacity:0;
+    animation:kpsConverge 2.6s ease-out forwards}
+  @keyframes kpsConverge{
+    0%{opacity:0;transform:translate(var(--sx),var(--sy)) scale(1)}
+    15%{opacity:1}
+    70%{opacity:.9;transform:translate(calc(var(--sx)*.15),calc(var(--sy)*.15)) scale(.6)}
+    100%{opacity:0;transform:translate(0,0) scale(.2)}
+  }
+  .kps-badge{position:relative;width:min(74%,300px);aspect-ratio:524/697;opacity:0;
+    transform:perspective(1000px) rotateY(-100deg) scale(.7);
+    animation:kpsEntrance 2.6s cubic-bezier(.22,1,.36,1) .9s forwards;transform-style:preserve-3d}
+  @keyframes kpsEntrance{
+    0%{opacity:0;transform:perspective(1000px) rotateY(-100deg) scale(.7)}
+    35%{opacity:1;transform:perspective(1000px) rotateY(-60deg) scale(.86)}
+    100%{opacity:1;transform:perspective(1000px) rotateY(0deg) scale(1)}
+  }
+  .kps-badge-img{width:100%;height:100%;object-fit:contain;display:block;
+    filter:drop-shadow(0 16px 28px rgba(0,0,0,.6))}
+  .kps-shine{position:absolute;top:0;left:-60%;width:40%;height:100%;pointer-events:none;
+    background:linear-gradient(75deg,rgba(255,255,255,0) 0%,rgba(255,241,180,.7) 50%,rgba(255,255,255,0) 100%);
+    mix-blend-mode:screen;opacity:0;transform:skewX(-18deg);
+    animation:kpsShine 7s ease-in-out 3.4s infinite}
+  @keyframes kpsShine{
+    0%{opacity:0;left:-60%} 4%{opacity:1} 14%{opacity:.9;left:130%} 18%,100%{opacity:0;left:130%}
+  }
+  .kps-ring{position:absolute;bottom:9%;width:62%;height:34px;border-radius:50%;pointer-events:none;
+    background:radial-gradient(ellipse,rgba(244,211,50,.42) 0%,rgba(244,211,50,.12) 45%,rgba(244,211,50,0) 75%);
+    opacity:0;animation:kpsRing 2.6s ease-out 1.4s forwards}
+  @keyframes kpsRing{from{opacity:0}to{opacity:1}}
+
+  /* A badge that keeps flying in is a distraction, not a welcome. */
+  @media (prefers-reduced-motion:reduce){
+    .kps-badge,.kps-shine,.kps-ring,.kps-particles i{animation:none!important;opacity:1!important;transform:none!important}
+    .kps-particles{display:none}
+  }
+  /* ---------- Brand palette ----------
+     var(--kg-red)  var(--kg-text)  var(--kg-gold)  var(--kg-bg)
+     Red now carries both the brand and "not valid", so status is never
+     signalled by colour alone: a mark is added in front of the label.
+  ------------------------------------------------------------------ */
+  .tag.ok::before, .badge.ok::before, .status-msg.ok::before{content:"\2713 "}
+  .tag.bad::before, .badge.bad::before, .status-msg.err::before{content:"\2715 "}
+  .tag.warn::before, .badge.warn::before{content:"\25CF "}
+  /* The one thing a competitor cannot copy: a certificate anyone can
+     check. It belongs on the first screen, working, not buried in a menu. */
+  .verify-bar{background:var(--ink);color:var(--paper);padding:18px 0}
+  .verify-bar .wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+  .verify-bar label{display:block;font-size:13px;color:var(--kg-text-dim);margin-bottom:9px}
+  .vb-row{display:flex;gap:10px;max-width:560px}
+  .vb-row input{flex:1;min-width:0;padding:12px 14px;font-family:var(--display);
+    font-size:14px;letter-spacing:.04em;background:var(--kg-surface);color:var(--paper);
+    border:1px solid var(--kg-border-2);border-radius:2px}
+  .vb-row input:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold)}
+  .vb-row button{padding:12px 22px;font-family:var(--display);font-size:13px;font-weight:700;
+    background:var(--gold);color:var(--ink);border:0;border-radius:2px;cursor:pointer}
+  .vb-row button:hover{background:var(--kg-gold)}
+  .vb-out{margin-top:11px;font-size:13.5px;line-height:1.6;min-height:1.2em}
+  .vb-out b{display:inline-block;margin-right:8px}
+  .vb-ok b{color:var(--gold)} .vb-no b{color:var(--kg-red)}
+  .vb-out span{color:var(--kg-text-dim)}
+  @media(max-width:560px){.vb-row{flex-direction:column}}
+  /* ---------- Ground and type ---------- */
+  body{background:var(--kg-bg);color:var(--kg-text)}
+  section{background:var(--kg-bg)}
+  .hero-title{color:var(--kg-text);letter-spacing:-.01em}
+  .hero-title .accent{color:var(--gold)}
+  .hero-sub{color:var(--smoke)}
+
+  /* the masthead sits on the same black, separated by the brand red */
+  header, header.site-header, .site-header{background:var(--kg-bg)!important;border-bottom:2px solid var(--kg-red)!important}
+  header .htitle{color:var(--kg-text)}
+  header .hsub,header .brand-sub{color:var(--gold)}
+  header nav a,header .nav a,header .navlink{color:var(--kg-text)}
+  header nav a:hover,header .nav a:hover{color:var(--gold)}
+  header .lang,header #langToggle,header .btn-outline{color:var(--kg-text);border-color:var(--kg-border-2);background:transparent}
+  header .lang:hover,header #langToggle:hover{border-color:var(--gold);color:var(--gold)}
+
+  /* gold acts, red alerts: the two are never used for the same job */
+  .btn-primary{background:var(--gold);color:var(--kg-bg);border:1px solid var(--gold)}
+  .btn-primary:hover{background:var(--kg-gold);border-color:var(--kg-gold)}
+  .btn-ghost{background:transparent;color:var(--kg-text);border:1px solid var(--kg-border-2)}
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+
+  .grid-3{border-top:2px solid var(--signal)}
+  .cell{border-left:1px solid var(--rule);padding:26px 22px;background:transparent}
+  .cell:first-child{border-left:0}
+  .cell h3{font-family:var(--display);font-size:15px;letter-spacing:.02em;
+    text-transform:none;margin:0 0 8px;color:var(--kg-text)}
+  .cell p{font-size:14px;line-height:1.65;margin:0;color:var(--smoke)}
+
+  .hero-visual{background:transparent;border:0}
+
+  /* the verification strip inverts, so it reads as the one live thing */
+  .verify-bar{background:var(--gold);color:var(--kg-bg);padding:20px 0;border-top:2px solid var(--kg-bg)}
+  .verify-bar label{color:var(--kg-gold-dim)}
+  .vb-row input{background:var(--kg-text);color:var(--kg-bg);border:1px solid var(--kg-bg)}
+  .vb-row input:focus{outline:2px solid var(--kg-bg);outline-offset:1px}
+  .vb-row button{background:var(--kg-bg);color:var(--gold)}
+  .vb-row button:hover{background:var(--kg-surface-2)}
+  .vb-out b{color:var(--kg-bg)} .vb-out span{color:var(--kg-gold-dim)}
+  .vb-ok b{color:#0a5d1e} .vb-no b{color:var(--signal)}
+  /* ---------- Contrast on the black ground ----------
+     These elements were coloured for a light background and became
+     unreadable when the ground went dark. Measured, not guessed:
+     everything here was below a 3:1 ratio. */
+  .sec-title{color:var(--kg-text)}
+  .sec-sub{color:var(--smoke)}
+  .sec-eyebrow{color:var(--signal)}
+  section p{color:var(--smoke)}
+  section h1,section h2,section h3,section h4{color:var(--kg-text)}
+  .work-card h3,.case-card h3,.port-card h3{color:var(--kg-text)}
+  .work-card p,.case-card p,.port-card p{color:var(--smoke)}
+  .about-body p,.about p{color:var(--smoke)}
+  footer,footer p,footer span,footer a{color:var(--smoke)}
+  footer .rights{color:var(--kg-text-dim)}
+  label{color:var(--kg-text)}
+  input,textarea,select{background:var(--band-2);color:var(--kg-text);border:1px solid var(--line-strong)}
+  input::placeholder,textarea::placeholder{color:var(--kg-text-dim)}
+  /* the portfolio band kept a white surface from the light version;
+     white type on it was invisible */
+  #portfolio{background:var(--band)}
+  #portfolio .pf-card{background:var(--band-2);border:1px solid var(--rule)}
+  #portfolio .pf-card h3{color:var(--kg-text)}
+  #portfolio .pf-card p,#portfolio .pf-card li{color:var(--smoke)}
+  #portfolio .sec-title{color:var(--kg-text)}
+  #portfolio .sec-sub{color:var(--smoke)}
+  /* the deep red reads as brand on white but disappears on black;
+     the brand red itself carries far better */
+
+  /* ---------- Theme switch ---------- */
+  .kg-theme{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:36px;height:34px;padding:0;cursor:pointer;
+    background:transparent;border:1px solid var(--kg-border-2);border-radius:3px;
+    color:var(--kg-text);font-size:15px;line-height:1;
+  }
+  .kg-theme:hover{border-color:var(--kg-gold);color:var(--kg-gold)}
+  .kg-theme:focus-visible{outline:2px solid var(--kg-gold);outline-offset:2px}
+  @media (prefers-reduced-motion:no-preference){
+    html{transition:background-color .18s ease}
+  }
+
+  /* ---------- Readability in both settings ----------
+     Gold on black is a brand mark, not a reading colour: at 1.6:1 the
+     button labels and the small caps were hard to read. Buttons take
+     black type on gold; small labels take the dimmed gold, which is
+     dark enough on white and bright enough on black. */
+  .btn-primary,.btn.btn-primary,button.btn-primary,.vb-row button{
+    background:var(--kg-gold);color:#000000;border-color:var(--kg-gold);
+  }
+  [data-theme="light"] .btn-primary,[data-theme="light"] .vb-row button{
+    background:var(--kg-gold);color:#000000;
+  }
+  .hsub,.brand-sub,header .hsub{color:var(--kg-gold-dim)}
+  [data-theme="light"] .hsub,[data-theme="light"] header .hsub{color:var(--kg-gold-dim)}
+  label,.field label,.fgrid label{color:var(--kg-text-dim)}
+  [data-theme="light"] label,[data-theme="light"] .field label{color:#4a463f}
+  [data-theme="light"] .hero-title .accent{color:var(--kg-gold-dim)}
+  [data-theme="light"] .verify-bar label{color:#3d3320}
+
+  /* the auth tabs and the verify label carried gold at small sizes;
+     the active tab reads as black on gold, the inactive one as plain type */
+  .auth-tab-btn{color:var(--kg-text-dim);background:transparent}
+  .auth-tab-btn.active{background:var(--kg-gold);color:#000000}
+  [data-theme="light"] .auth-tab-btn{color:#4a463f}
+  .verify-bar label{color:#3d3320}
+
+  /* the tab strip kept a fixed dark surface, so light mode put dim type
+     on it; and the verify-bar label colour was reaching form labels */
+  .auth-tabs{background:var(--kg-surface);border-color:var(--kg-border)}
+  .auth-tab-btn{color:var(--kg-text-dim);background:transparent}
+  .auth-tab-btn.active{background:var(--kg-gold);color:#000000}
+  form label,.contact-form label,.field > label{color:var(--kg-text-dim)}
+  .verify-bar > .wrap > label{color:#3d3320}
+  /* This block was given a fixed light colour, so it stayed pale when
+     the page turned to paper. It now follows the theme. */
+  [data-theme="light"] .training-positioning{
+    background:rgba(244,211,50,0.14);
+    border-left-color:var(--kg-red);
+  }
+  /* Tapping beats typing on a phone, and a list of options also tells
+     the client what Kagoma actually does. */
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chips button{font-family:inherit;font-size:13px;padding:10px 15px;border-radius:20px;
+    border:1px solid var(--kg-border-2);background:transparent;color:var(--kg-text-dim);
+    cursor:pointer;transition:.15s}
+  .chips button:hover{border-color:var(--kg-gold);color:var(--kg-text)}
+  .chips button.on{border-color:var(--kg-gold);background:rgba(244,211,50,.13);
+    color:var(--kg-gold);font-weight:bold}
+  [data-theme="light"] .chips button.on{background:rgba(244,211,50,.22);color:#141210}
+  .course-more{display:block;text-align:center;padding:18px;margin-top:10px;
+    border:1px solid var(--kg-border-2);border-radius:4px;color:var(--kg-gold);
+    text-decoration:none;font-weight:bold;font-size:14px;transition:.15s}
+  .course-more:hover{border-color:var(--kg-gold);background:rgba(244,211,50,.06)}
+  /* One way in, not two. The old form here asked for the same details
+     as the request form above and sent them nowhere. */
+  .contact-direct{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:1px;background:var(--kg-border);border:1px solid var(--kg-border);border-radius:5px;
+    overflow:hidden;margin-top:26px}
+  .contact-direct .cd{display:block;padding:22px;background:var(--kg-bg);
+    text-decoration:none;transition:background .15s}
+  a.cd:hover{background:var(--kg-surface)}
+  .contact-direct .k{display:block;font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--kg-gold);margin-bottom:9px;font-weight:bold}
+  .contact-direct .v{display:block;font-size:15px;color:var(--kg-text);line-height:1.5}
+  .contact-direct .v2{display:block;font-size:15px;color:var(--kg-text-dim);line-height:1.5}
+  .contact-cta{display:flex;gap:12px;margin-top:22px;flex-wrap:wrap}
+  /* the section number and its repeated name are gone; the heading
+     carries a rule instead, so a section still reads as a new start */
+  .sec-title{position:relative;padding-top:26px}
+  .sec-title::before{content:'';position:absolute;top:0;left:0;
+    width:56px;height:3px;background:var(--kg-red)}
+  /* ---------- Social ---------- */
+  .social{display:flex;gap:10px;margin:22px 0 18px;flex-wrap:wrap}
+  .social a{display:flex;align-items:center;justify-content:center;
+    width:42px;height:42px;border:1px solid var(--kg-border-2);border-radius:5px;
+    color:var(--kg-text-dim);transition:.15s}
+  .social a svg{width:19px;height:19px;fill:currentColor;display:block}
+  .social a:hover{border-color:var(--kg-gold);color:var(--kg-gold);
+    background:rgba(244,211,50,.07)}
+  .social a:focus-visible{outline:2px solid var(--kg-gold);outline-offset:2px}
+  /* an account Kagoma does not have yet is dimmed, not pretended */
+  .social a[href="#"]{opacity:.4;cursor:default}
+  .social a[href="#"]:hover{border-color:var(--kg-border-2);color:var(--kg-text-dim);background:none}
+  /* what Kagoma has actually done, where a visitor looks first */
+  .proof .n{font-size:34px;font-weight:800;color:var(--kg-gold);line-height:1;margin-bottom:10px}
+  .proof .cell h3{font-size:14px;margin-bottom:6px}
+
+  /* ---------- Phone ----------
+     Measured on a 390px screen, not guessed:
+
+     · a field under 16px makes iOS zoom the whole page the moment it
+       is focused, and the visitor then has to pinch back out
+     · a tap target under about 44px is missed as often as it is hit
+     · anything under 12px is unreadable outdoors, which is where a
+       security officer reads it
+  ------------------------------------------------------------------ */
+  @media (max-width: 900px){
+    input, select, textarea{
+      font-size:16px!important;
+      min-height:46px;
+      padding:12px 14px;
+    }
+    textarea{min-height:96px;line-height:1.55}
+
+    button, .btn, a.btn, .chips button, .pick button,
+    header .navlinks a, header .navlinks button,
+    .kg-theme, #langToggle, #langBtn{
+      min-height:44px;
+      display:inline-flex;align-items:center;justify-content:center;
+    }
+
+    /* links inside running text keep their size; standalone ones grow */
+    .nav a, .navlinks a, .flink, .hb-btn, .course-more, .social a{
+      min-height:44px;
+    }
+
+    /* nothing on a phone should be smaller than this */
+    .small, .muted.small, .meta, .rline, .note, .ftag, .rights,
+    .field label, .f label{font-size:13px!important;line-height:1.6}
+
+    /* room between things a finger has to choose between */
+    .chips{gap:10px}
+    .pick{gap:10px}
+    .actions, .hb-act{gap:10px}
+  }
+
+  @media (max-width: 900px){
+    /* A footer link and a portal link are things a thumb has to hit,
+       not words in a sentence. They were 22px and 36px tall. */
+    .fcontact a, .flink, footer a,
+    header .navlinks a, header .navlinks button,
+    .contact-direct .cd{
+      min-height:44px;
+      display:inline-flex;align-items:center;
+      font-size:13.5px!important;
+    }
+    .contact-direct .cd{display:block;padding:18px}
+    .fcontact{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center}
+
+    /* the eye that shows a password sits inside the field; give the
+       whole thing a finger's width */
+    .pw-eye{min-width:44px;min-height:44px;
+      display:inline-flex;align-items:center;justify-content:center;font-size:17px}
+
+    /* the theme and language buttons are square by design; make them
+       square at a size a thumb can find */
+    .kg-theme, #langToggle, #langBtn{min-width:44px}
+  }
+
+  @media (max-width: 900px){
+    /* the last few measured below the line: a nav built with a
+       different class name, a section label, and the logo link */
+    .toollinks a, .tool-nav a, header a[href$=".html"]{
+      min-height:44px;display:inline-flex;align-items:center;
+      font-size:13.5px!important;
+    }
+    .homelink{min-width:44px;min-height:44px;
+      display:inline-flex;align-items:center;justify-content:center}
+    #l_roles, .field > label[id]{font-size:13px!important}
+  }
+  @media (max-width: 900px){
+    /* the menu button is the most-tapped thing on a phone; it was 36px
+       wide, narrower than the fields it opens onto */
+    .burger{min-width:46px;min-height:46px;
+      display:inline-flex;align-items:center;justify-content:center}
+  }
+  /* A drawn mark, not a photograph: nobody can mistake it for evidence
+     of work Kagoma has done, and each one is about 1 KB. */
+  .ccover{width:86px;height:49px;border-radius:3px;flex:none;object-fit:cover;
+    border:1px solid var(--kg-border);background:#0a0a0a;margin-right:2px}
+  @media(max-width:560px){ .ccover{width:64px;height:36px} }
+
+  /* ---------- Kagoma type ----------
+     Bricolage Grotesque, one variable file, weights 200–800.
+     It replaces Archivo, EB Garamond and the Arial fallbacks the
+     portal pages were using, so every page reads as one company. */
+  :root{
+    --display:'Bricolage Grotesque', system-ui, sans-serif;
+    --body:'Bricolage Grotesque', system-ui, sans-serif;
+    --mono:'Bricolage Grotesque', system-ui, sans-serif;
+  }
+  html, body, button, input, select, textarea, .btn{
+    font-family:'Bricolage Grotesque', system-ui, -apple-system, sans-serif;
+  }
+  body{font-variation-settings:'wght' 400,'wdth' 100,'opsz' 14;
+       -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+  h1,.hero h1{font-variation-settings:'wght' 800,'wdth' 100,'opsz' 96;letter-spacing:-.025em}
+  h2,.sec-title{font-variation-settings:'wght' 700,'wdth' 100,'opsz' 48;letter-spacing:-.015em}
+  h3{font-variation-settings:'wght' 600,'opsz' 24}
+  h4{font-variation-settings:'wght' 600,'opsz' 24}
+  strong,b{font-variation-settings:'wght' 700}
+
+  /* anything that is a number lines up in a column */
+  .ref,.rf,.num,.n,.money,.cnum,code,
+  input[inputmode="numeric"],input[type="number"],input[type="tel"]{
+    font-variant-numeric:tabular-nums}
+  /* the call to action must hold one line: a button that wraps reads
+     as two broken words, not one instruction */
+  header .btn-primary, .nav-cta{white-space:nowrap}
+  header .navlinks a{white-space:nowrap}
+
+  /* the proof figures carry the weight of the claim; at 400 they read
+     as ordinary text */
+  .proof .n{font-variation-settings:'wght' 800,'opsz' 96;letter-spacing:-.02em}
+  .proof .cell h3{font-variation-settings:'wght' 700,'opsz' 24}
+
+  /* section headings were set for a serif face and sat loose */
+  .sec-title{line-height:1.08}
+  .hero h1{line-height:1.04}
+  /* ---------- Leadership ----------
+     A client buying security wants to know who answers for it. A name,
+     a role and a credential do more than a stock photograph. */
+  /* minmax(320px) cannot fit inside a 320px screen once the page has
+     any padding; it is a floor, not a guide */
+  .lead-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));
+    gap:18px;margin-top:26px}
+  .lead-card{display:flex;gap:18px;align-items:flex-start;min-width:0;
+    border:1px solid var(--line);border-radius:6px;padding:24px;background:var(--panel,#0d0d0d)}
+  .lead-mark{width:62px;height:62px;flex:none;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--kg-gold,#f4d332);color:#000;font-size:19px;
+    font-variation-settings:'wght' 800;letter-spacing:.02em}
+  .lead-body{min-width:0}
+  .lead-body h3{font-size:18px;margin:0 0 4px;color:#fff;overflow-wrap:anywhere}
+  .lead-role{font-size:13.5px;color:var(--kg-gold,#f4d332);
+    font-variation-settings:'wght' 600;margin-bottom:3px}
+  .lead-creds{font-size:11px;letter-spacing:.16em;color:#8a857b;margin-bottom:11px}
+  .lead-body p{font-size:14px;line-height:1.75;color:#9c9c9c;margin:0}
+  .lead-note{margin-top:20px;padding:15px 18px;border-left:3px solid var(--kg-gold,#f4d332);
+    background:rgba(244,211,50,.06);border-radius:0 5px 5px 0;
+    font-size:13.5px;line-height:1.75;color:#9c9c9c}
+  [data-theme="light"] .lead-card{background:#fff}
+  [data-theme="light"] .lead-body h3{color:#141210}
+  [data-theme="light"] .lead-body p,[data-theme="light"] .lead-note{color:#5f5b54}
+  /* The header row was space-between with no gap: at a wide window the
+     wordmark and the first link touched, and below about 1150px they
+     overlapped outright. A gap the row cannot fall below fixes both. */
+  header .nav-row{gap:28px;flex-wrap:nowrap;min-width:0}
+  @media (max-width:1180px){
+    /* the gap that separates the wordmark from the links is not needed
+       once the links are behind the menu */
+    header .nav-row{gap:10px}
+    header .nav-actions{gap:6px}
+  }
+  @media (max-width:360px){
+    /* On the smallest phones still in common use the wordmark and the
+       four action buttons cannot both fit. The name goes; the crest
+       still says whose site this is, and it links home. */
+    header .brand .brand-text{display:none}
+    header .brand img{width:32px}
+    header .nav-row{gap:4px;padding-left:10px;padding-right:10px}
+    header .nav-actions{gap:3px}
+  }
+  @media (max-width:400px){
+    /* a 360px phone is still common in Rwanda; the row has to fit it */
+    header .nav-row{gap:6px;padding-left:12px;padding-right:12px}
+    header .brand img{width:34px}
+    header .brand .kg-name{font-size:15.5px}
+    header .nav-actions{gap:4px}
+    header .nav-actions .kg-theme,
+    header .nav-actions #langToggle{min-width:38px;padding-left:0;padding-right:0}
+  }
+  @media (max-width:430px){
+    /* wordmark 199 + actions 156 + gap = 396 on a 390 screen. The
+       strapline under KAGOMA is the part a phone can do without: the
+       crest and the name still say who this is. */
+    header .brand .kg-sub{display:none}
+    header .brand{gap:9px}
+    header .brand .kg-name{font-size:17px;letter-spacing:.02em}
+    header .nav-row{gap:8px;padding-left:14px;padding-right:14px}
+  }
+  header .brand{flex:0 0 auto;margin-right:4px}
+  /* one line or none: two rows of links makes the header twice as
+     tall and reads as an overflow rather than a menu */
+  /* centring pulled the links back under the wordmark; they start
+     where the wordmark ends and run forward from there */
+  /* .wrap is capped at 1180px, so the row never has more room than
+     this however wide the window is. Five links, measured, need 475px
+     at 18px spacing and 14px type; the shelf is 520px minus the gap to
+     the action buttons. The spacing comes down so all five fit. */
+  header .primary{flex:1 1 auto;min-width:0;display:flex;flex-wrap:nowrap;
+    gap:11px;align-items:center;justify-content:flex-start;overflow:hidden;
+    margin-right:16px}
+  header .primary a{white-space:nowrap;font-size:13.5px}
+  /* eight links do not fit beside the wordmark at any spacing. The
+     three a visitor reaches for least sit behind More. */
+
+  @media (max-width:1400px){ header .primary{gap:12px} header .primary a{font-size:13px} }
+  header .nav-actions{flex:0 0 auto;display:flex;align-items:center;gap:9px}
+
+  /* below this the links do not fit beside the wordmark at any spacing,
+     so they go behind the menu button instead of colliding */
+  @media (max-width:1180px){
+    header .primary{display:none}
+    header .burger{display:inline-flex}
+  }
+  @media (max-width:400px){
+    /* the verify bar and the industry grid were built on fixed widths
+       that a 320px phone cannot hold */
+    .verify-bar{flex-wrap:wrap;gap:8px}
+    .verify-bar input{min-width:0;flex:1 1 100%}
+    .verify-bar button{flex:1 1 auto}
+    .industry-grid{grid-template-columns:1fr!important}
+    .wrap{padding-left:14px;padding-right:14px}
+  }
+  /* the staff door: present for people who work here, not offered to
+     visitors. It does not compete with anything a client came for. */
+  .staff-link{opacity:.45}
+  .staff-link:hover{opacity:1}
+  /* the footer links took the browser default blue on pages whose own
+     stylesheet never defined .flink */
+  .kg-foot a, .flink{color:var(--kg-text-dim,#9c9c9c);text-decoration:none}
+  .kg-foot a:hover, .flink:hover{color:var(--kg-gold,#f4d332)}
+  .kg-foot .sep{color:var(--kg-border-2,#3a3a3a)}
+  .staff-link{opacity:.45}
+  .staff-link:hover{opacity:1}
+  [data-theme="light"] .kg-foot a,[data-theme="light"] .flink{color:#5f5b54}
+</style>
+<script>
+  /* set the ground before the first paint, so the page never flashes
+     the wrong colour on the way in */
+  try{ document.documentElement.setAttribute('data-theme',
+       localStorage.getItem('kg-theme') || 'dark'); }catch(e){}
+</script>
+</head>
+<body>
+
+</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<header class="site-nav">
+  <div class="wrap nav-row">
+    <a href="#home" class="brand">
+      <img src="img/crest-60e57097.webp" alt="Kagoma Protection Services logo">
+      <span class="brand-text">
+        <span class="mark">KAGOMA</span>
+        <span class="sub">Protection Services</span>
+      </span>
+    </a>
+    <nav class="primary">
+      <a href="#about" data-i18n="nav_about">About Us</a>
+      <a href="#services" data-i18n="nav_services">Security Services</a>
+      <a href="#training" data-i18n="nav_training">Training</a>
+        <a href="work.html" data-i18n="nav_work">Apply for Work</a>
+      <a href="#contact" data-i18n="nav_contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <div class="nav-more">
+        <button id="moreBtn" aria-expanded="false" aria-haspopup="true" aria-controls="morePanel">
+          <span data-i18n="nav_more">More</span>
+          <svg viewBox="0 0 10 6" fill="none" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </button>
+        <div class="nav-more-panel" id="morePanel" role="menu">
+          <a href="#contact" data-i18n="nav_contact">Contact</a>
+            <a href="#industries" data-i18n="nav_industries">Industries</a>
+            <a href="#portfolio" data-i18n="nav_portfolio">Portfolio</a>
+            <a href="#leadership" data-i18n="nav_lead">Leadership</a>
+            <a href="#resources" role="menuitem" data-i18n="nav_resources">Resources</a>
+          <hr>
+          <a href="certificates.html" role="menuitem" data-i18n="nav_certs">Certificates</a>
+          <a href="student.html" role="menuitem" data-i18n="nav_student">Student Portal</a>
+          <a href="professional.html" role="menuitem" data-i18n="nav_professional">Professional Portal</a>
+          <a href="client.html" role="menuitem" data-i18n="nav_client">Client Portal</a>
+          <a href="employer.html" role="menuitem" data-i18n="nav_employer">Employer Portal</a>
+        </div>
+      </div>
+      <button class="kg-theme" onclick="kgToggleTheme()" aria-pressed="false" title="Switch to light">☀</button>
+      <button class="lang-toggle" id="langToggle" aria-label="Switch language">RW</button>
+      <a href="#request" class="nav-cta" data-i18n="nav_cta">Request Service</a>
+      <button class="burger" id="burgerBtn" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#home" data-i18n="nav_home">Home</a>
+    <a href="#about" data-i18n="nav_about">About Us</a>
+    <a href="#services" data-i18n="nav_services">Security Services</a>
+    <a href="#training" data-i18n="nav_training">Training</a>
+        <a href="work.html" data-i18n="nav_work">Apply for Work</a>
+    <a href="#industries" data-i18n="nav_industries">Industries</a>
+    <a href="#request" data-i18n="nav_request">Request Service</a>
+    <a href="#portfolio" data-i18n="nav_portfolio">Portfolio</a>
+    <a href="#resources" data-i18n="nav_resources">Resources</a>
+    <a href="#contact" data-i18n="nav_contact">Contact</a>
+    <a href="certificates.html" data-i18n="nav_certs">Certificates</a>
+    <a href="client.html" data-i18n="nav_client">Client Portal</a>
+      <a href="professional.html" data-i18n="nav_professional">Professional Portal</a>
+      <a href="student.html" data-i18n="nav_student">Student Portal</a>
+    <a href="employer.html" data-i18n="nav_employer">Employer Portal</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="wrap">
+    <div>
+      <h1 class="hero-title">
+        <span data-i18n="hero_title_1">Protection, training</span><br>
+        <span data-i18n="hero_title_2">and a certificate</span><br>
+        <span class="accent" data-i18n="hero_title_3">an employer can check.</span>
+      </h1>
+      <p class="hero-sub" data-i18n="hero_sub">Kagoma Protection Services plans and runs the security of events across Rwanda, advises on security risk, and trains the officers who do the work.</p>
+      <div class="hero-ctas">
+        <a href="#services" class="btn btn-primary" data-i18n="hero_cta1">View Security Services</a>
+        <a href="#training" class="btn btn-ghost" data-i18n="hero_cta2">Explore Training Courses</a>
+      </div>
+    </div>
+    <div class="hero-visual kps-stage" aria-hidden="true">
+      <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+      <div class="kps-particles" id="kpsParticles"></div>
+      <div class="kps-badge">
+        <img src="img/badge-fca1f246.webp" alt="" class="kps-badge-img">
+        <span class="kps-shine"></span>
+      </div>
+      <span class="kps-ring"></span>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="grid-3 reveal proof">
+      <div class="cell">
+        <div class="n">30</div>
+        <h3 data-i18n="pf_a">Officers deployed at KCC</h3>
+        <p data-i18n="pf_a2">Strictly Soul and the UEFA Champions League Final, for Heineken Rwanda.</p>
+      </div>
+      <div class="cell">
+        <div class="n">20</div>
+        <h3 data-i18n="pf_b">Assessed courses</h3>
+        <p data-i18n="pf_b2">Every certificate carries a number an employer can check.</p>
+      </div>
+      <div class="cell">
+        <div class="n">24/7</div>
+        <h3 data-i18n="pf_c">Operations desk</h3>
+        <p data-i18n="pf_c2">Planning, deployment and reporting, before and after the doors open.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VERIFY A CERTIFICATE -->
+<div class="verify-bar">
+  <div class="wrap">
+    <label for="vbNum" data-i18n="vb_label">Check a Kagoma certificate</label>
+    <div class="vb-row">
+      <input type="text" id="vbNum" placeholder="KAGOMA-CERT-2026-000125"
+             onkeydown="if(event.key==='Enter')vbCheck()" autocomplete="off" name="vbNum">
+      <button onclick="vbCheck()" data-i18n="vb_btn">Check</button>
+    </div>
+    <div class="vb-out" id="vbOut" role="status"></div>
+  </div>
+
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="wrap">
+    <h2 class="sec-title reveal" data-i18n="about_title">Built on discipline, not luck.</h2>
+    <div class="about-layout">
+      <div class="about-copy reveal">
+        <p data-i18n="about_p1">Kagoma Protection Services is a security management and consultancy firm serving corporate, hospitality, event and institutional clients. We plan, deploy and supervise protection programmes that hold up under real conditions — not just on paper.</p>
+        <p data-i18n="about_p2">Every deployment is grounded in risk assessment, trained personnel and clear operational standards — the same standards we teach in our professional training courses.</p>
+      </div>
+      <div class="values-list reveal">
+        <div class="value">
+          <span class="vnum">01</span>
+          <div><h4 data-i18n="value1_title">Discipline</h4><p data-i18n="value1_desc">Standards are followed consistently, on every post, not only when someone is watching.</p></div>
+        </div>
+        <div class="value">
+          <span class="vnum">02</span>
+          <div><h4 data-i18n="value2_title">Vigilance</h4><p data-i18n="value2_desc">Protection is a constant posture, not an occasional check.</p></div>
+        </div>
+        <div class="value">
+          <span class="vnum">03</span>
+          <div><h4 data-i18n="value3_title">Protection</h4><p data-i18n="value3_desc">The safety of people, property and events is the reason the company exists.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="wrap">
+    <h2 class="sec-title reveal" data-i18n="services_title">Day-to-day protection, professionally managed.</h2>
+    <p class="sec-sub reveal" data-i18n="services_sub">Event security, crowd safety, risk assessment and training — our services are built around your risk profile and daily reality.</p>
+    <div class="card-grid" id="servicesGrid"></div>
+  </div>
+</section>
+
+<!-- TRAINING -->
+<section id="training" class="training">
+  <div class="wrap">
+    <h2 class="sec-title reveal" data-i18n="training_title">Professional Education in Security, Safety &amp; Risk Management</h2>
+    <div class="training-positioning reveal" data-i18n="training_positioning">Kagoma Professional Training Courses provides structured professional courses designed to develop practical knowledge, operational competence and professional standards in security, safety and risk management.</div>
+
+    <div class="course-list" id="courseList"></div>
+    <p class="course-legend"><span class="prac">&#9650;</span> <span data-i18n="course_legend">Practical components are delivered and assessed separately by certified instructors.</span></p>
+    <div class="training-cta-row">
+      <a href="student.html" class="btn btn-primary" data-i18n="student_portal_cta">Enroll as a Student</a>
+      <a href="#contact" class="btn btn-ghost" data-i18n="courses_cta">Request Course Brochure</a>
+      <a href="certificates.html" class="btn btn-ghost" data-i18n="verify_cert_cta">Verify a Certificate</a>
+    </div>
+  </div>
+</section>
+
+<!-- INDUSTRIES -->
+<section id="industries">
+  <div class="wrap">
+    <h2 class="sec-title reveal" data-i18n="industries_title">Sectors we protect.</h2>
+    <p class="sec-sub reveal" data-i18n="industries_sub">Our teams are trained to the specific risk profile of each sector we serve.</p>
+    <div class="industry-grid" id="industryGrid"></div>
+  </div>
+</section>
+
+<!-- REQUEST SECURITY SERVICE -->
+<section id="request">
+  <div class="wrap">
+    <h2 class="sec-title reveal" data-i18n="request_title">Tell us what you need protected.</h2>
+    <p class="sec-sub reveal" data-i18n="request_sub">Submit the details of your event or site and our team will follow up with a risk assessment and quotation.</p>
+
+    <form class="request-form reveal" id="requestForm" onsubmit="submitServiceRequest(event)">
+      <div class="request-grid">
+        <div class="field">
+          <label data-i18n="req_lbl_name">Full Name / Organisation</label>
+          <input type="text" id="reqName" required name="full_name" autocomplete="name">
+        </div>
+        <div class="field">
+          <label data-i18n="req_lbl_email">Email</label>
+          <input type="email" id="reqEmail" required name="email" autocomplete="email">
+        </div>
+        <div class="field">
+          <label data-i18n="req_lbl_phone">Phone</label>
+          <input type="text" id="reqPhone" name="phone" autocomplete="tel">
+        </div>
+        <div class="field">
+          <label data-i18n="req_lbl_event_type">Type of Service Needed</label>
+          <select id="reqEventType">
+            <option value="Event Security" data-i18n="req_opt_event">Event Security Management</option>
+            <option value="Crowd Safety" data-i18n="req_opt_crowd">Crowd Safety &amp; Guest Management</option>
+            <option value="Event Staffing" data-i18n="req_opt_staff">Event Staffing &amp; Stewarding</option>
+            <option value="Risk Assessment" data-i18n="req_opt_risk">Security Risk Assessment</option>
+            <option value="Consulting" data-i18n="req_opt_consult">Security Consulting</option>
+            <option value="Training" data-i18n="req_opt_training">Security Training</option>
+            <option value="Other" data-i18n="req_opt_other">Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label data-i18n="req_lbl_event_name">Event / Site Name</label>
+          <input type="text" id="reqEventName" name="full_name" autocomplete="name">
+        </div>
+        <div class="field">
+          <label data-i18n="req_lbl_date">Date Needed</label>
+          <input type="date" id="reqDate" name="reqDate">
+        </div>
+        <div class="field">
+          <label data-i18n="req_lbl_province">Province</label>
+          <select id="reqProvince" onchange="reqFillDistricts()"><option value="">&mdash;</option></select>
+        </div>
+        <div class="field">
+          <label data-i18n="req_lbl_district">District</label>
+          <select id="reqDistrict"><option value="">&mdash;</option></select>
+        </div>
+        <div class="field">
+          <label data-i18n="req_lbl_place">Venue or area</label>
+          <input type="text" id="reqLocation" placeholder="Kigali Convention Centre" name="reqLocation">
+        </div>
+        <div class="field">
+          <label data-i18n="req_lbl_attendees">Expected number of people</label>
+          <select id="reqAttendees">
+            <option value="">&mdash;</option>
+            <option value="under 100">&lt; 100</option>
+            <option value="100-300">100 &ndash; 300</option>
+            <option value="300-1000">300 &ndash; 1,000</option>
+            <option value="1000-5000">1,000 &ndash; 5,000</option>
+            <option value="over 5000">5,000+</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label data-i18n="req_lbl_needs">What do you need? Tap all that apply</label>
+        <div class="chips" id="reqNeeds"></div>
+      </div>
+
+      <div class="field">
+        <label data-i18n="req_lbl_details">Anything else &mdash; optional</label>
+        <textarea id="reqDetails" rows="3" placeholder=""></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" id="reqSubmitBtn" data-i18n="req_submit">Submit Request</button>
+      <div class="status-msg" id="reqStatus"></div>
+    </form>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="portfolio" class="portfolio">
+  <div class="wrap">
+    <h2 class="sec-title reveal" data-i18n="portfolio_title">Selected engagements.</h2>
+    <p class="sec-sub reveal" data-i18n="portfolio_sub">A sample of the programmes our teams have planned and delivered.</p>
+    <div class="portfolio-grid" id="portfolioGrid"></div>
+  </div>
+</section>
+
+<!-- RESOURCES -->
+<section id="resources">
+  <div class="wrap">
+    <h2 class="sec-title reveal" data-i18n="resources_title">Guides, briefings &amp; downloads.</h2>
+    <p class="sec-sub reveal" data-i18n="resources_sub">Practical material for clients, partners and course participants.</p>
+    <div class="resource-grid" id="resourceGrid"></div>
+  </div>
+</section>
+
+
+<!-- LEADERSHIP -->
+<section id="leadership">
+  <div class="wrap">
+    <h2 class="sec-title reveal" data-i18n="lead_title">Who runs Kagoma.</h2>
+    <p class="sec-sub reveal" data-i18n="lead_sub">A security company is only as good as the people who answer for it.</p>
+
+    <div class="lead-grid">
+      <div class="lead-card reveal">
+        <div class="lead-mark">HC</div>
+        <div class="lead-body">
+          <h3>Honore CYUBAHIRO Elyse</h3>
+          <div class="lead-role" data-i18n="lead_r1">Managing Director</div>
+          <div class="lead-creds">SRMP-C &middot; SRMP-R</div>
+          <p data-i18n="lead_b1">Founded Kagoma in 2026 and leads its event security, consulting
+          and training work. Holds the Security Risk Management Professional certifications
+          (Certified and Registered), and signs every certificate Kagoma issues.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="lead-note" data-i18n="lead_note">
+      Kagoma's instructors are named on the syllabus of the course they teach. A course
+      with a practical component is assessed by the qualified instructor who ran it, not
+      by the office.
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="wrap">
+    <h2 class="sec-title reveal" data-i18n="contact_title">Start with a risk conversation.</h2>
+    <p class="sec-sub reveal" data-i18n="contact_sub">Tell us about your site, event or training need — we'll respond with next steps.</p>
+
+    <div class="contact-direct">
+      <a class="cd" href="tel:+250788225262">
+        <span class="k" data-i18n="cd_phone">Phone</span>
+        <span class="v">+250 788 225 262</span>
+        <span class="v2">+250 798 005 444</span>
+      </a>
+      <a class="cd" href="mailto:info@kagomaprotection.com">
+        <span class="k" data-i18n="cd_email">Email</span>
+        <span class="v">info@kagomaprotection.com</span>
+      </a>
+      <div class="cd">
+        <span class="k" data-i18n="cd_where">Where we work</span>
+        <span class="v" data-i18n="cd_where_v">At your venue, across Rwanda</span>
+        <span class="v2" data-i18n="cd_where_v2">Registered in Kicukiro, Kigali</span>
+      </div>
+      <div class="cd">
+        <span class="k" data-i18n="cd_hours">Hours</span>
+        <span class="v" data-i18n="cd_hours_v">24/7 operations desk</span>
+      </div>
+    </div>
+
+    <div class="contact-cta">
+      <a class="btn btn-primary" href="#request" data-i18n="cd_request">Request a service</a>
+      <a class="btn btn-ghost" href="work.html" data-i18n="cd_work">Apply for work</a>
+    </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <img src="img/crest-60e57097.webp" alt="Kagoma Protection Services logo" style="height:38px;width:auto;">
+      <div>
+        <div class="fmark">KAGOMA</div>
+        <div class="ftag" data-i18n="footer_tagline">Security Management &amp; Consultancy</div>
+      </div>
+    </div>
+    <div class="fcontact" style="margin-bottom:8px">
+      <a href="privacy.html" class="flink">Privacy Notice</a>
+      <span class="sep">&middot;</span>
+      <a href="terms.html" class="flink">Terms &amp; Conditions</a>
+      <span class="sep">&middot;</span>
+      <a href="faq.html" class="flink">FAQ</a>
+      <span class="sep">&middot;</span>
+      <a href="certificates.html" class="flink">Certificate Verification</a>
+      <span class="sep">&middot;</span>
+      <a href="index.html#contact" class="flink">Contact</a>
+      <span class="sep">&middot;</span>
+      <a href="admin.html" class="flink staff-link" rel="nofollow">Staff</a>
+    </div>
+    <div class="fcontact" style="margin-bottom:8px">
+      <a href="work.html" class="flink" data-i18n="foot_work">Apply to work with Kagoma</a>
+      <span class="sep">&middot;</span>
+      <a href="student.html" data-i18n="foot_train">Train with Kagoma</a>
+      <span class="sep">&middot;</span>
+      <a href="certificates.html" data-i18n="foot_verify">Verify a certificate</a>
+    </div>
+    <div class="fcontact">
+      <a href="tel:+250788225262">+250 788 225 262</a>
+      <span class="sep">&middot;</span>
+      <a href="tel:+250798005444">+250 798 005 444</a>
+      <span class="sep">&middot;</span>
+      <a href="mailto:info@kagomaprotection.com">info@kagomaprotection.com</a>
+      <span class="sep">&middot;</span>
+      <span>Kigali, Rwanda</span>
+    </div>
+    <div class="social" aria-label="Kagoma Protection Services on social media">
+      <a href="#" data-net="linkedin" aria-label="LinkedIn" title="LinkedIn" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.63-1.85 3.36-1.85 3.59 0 4.26 2.36 4.26 5.44v6.3zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
+      </a>
+      <a href="#" data-net="instagram" aria-label="Instagram" title="Instagram" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.3-1.46.72-2.13 1.38C1.35 2.68.93 3.35.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.38 2.13.67.66 1.34 1.08 2.13 1.38.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.3 1.46-.72 2.13-1.38.66-.67 1.08-1.34 1.38-2.13.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.3-.79-.72-1.46-1.38-2.13C21.32 1.35 20.65.93 19.86.63 19.1.33 18.22.13 16.95.07 15.67.01 15.26 0 12 0zm0 5.84a6.16 6.16 0 1 0 0 12.32 6.16 6.16 0 0 0 0-12.32zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm7.85-10.4a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z"/></svg>
+      </a>
+      <a href="#" data-net="youtube" aria-label="YouTube" title="YouTube" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19C0 8.08 0 12 0 12s0 3.92.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14C24 15.92 24 12 24 12s0-3.92-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg>
+      </a>
+      <a href="#" data-net="facebook" aria-label="Facebook" title="Facebook" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07z"/></svg>
+      </a>
+      <a href="#" data-net="x" aria-label="X" title="X" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.41l-5.8-7.58-6.64 7.58H.46l8.6-9.83L0 1.15h7.59l5.24 6.93 6.07-6.93zm-1.29 19.5h2.04L6.49 3.24H4.3l13.31 17.41z"/></svg>
+      </a>
+    </div>
+    <div class="rights" data-i18n="footer_rights">© 2026 Kagoma Protection Services. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* ---------------- Translations ---------------- */
+const T = {
+  nav_home:{en:"Home",rw:"Ahabanza"},
+  nav_about:{en:"About Us",rw:"Abo Turibo"},
+  nav_services:{en:"Security Services",rw:"Serivisi z'Umutekano"},
+  nav_training:{en:"Training",rw:"Amasomo"},
+  nav_work:{en:"Apply for Work", rw:"Saba Akazi"},
+  foot_work:{en:"Apply to work with Kagoma", rw:"Saba Akazi kuri Kagoma"},
+  foot_train:{en:"Train with Kagoma", rw:"Iga kuri Kagoma"},
+  foot_verify:{en:"Verify a certificate", rw:"Genzura icyemezo"},
+  nav_industries:{en:"Industries",rw:"Aho Dukorera"},
+  nav_request:{en:"Request Service",rw:"Saba Serivisi"},
+  nav_portfolio:{en:"Portfolio",rw:"Ibyo Twakoze"},
+  nav_resources:{en:"Resources",rw:"Inyandiko"},
+  nav_contact:{en:"Contact",rw:"Twandikire"},
+  nav_certs:{en:"Certificates",rw:"Impamyabushobozi"},
+  nav_student:{en:"Student Portal",rw:"Umwanya w'Abanyeshuri"},
+  nav_employer:{en:"Employer Portal",rw:"Umwanya w'Ibigo"},
+  nav_cta:{en:"Request Service",rw:"Saba Serivisi"},
+  nav_more:{en:"More",rw:"Ibindi"},
+  nav_professional:{en:"Professional Portal",rw:"Ikaye y'Umunyamwuga"},
+  nav_client:{en:"Client Portal",rw:"Ikaye y'Umukiriya"},
+  course_legend:{en:"Practical components are delivered and assessed separately by certified instructors.",rw:"Ibice bifatika bitangwa kandi bigasuzumwa ukwabyo n'abarimu bafite ibyemezo."},
+
+  hero_eyebrow:{en:"SECURITY MANAGEMENT & CONSULTANCY",rw:"GUCUNGA UMUTEKANO N'INAMA Z'UBUHANGA"},
+  hero_title_1:{en:"Protection, training", rw:"Kurinda, guhugura,"},
+  hero_title_2:{en:"and a certificate", rw:"n'icyemezo umukoresha"},
+  hero_title_3:{en:"an employer can check.", rw:"ashobora kugenzura."},
+  enrol_btn:{en:"Enrol \u2014 free", rw:"Iyandikishe \u2014 ubuntu"},
+  vb_label:{en:"Check a Kagoma certificate", rw:"Genzura icyemezo cya Kagoma"},
+  vb_btn:{en:"Check", rw:"Genzura"},
+  vb_enter:{en:"Enter the certificate number printed on the document.", rw:"Andika nimero y'icyemezo iri ku nyandiko."},
+  vb_checking:{en:"Checking\u2026", rw:"Turimo kugenzura\u2026"},
+  vb_none:{en:"No certificate with that number.", rw:"Nta cyemezo gifite iyo nimero."},
+  vb_offline:{en:"Cannot reach the register right now.", rw:"Ntibishoboye guhuza n'igitabo cy'ibyemezo."},
+  pf_a:{en:"Officers deployed at KCC", rw:"Abakozi bashyizweho i KCC"},
+  pf_a2:{en:"Strictly Soul and the UEFA Champions League Final, for Heineken Rwanda.",
+         rw:"Strictly Soul n'umukino wa nyuma wa UEFA, kuri Heineken Rwanda."},
+  pf_b:{en:"Assessed courses", rw:"Amasomo afite ibizamini"},
+  pf_b2:{en:"Every certificate carries a number an employer can check.",
+         rw:"Buri cyemezo gifite nimero umukoresha ashobora kugenzura."},
+  pf_c:{en:"Operations desk", rw:"Ibiro bikora"},
+  pf_c2:{en:"Planning, deployment and reporting, before and after the doors open.",
+         rw:"Gutegura, gushyiraho abakozi no gutanga raporo, mbere na nyuma y'ibirori."},
+  hero_sub:{en:"Kagoma Protection Services plans and runs the security of events across Rwanda, advises on security risk, and trains the officers who do the work. Every certificate we issue carries a number anyone can verify.", rw:"Kagoma Protection Services itegura kandi igacunga umutekano w'ibirori mu Rwanda, igatanga inama ku byago by'umutekano, kandi ihugura abakozi babikora. Buri cyemezo dutanga gifite nimero umuntu wese ashobora kugenzura."},
+  hero_cta1:{en:"View Security Services",rw:"Reba Serivisi z'Umutekano"},
+  hero_cta2:{en:"Explore Training Courses",rw:"Reba Amasomo y'Umwuga"},
+  hero_motto:{en:"Discipline · Vigilance · Protection",rw:"Imyitwarire · Ubushishozi · Umutekano"},
+
+  feat1_title:{en:"Trained Personnel",rw:"Abakozi Bahuguwe"},
+  feat1_desc:{en:"Every officer is vetted, uniformed and certified against a documented standard before deployment.",
+              rw:"Buri murinzi asuzumwa neza, agahabwa imyenda y'akazi, agahabwa impamyabushobozi mbere yo gushyirwa ku murimo."},
+  feat2_title:{en:"Risk-Led Planning",rw:"Gutegura Bishingiye ku Byago"},
+  feat2_desc:{en:"Programmes are built from a site assessment first — never a generic package applied blind.",
+              rw:"Gahunda zose zubakwa nyuma yo gusuzuma ahantu — ntabwo dukoresha uburyo rusange butagenewe ikigo cyawe."},
+  feat3_title:{en:"Accredited Training",rw:"Amasomo Yemewe"},
+  feat3_desc:{en:"The same standards we deploy in the field are taught in our professional training courses.",
+              rw:"Amahame dukoresha ku murimo ni yo yigishwa mu masomo yacu y'umwuga."},
+
+  about_label:{en:"SEC.01 — ABOUT",rw:"SEC.01 — ABO TURIBO"},
+  about_title:{en:"Built on discipline, not luck.",rw:"Twubatswe ku myitwarire, ntabwo ari amahirwe."},
+  about_p1:{en:"Kagoma Protection Services is a security management and consultancy firm serving corporate, hospitality, event and institutional clients. We plan, deploy and supervise protection programmes that hold up under real conditions — not just on paper.",
+            rw:"Kagoma Protection Services ni ikigo gicunga umutekano kandi gitanga inama, gikorera ibigo by'ubucuruzi, amahoteri, ibirori, n'inzego zitandukanye. Dutegura, dushyira mu bikorwa kandi dukurikirana gahunda z'umutekano zihamye mu bihe nyabyo — ntabwo ari ku mpapuro gusa."},
+  about_p2:{en:"Every deployment is grounded in risk assessment, trained personnel and clear operational standards — the same standards we teach in our professional training courses.",
+            rw:"Buri gikorwa gishingiye ku isuzuma ry'ibyago, abakozi bahuguwe neza, n'amabwiriza asobanutse yo gukora — ni yo mabwiriza twigisha mu masomo yacu y'umwuga."},
+  value1_title:{en:"Discipline",rw:"Imyitwarire"},
+  value1_desc:{en:"Standards are followed consistently, on every post, not only when someone is watching.",rw:"Amabwiriza akurikizwa buri gihe, aho umukozi ari hose, atari gusa igihe hari uwuriho."},
+  value2_title:{en:"Vigilance",rw:"Ubushishozi"},
+  value2_desc:{en:"Protection is a constant posture, not an occasional check.",rw:"Umutekano ni ikintu dukurikirana buri gihe, ntabwo ari ugusuzuma rimwe na rimwe."},
+  value3_title:{en:"Protection",rw:"Umutekano"},
+  value3_desc:{en:"The safety of people, property and events is the reason the company exists.",rw:"Umutekano w'abantu, umutungo n'ibirori ni yo mpamvu ikigo cyacu gihari."},
+
+  services_label:{en:"SEC.02 — SECURITY SERVICES",rw:"SEC.02 — SERIVISI Z'UMUTEKANO"},
+  services_title:{en:"Events secured. Risk assessed. Officers trained.", rw:"Ibirori birinzwe. Ibyago bisuzumwe. Abakozi bahuguwe."},
+  services_sub:{en:"Event security, crowd safety, risk assessment, consulting and training — the work Kagoma is registered and equipped to do.", rw:"Umutekano w'ibirori, umutekano w'imbaga, isuzuma ry'ibyago, ubujyanama n'amahugurwa — akazi Kagoma yanditseho kandi ishoboye."},
+
+  training_label:{en:"SEC.03 — PROFESSIONAL TRAINING COURSES",rw:"SEC.03 — AMASOMO Y'UMWUGA"},
+  training_title:{en:"Professional Education in Security, Safety & Risk Management",
+                   rw:"Amasomo y'Umwuga mu Mutekano, Umutekano Rusange n'Imicungire y'Ibyago"},
+  training_positioning:{en:"Kagoma Professional Training Courses provides structured professional courses designed to develop practical knowledge, operational competence and professional standards in security, safety and risk management.",
+                         rw:"Amasomo y'Umwuga ya Kagoma atanga amasomo ateguwe neza kandi asobanutse, agamije guteza imbere ubumenyi ngiro, ubushobozi mu mirimo, n'amahame y'umwuga mu mutekano, umutekano rusange n'imicungire y'ibyago."},
+  courses_cta:{en:"Request Course Brochure",rw:"Saba Igitabo cy'Amasomo"},
+  verify_cert_cta:{en:"Verify a Certificate",rw:"Genzura Impamyabushobozi"},
+  student_portal_cta:{en:"Enroll as a Student",rw:"Iyandikishe nk'Umunyeshuri"},
+
+  industries_label:{en:"SEC.04 — INDUSTRIES",rw:"SEC.04 — AHO DUKORERA"},
+  industries_title:{en:"Sectors we protect.",rw:"Inzego dukorera."},
+  industries_sub:{en:"Our teams are trained to the specific risk profile of each sector we serve.",
+                   rw:"Itsinda ryacu rihuguwe hakurikijwe ibyago byihariye bya buri rwego dukoreramo."},
+
+  request_label:{en:"SEC.05 — REQUEST A SERVICE",rw:"SEC.05 — SABA SERIVISI"},
+  request_title:{en:"Tell us what you need protected.",rw:"Tubwire icyo ushaka ko turinda."},
+  request_sub:{en:"Submit the details of your event or site and our team will follow up with a risk assessment and quotation.",
+               rw:"Ohereza amakuru y'igikorwa cyawe cyangwa ahantu hawe, itsinda ryacu rikuvugane bikurikira isuzuma ry'ibyago na quotation."},
+  req_lbl_name:{en:"Full Name / Organisation",rw:"Amazina Yombi / Ikigo"},
+  req_lbl_email:{en:"Email",rw:"Imeyili"},
+  req_lbl_phone:{en:"Phone",rw:"Telefoni"},
+  req_lbl_event_type:{en:"Type of Service Needed",rw:"Ubwoko bwa Serivisi Ukeneye"},
+  req_opt_event:{en:"Event Security Management",rw:"Gucunga Umutekano mu Birori"},
+  req_opt_crowd:{en:"Crowd Safety & Guest Management",rw:"Umutekano w'Imbaga n'Abashyitsi"},
+  req_opt_staff:{en:"Event Staffing & Stewarding",rw:"Abakozi b'Ibirori"},
+  req_opt_consult:{en:"Security Consulting",rw:"Ubujyanama ku Mutekano"},
+  req_opt_training:{en:"Security Training",rw:"Amahugurwa y'Umutekano"},
+  req_opt_risk:{en:"Security Risk Assessment",rw:"Isuzuma ry'Ibyago by'Umutekano"},
+  req_opt_other:{en:"Other",rw:"Ikindi"},
+  req_lbl_event_name:{en:"Event / Site Name",rw:"Izina ry'Igikorwa / Ahantu"},
+  req_lbl_date:{en:"Date Needed",rw:"Itariki Ukeneyeho"},
+  req_lbl_location:{en:"Location",rw:"Aho Biherereye"},
+  req_lbl_attendees:{en:"Expected Number of People",rw:"Umubare w'Abantu Witezwe"},
+  req_lbl_details:{en:"Anything else \u2014 optional", rw:"Ikindi \u2014 ntibisabwa"},
+  req_submit:{en:"Submit Request",rw:"Ohereza Icyifuzo"},
+  req_ok:{en:"Your request has been submitted. Our team will contact you shortly.",rw:"Icyifuzo cyawe cyoherejwe. Itsinda ryacu rizakuvugana vuba."},
+  req_err_fields:{en:"Please fill in your name and email.",rw:"Uzuza amazina n'imeyili yawe."},
+  req_err_fail:{en:"Something went wrong submitting your request. Please try again.",rw:"Habaye ikibazo mu kohereza icyifuzo cyawe. Ongera ugerageze."},
+  req_submitting:{en:"Submitting...",rw:"Turimo kohereza..."},
+
+  portfolio_label:{en:"SEC.06 — PORTFOLIO",rw:"SEC.06 — IBYO TWAKOZE"},
+  portfolio_title:{en:"Selected engagements.",rw:"Bimwe mu byo twakoze."},
+  portfolio_sub:{en:"A sample of the programmes our teams have planned and delivered.",
+                 rw:"Ingero z'imwe mu gahunda amatsinda yacu yateguye kandi ashyira mu bikorwa."},
+
+  resources_label:{en:"SEC.07 — RESOURCES",rw:"SEC.07 — INYANDIKO"},
+  resources_title:{en:"Guides, briefings & downloads.",rw:"Amabwiriza, raporo n'inyandiko wakura."},
+  resources_sub:{en:"Practical material for clients, partners and course participants.",
+                 rw:"Ibikoresho ngirakamaro ku bakiriya, abafatanyabikorwa n'abiga amasomo yacu."},
+
+  contact_label:{en:"SEC.08 — CONTACT",rw:"SEC.08 — TWANDIKIRE"},
+  contact_title:{en:"Start with a risk conversation.",rw:"Tangira n'ikiganiro ku byago byawe."},
+  cd_phone:{en:"Phone", rw:"Telefoni"},
+  cd_email:{en:"Email", rw:"Email"},
+  cd_where:{en:"Where we work", rw:"Aho dukorera"},
+  cd_where_v:{en:"At your venue, across Rwanda", rw:"Aho ibirori byawe bibera, mu Rwanda hose"},
+  cd_where_v2:{en:"Registered in Kicukiro, Kigali", rw:"Twanditse i Kicukiro, Kigali"},
+  cd_hours:{en:"Hours", rw:"Amasaha"},
+  cd_hours_v:{en:"Reachable any time, day or night", rw:"Turahamagarwa igihe cyose, ku manywa na nijoro"},
+  cd_request:{en:"Request a service", rw:"Saba serivisi"},
+  cd_work:{en:"Apply for work", rw:"Saba akazi"},
+  nav_lead:{en:"Leadership", rw:"Ubuyobozi"},
+  lead_title:{en:"Who runs Kagoma.", rw:"Abayobora Kagoma."},
+  lead_sub:{en:"A security company is only as good as the people who answer for it.",
+            rw:"Ikigo cy'umutekano kingana n'abakibazwa."},
+  lead_r1:{en:"Managing Director", rw:"Umuyobozi Mukuru"},
+  lead_b1:{en:"Founded Kagoma in 2026 and leads its event security, consulting and training work. Holds the Security Risk Management Professional certifications (Certified and Registered), and signs every certificate Kagoma issues.",
+           rw:"Yashinze Kagoma mu 2026, akayobora umutekano w'ibirori, ubujyanama n'amahugurwa. Afite ibyemezo bya Security Risk Management Professional (Certified na Registered), kandi asinya buri cyemezo Kagoma itanga."},
+  lead_note:{en:"Kagoma's instructors are named on the syllabus of the course they teach. A course with a practical component is assessed by the qualified instructor who ran it, not by the office.",
+             rw:"Abatoza ba Kagoma bavugwa ku gahunda y'isomo bigisha. Isomo rifite imyitozo ifatika risuzumwa n'umutoza wemewe waryigishije, atari ibiro."},
+  contact_sub:{en:"Tell us about your site, event or training need — we'll respond with next steps.",
+               rw:"Tubwire ibijyanye n'ahantu hawe, igikorwa cyangwa amasomo ukeneye — tuzagusubiza tukwereka intambwe zikurikira."},
+  lbl_name:{en:"Full Name",rw:"Amazina Yombi"},
+  lbl_email:{en:"Email",rw:"Imeyili"},
+  lbl_org:{en:"Organisation",rw:"Ikigo"},
+  lbl_message:{en:"Message",rw:"Ubutumwa"},
+  lbl_submit:{en:"Send Message",rw:"Ohereza Ubutumwa"},
+  contact_info_title:{en:"Direct Contact",rw:"Aho Twaboneka Ako Kanya"},
+  lbl_address:{en:"ADDRESS",rw:"AHO TURI"},
+  lbl_hours:{en:"HOURS",rw:"AMASAHA"},
+  hours_val:{en:"24/7 Operations Desk",rw:"Amasaha 24/7"},
+
+  footer_tagline:{en:"Security Management & Consultancy",rw:"Gucunga Umutekano n'Inama z'Ubuhanga"},
+  footer_rights:{en:"© 2026 Kagoma Protection Services. All rights reserved.",rw:"© 2026 Kagoma Protection Services. Uburenganzira bwose burarindwa."}
+};
+
+/* ---------------- Data-driven content ---------------- */
+/* ------------------------------------------------------------------
+   These follow the activities on the RDB certificate and nothing more.
+
+     SN823001  organisation and management of events, including
+               providing the staff who run the venue
+     SM749008  security consulting
+     SK661205  security and commodity contracts dealing
+
+   Manned guarding of premises, and deploying close protection
+   officers, require a licence from the Rwanda National Police that
+   Kagoma does not hold. Advertising them would be a claim the
+   company cannot lawfully meet. Kagoma teaches those subjects; it
+   does not sell the deployment.
+------------------------------------------------------------------- */
+const SERVICES = [
+  {code:"SVC-01", en:{t:"Event Security Management",
+    d:"Planning and running the security of conferences, summits, concerts and corporate gatherings, from the first walk-through to the closing report."},
+   rw:{t:"Gucunga Umutekano mu Birori",
+    d:"Gutegura no gukurikirana umutekano w'amakoferansi, inama nkuru, imyidagaduro n'ibirori by'ibigo, uhereye ku igenzura rya mbere ukageza kuri raporo yo gusoza."}},
+
+  {code:"SVC-02", en:{t:"Crowd Safety & Guest Management",
+    d:"Entry flow, accreditation, seating and movement planned so that a crowd stays safe and a guest is looked after."},
+   rw:{t:"Umutekano w'Imbaga n'Abashyitsi",
+    d:"Uko abantu binjira, uko bandikwa, aho bicara n'uko bagenda \u2014 byose biteguwe kugira ngo imbaga igume mu mutekano, umushyitsi akitabwaho."}},
+
+  {code:"SVC-03", en:{t:"Event Staffing & Stewarding",
+    d:"Trained stewards, ushers and accreditation staff to run the venue during the event."},
+   rw:{t:"Abakozi b'Ibirori",
+    d:"Abakozi bahuguwe bakira abashyitsi, babayobora kandi bakurikirana ibyangombwa mu gihe cy'ibirori."}},
+
+  {code:"SVC-04", en:{t:"Security Risk Assessment",
+    d:"Venue and site surveys, threat analysis and a written report with what we found and what we recommend."},
+   rw:{t:"Isuzuma ry'Ibyago by'Umutekano",
+    d:"Gusuzuma aho ibirori bibera, gusesengura ibyago, no gutanga raporo yanditse y'ibyabonetse n'ibyo dusaba."}},
+
+  {code:"SVC-05", en:{t:"Security Consulting",
+    d:"Advice on security programmes, procedures and standards \u2014 including reviewing what a provider is delivering to you."},
+   rw:{t:"Ubujyanama ku Mutekano",
+    d:"Inama ku gahunda z'umutekano, amabwiriza n'ibipimo \u2014 harimo no gusuzuma ibyo utanga serivisi akorera ikigo cyawe."}},
+
+  {code:"SVC-06", en:{t:"Emergency & Evacuation Planning",
+    d:"Crowd emergency plans, evacuation routes and the drills that make them work on the day."},
+   rw:{t:"Igenamigambi ry'Ibyihutirwa",
+    d:"Gahunda y'ibyihutirwa ku mbaga, inzira zo gusohokera, n'imyitozo ituma bikora ku munsi w'ibirori."}},
+
+  {code:"SVC-07", en:{t:"Professional Security Training",
+    d:"Twenty assessed courses, from the security officer role to protective programme leadership, each with a certificate an employer can verify."},
+   rw:{t:"Amahugurwa y'Umwuga w'Umutekano",
+    d:"Amasomo 20 afite ibizamini, kuva ku mukozi w'umutekano kugeza ku buyobozi bwa gahunda yo kurinda, buri rimwe rifite icyemezo umukoresha ashobora kugenzura."}},
+
+  {code:"SVC-08", en:{t:"Security Contracts Advisory",
+    d:"Help writing, tendering and reviewing security service contracts, so what is bought is what is delivered."},
+   rw:{t:"Ubujyanama ku Masezerano y'Umutekano",
+    d:"Gufasha kwandika, gutangaza no gusuzuma amasezerano ya serivisi z'umutekano, kugira ngo ibiguzwe ari byo bitangwa."}}
+];
+
+const FALLBACK_COURSES = [
+  {code:"KG-101", track:"core", practical:false, en:{t:"Event Security Management", d:"Planning, staffing and coordinating security for conferences, concerts and large public events.", s:"6 Modules · 41 Lessons"}, rw:{t:"Gucunga Umutekano mu Birori", d:"Gutegura, gushyiraho abakozi no guhuza umutekano mu makoferansi, imyidagaduro n'ibindi birori binini.", s:"Ibice 6 · Amasomo 41"}},
+  {code:"KG-102", track:"core", practical:false, en:{t:"Crowd Management and Crowd Safety", d:"Controlling density, flow and emergency egress where large numbers of people gather.", s:"6 Modules · 41 Lessons"}, rw:{t:"Gucunga Imbaga n'Umutekano Wayo", d:"Gucunga ubwinshi, uko abantu banyura n'uko basohoka mu gihe cy'ihutirwa aho imbaga iteranira.", s:"Ibice 6 · Amasomo 41"}},
+  {code:"KG-103", track:"core", practical:false, en:{t:"Loss Prevention Management", d:"Identifying and controlling the sources of shrinkage, theft and internal risk.", s:"6 Modules · 25 Lessons"}, rw:{t:"Imicungire yo Kwirinda Igihombo", d:"Kumenya no kugenzura aho igihombo, ubujura n'ibyago byo imbere biva.", s:"Ibice 6 · Amasomo 25"}},
+  {code:"KG-104", track:"core", practical:false, en:{t:"Hospitality Security Management", d:"Security operations tailored to hotels, resorts and guest-facing venues.", s:"9 Modules · 46 Lessons"}, rw:{t:"Imicungire y'Umutekano mu Bwakiranyi", d:"Imikorere y'umutekano yateguriwe amahoteri n'ahandi hakirwa abashyitsi.", s:"Ibice 9 · Amasomo 46"}},
+  {code:"KG-105", track:"core", practical:false, en:{t:"International Security and Risk Management Professional", d:"Cross-border risk frameworks, country assessment and travel risk for international operations.", s:"6 Modules · 41 Lessons"}, rw:{t:"Umwuga w'Umutekano Mpuzamahanga n'Imicungire y'Ibyago", d:"Uburyo bwo gucunga ibyago hakurya y'imipaka, gusuzuma ibihugu n'ibyago by'ingendo mpuzamahanga.", s:"Ibice 6 · Amasomo 41"}},
+  {code:"KG-106", track:"core", practical:true, en:{t:"Executive Protection", d:"Protective principles, intelligence, advance work, operations and professional standards.", s:"6 Modules · 41 Lessons"}, rw:{t:"Kurinda Abayobozi n'Abantu Bakomeye", d:"Amahame yo kurinda, amakuru, umurimo ubanziriza, ibikorwa n'amabwiriza y'umwuga.", s:"Ibice 6 · Amasomo 41"}},
+  {code:"KG-107", track:"core", practical:true, en:{t:"First Aid for Security Professionals", d:"Emergency response, trauma priorities and basic life support for security personnel.", s:"6 Modules · 41 Lessons"}, rw:{t:"Ubufasha bwa Mbere ku Banyamwuga b'Umutekano", d:"Gutabara mu byihutirwa, ibyibandwaho ku bikomere n'ubufasha bw'ibanze bw'ubuzima.", s:"Ibice 6 · Amasomo 41"}},
+  {code:"KG-108", track:"core", practical:true, en:{t:"Advanced Security Guard Course", d:"Advanced access control, patrol, observation, reporting, incident response and supervision.", s:"6 Modules · 41 Lessons"}, rw:{t:"Isomo Ryisumbuye ry'Umukozi w'Umutekano", d:"Kugenzura abinjira, patrouille, kwitegereza, gutanga raporo, gutabara ibibazo n'ubugenzuzi ku rwego rwisumbuye.", s:"Ibice 6 · Amasomo 41"}},
+  {code:"KG-109", track:"core", practical:false, en:{t:"Security Professional Etiquette", d:"Conduct, communication and presentation standards for security staff.", s:"6 Modules · 17 Lessons"}, rw:{t:"Imyitwarire y'Abanyamwuga b'Umutekano", d:"Imyitwarire, itumanaho n'uko umukozi w'umutekano yigaragaza.", s:"Ibice 6 · Amasomo 17"}},
+  {code:"KG-110", track:"core", practical:false, en:{t:"Security Risk Assessment and Security Planning", d:"Threat and vulnerability assessment, risk registers and defensible security programme design.", s:"6 Modules · 41 Lessons"}, rw:{t:"Isuzuma ry'Ibyago n'Igenamigambi ry'Umutekano", d:"Gusuzuma iterabwoba n'intege nke, urutonde rw'ibyago no gutegura gahunda y'umutekano ishobora kwiregurwa.", s:"Ibice 6 · Amasomo 41"}},
+  {code:"KG-111", track:"core", practical:false, en:{t:"Security Operations and Incident Management", d:"Running a security operation, command and control, incident response and after-action review.", s:"6 Modules · 41 Lessons"}, rw:{t:"Ibikorwa by'Umutekano no Gucunga Ibibazo", d:"Gucunga ibikorwa by'umutekano, ubuyobozi n'igenzura, gutabara ibibazo n'isuzuma nyuma y'igikorwa.", s:"Ibice 6 · Amasomo 41"}},
+  {code:"KG-112", track:"core", practical:true, en:{t:"Close Protection / PSD Training Manager", d:"Designing, delivering and safety-controlling close protection and PSD training programmes.", s:"8 Modules · 50 Lessons"}, rw:{t:"Umuyobozi w'Amahugurwa yo Kurinda Hafi", d:"Gutegura, gutanga no kugenzura umutekano w'amahugurwa yo kurinda hafi n'ay'itsinda ririnda.", s:"Ibice 8 · Amasomo 50"}},
+  {code:"EP-V1", track:"ep", practical:false, en:{t:"Volume 1 — EP Fundamentals", d:"Doctrine, the protective mindset, layers of protection and the professional ethical standard.", s:"Domain I · Subjects 1–16"}, rw:{t:"Igitabo cya 1 — Ishingiro rya EP", d:"Inyigisho, imyumvire yo kurinda, inzego zo kurinda n'urwego rw'ubunyangamugayo bw'umwuga.", s:"Icyiciro I · Ingingo 1–16"}},
+  {code:"EP-V2", track:"ep", practical:false, en:{t:"Volume 2 — Protective Intelligence", d:"Threat assessment methodology, behavioural indicators and surveillance detection.", s:"Domain II · Subjects 17–38"}, rw:{t:"Igitabo cya 2 — Amakuru yo Kurinda", d:"Uburyo bwo gusuzuma iterabwoba, ibimenyetso by'imyitwarire no kumenya ugukurikiranwa.", s:"Icyiciro II · Ingingo 17–38"}},
+  {code:"EP-V3", track:"ep", practical:false, en:{t:"Volume 3 — Information Security", d:"Reducing the information exposure that removes an adversary's need to conduct surveillance.", s:"Domain III · Subjects 39–52"}, rw:{t:"Igitabo cya 3 — Umutekano w'Amakuru", d:"Kugabanya ibigaragara bikuraho ukwinjira kw'umwanzi kwo gukurikirana.", s:"Icyiciro III · Ingingo 39–52"}},
+  {code:"EP-V4", track:"ep", practical:false, en:{t:"Volume 4 — Planning", d:"Advance work, route analysis, venue assessment, operations orders and contingency planning.", s:"Domain IV · Subjects 53–100"}, rw:{t:"Igitabo cya 4 — Igenamigambi", d:"Umurimo ubanziriza, isesengura ry'inzira, isuzuma ry'ahantu, amabwiriza y'igikorwa n'ibitunguranye.", s:"Icyiciro IV · Ingingo 53–100"}},
+  {code:"EP-V5", track:"ep", practical:true, en:{t:"Volume 5 — Operations", d:"Formations, movement, incident response and specialist protective situations.", s:"Domain V · Subjects 101–147"}, rw:{t:"Igitabo cya 5 — Ibikorwa", d:"Imiterere y'itsinda, imigendere, gutabara ibibazo n'imimerere yihariye yo kurinda.", s:"Icyiciro V · Ingingo 101–147"}},
+  {code:"EP-V6", track:"ep", practical:false, en:{t:"Volume 6 — Legal", d:"Legal authority, use of force, rules of engagement, liability and reporting obligations.", s:"Domain VI · Subjects 148–162"}, rw:{t:"Igitabo cya 6 — Amategeko", d:"Ububasha bw'amategeko, gukoresha imbaraga, amabwiriza y'ibikorwa, inshingano n'itangwa rya raporo.", s:"Icyiciro VI · Ingingo 148–162"}},
+  {code:"EP-V7", track:"ep", practical:false, en:{t:"Volume 7 — Business and Administrative", d:"Contracts, pricing, procurement, recruitment, training management and quality systems.", s:"Domain VII · Subjects 163–177"}, rw:{t:"Igitabo cya 7 — Ubucuruzi n'Imicungire", d:"Amasezerano, gushyiraho ibiciro, kugura, gushaka abakozi, imicungire y'amahugurwa na sisitemu z'ubwiza.", s:"Icyiciro VII · Ingingo 163–177"}},
+  {code:"EP-V8", track:"ep", practical:false, en:{t:"Volume 8 — EP Leadership", d:"Detail command, decision-making under stress, programme management and professional legacy.", s:"Domain VIII · Subjects 178–200"}, rw:{t:"Igitabo cya 8 — Ubuyobozi bwa EP", d:"Kuyobora itsinda, gufata ibyemezo mu gitutu, gucunga gahunda n'umurage w'umwuga.", s:"Icyiciro VIII · Ingingo 178–200"}},
+];
+let COURSES = FALLBACK_COURSES;
+
+const INDUSTRIES = [
+  {en:"Hospitality & Hotels",rw:"Amahoteri n'Ubukerarugendo"},
+  {en:"Events & Entertainment",rw:"Ibirori n'Imyidagaduro"},
+  {en:"Corporate & Financial Institutions",rw:"Ibigo by'Ubucuruzi n'Amabanki"},
+  {en:"Retail & Commercial",rw:"Ubucuruzi n'Amaduka"},
+  {en:"NGOs & Diplomatic Missions",rw:"Imiryango Mpuzamahanga n'Ambasade"},
+  {en:"Construction & Real Estate",rw:"Ubwubatsi n'Imitungo Itimukanwa"},
+  {en:"Government & Public Sector",rw:"Leta n'Inzego za Leta"},
+  {en:"Residential & Estates",rw:"Aho Abantu Batuye"}
+];
+
+const PORTFOLIO = [
+  /* Work Kagoma has actually done, with the client named and the scale
+     stated. An invented case study reads the same as a real one until
+     somebody asks about it. */
+  {tag:"EVENTS",
+   en:{t:"Strictly Soul \u2014 Kigali Convention Centre",
+       d:"Thirty officers deployed for Heineken Rwanda across accreditation, crowd flow and VIP support. May 2026. No incidents recorded."},
+   rw:{t:"Strictly Soul \u2014 Kigali Convention Centre",
+       d:"Abakozi 30 bashyizweho kuri Heineken Rwanda: kugenzura ibyangombwa, gucunga imbaga no kwakira abashyitsi. Gicurasi 2026. Nta kibazo cyabaye."}},
+
+  {tag:"EVENTS",
+   en:{t:"UEFA Champions League Final Watch Event",
+       d:"Crowd safety and access control for Heineken Rwanda at the Kigali Convention Centre. Live control room with incident coordination. May 2026."},
+   rw:{t:"Umukino wa Nyuma wa UEFA Champions League",
+       d:"Umutekano w'imbaga no kugenzura abinjira kuri Heineken Rwanda i Kigali Convention Centre, hamwe n'icyumba cy'ubugenzuzi. Gicurasi 2026."}},
+
+  {tag:"CORPORATE",
+   en:{t:"Conference & Summit Staffing",
+       d:"Accreditation desks, ushering and steward coordination for multi-day conferences at Kigali venues."},
+   rw:{t:"Abakozi mu Nama n'Amakoferansi",
+       d:"Kwandika abitabiriye, kwakira abashyitsi no guhuza abakozi mu nama z'iminsi myinshi i Kigali."}},
+
+  {tag:"CONSULTING",
+   en:{t:"Venue Risk Assessment",
+       d:"Written surveys of venues and event sites: what was found, the level of each risk, and what we recommend before doors open."},
+   rw:{t:"Isuzuma ry'Ibyago by'Ahantu",
+       d:"Raporo yanditse ku hantu h'ibirori: ibyabonetse, urwego rw'ibyago, n'ibyo dusaba mbere y'uko ibirori bitangira."}}
+];
+
+const RESOURCES = [
+  {tag:{en:"BRIEFING",rw:"RAPORO"}, en:{t:"Security Insights & Briefings", d:"Short, practical notes on current risk trends."}, rw:{t:"Amakuru n'Isesengura ry'Umutekano", d:"Inyandiko ngufi ku byago biriho ubu."}},
+  {tag:{en:"DOWNLOAD",rw:"KURA"}, en:{t:"Training Course Brochure", d:"Full outline of all professional training courses."}, rw:{t:"Igitabo cy'Amasomo", d:"Incamake y'amasomo yose y'umwuga atangwa."}},
+  {tag:{en:"GUIDE",rw:"AMABWIRIZA"}, en:{t:"Client Safety Guidelines", d:"Baseline safety procedures for sites we protect."}, rw:{t:"Amabwiriza y'Umutekano ku Bakiriya", d:"Amabwiriza y'ibanze y'umutekano ku hantu turinda."}},
+  {tag:{en:"FAQ",rw:"IBIBAZO"}, en:{t:"Frequently Asked Questions", d:"Answers on deployment, pricing structure and onboarding."}, rw:{t:"Ibibazo Bikunze Kubazwa", d:"Ibisubizo ku bijyanye no gutangira gukorana natwe."}}
+];
+
+/* ---------------- Render ---------------- */
+function renderServices(lang){
+  document.getElementById('servicesGrid').innerHTML = SERVICES.map(s=>`
+    <div class="svc-card">
+      <span class="corner tl"></span><span class="corner br"></span>
+      <h3>${s[lang].t}</h3>
+      <p>${s[lang].d}</p>
+    </div>`).join('');
+}
+function renderCourses(lang){
+  /* The front page introduces the training; it is not the catalogue.
+     Twenty rows here made the page three screens longer and told a
+     visitor less than six well-chosen ones do. */
+  const box = document.getElementById('courseList');
+  if(!box) return;
+  const SHOW = 6;
+  const shown = COURSES.slice(0, SHOW);
+
+  box.innerHTML = shown.map(c=>`
+    <a class="course-row" href="student.html">
+      <img class="ccover" src="img/courses/${c.code}.svg" alt="" loading="lazy" width="480" height="270">
+      <div class="ccode">${c.code}</div>
+      <div class="cbody">
+        <h4>${c[lang].t}${c.practical?' <span class="prac">&#9650;</span>':''}</h4>
+        <p>${c[lang].d}</p>
+      </div>
+      <div class="carrow">&rarr;</div>
+    </a>`).join('')
+    + `<a class="course-more" href="student.html">
+         ${lang==='rw'
+           ? 'Reba amasomo yose '+COURSES.length+' &rarr;'
+           : 'See all '+COURSES.length+' courses &rarr;'}
+       </a>`;
+}
+function renderIndustries(lang){
+  document.getElementById('industryGrid').innerHTML = INDUSTRIES.map((it,i)=>`
+    <div class="industry-cell">
+      <div class="ind-num">${String(i+1).padStart(2,'0')}</div>
+      <h4>${it[lang]}</h4>
+    </div>`).join('');
+}
+function renderPortfolio(lang){
+  document.getElementById('portfolioGrid').innerHTML = PORTFOLIO.map(p=>`
+    <div class="pf-card">
+      <span class="corner tl"></span><span class="corner br"></span>
+      <div class="pf-tag">${p.tag}</div>
+      <h3>${p[lang].t}</h3>
+      <p>${p[lang].d}</p>
+    </div>`).join('');
+}
+function renderResources(lang){
+  document.getElementById('resourceGrid').innerHTML = RESOURCES.map(r=>`
+    <div class="res-card">
+      <span class="res-tag">${r.tag[lang]}</span>
+      <h4>${r[lang].t}</h4>
+      <p>${r[lang].d}</p>
+    </div>`).join('');
+}
+
+/* ---------------- request form: tap instead of type ---------------- */
+const RW_PROV={
+  'Umujyi wa Kigali': ['Gasabo','Kicukiro','Nyarugenge'],
+  'Amajyaruguru':     ['Burera','Gakenke','Gicumbi','Musanze','Rulindo'],
+  'Amajyepfo':        ['Gisagara','Huye','Kamonyi','Muhanga','Nyamagabe','Nyanza','Nyaruguru','Ruhango'],
+  'Iburasirazuba':    ['Bugesera','Gatsibo','Kayonza','Kirehe','Ngoma','Nyagatare','Rwamagana'],
+  'Iburengerazuba':   ['Karongi','Ngororero','Nyabihu','Nyamasheke','Rubavu','Rusizi','Rutsiro']
+};
+const PROV_EN={'Umujyi wa Kigali':'Kigali City','Amajyaruguru':'Northern','Amajyepfo':'Southern',
+               'Iburasirazuba':'Eastern','Iburengerazuba':'Western'};
+
+/* Only what Kagoma is registered and licensed to do. A client cannot
+   tick something we would then have to turn down. */
+const NEEDS=[
+  {k:'Event security plan',  rw:"Gahunda y'umutekano w'ibirori"},
+  {k:'Crowd safety',         rw:"Umutekano w'imbaga"},
+  {k:'Guest reception',      rw:'Kwakira abashyitsi'},
+  {k:'Accreditation',        rw:'Kugenzura ibyangombwa'},
+  {k:'Access screening',     rw:'Kugenzura abinjira'},
+  {k:'Stewards and ushers',  rw:"Abakozi b'ibirori"},
+  {k:'Risk assessment',      rw:"Isuzuma ry'ibyago"},
+  {k:'Emergency planning',   rw:"Igenamigambi ry'ibyihutirwa"},
+  {k:'Security consulting',  rw:'Ubujyanama ku mutekano'},
+  {k:'Staff training',       rw:"Amahugurwa y'abakozi"}
+];
+let reqPicked=new Set();
+
+function reqFillProvinces(){
+  const s=document.getElementById('reqProvince'); if(!s) return;
+  const keep=s.value;
+  s.innerHTML='<option value="">\u2014</option>'+Object.keys(RW_PROV).map(p=>
+    '<option value="'+p+'">'+(currentLang==='rw'? p : PROV_EN[p])+'</option>').join('');
+  if(keep) s.value=keep;
+}
+function reqFillDistricts(){
+  const p=document.getElementById('reqProvince').value;
+  const d=document.getElementById('reqDistrict'); if(!d) return;
+  const keep=d.value;
+  d.innerHTML='<option value="">\u2014</option>'+
+    (RW_PROV[p]||[]).map(x=>'<option value="'+x+'">'+x+'</option>').join('');
+  if(keep && (RW_PROV[p]||[]).indexOf(keep)!==-1) d.value=keep;
+}
+function reqPaintNeeds(){
+  const box=document.getElementById('reqNeeds'); if(!box) return;
+  box.innerHTML=NEEDS.map(function(n){
+    return '<button type="button" class="'+(reqPicked.has(n.k)?'on':'')+
+      '" onclick="reqTap(\''+n.k+'\')">'+(currentLang==='rw'? n.rw : n.k)+'</button>';
+  }).join('');
+}
+function reqTap(k){ reqPicked.has(k)? reqPicked.delete(k) : reqPicked.add(k); reqPaintNeeds(); }
+
+/* the tapped items and the place become the text the desk reads, so
+   nothing downstream has to change */
+function reqComposeDetails(){
+  const parts=[];
+  if(reqPicked.size) parts.push('Needs: '+Array.from(reqPicked).join(', '));
+  const e=document.getElementById('reqDetails');
+  const extra=e? e.value.trim() : '';
+  if(extra) parts.push(extra);
+  return parts.join('\n\n');
+}
+function reqComposeLocation(){
+  const v=function(id){ const e=document.getElementById(id); return e? e.value.trim():''; };
+  return [v('reqLocation'), v('reqDistrict'), v('reqProvince')].filter(Boolean).join(', ');
+}
+
+function renderAll(lang){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(T[key]) el.innerHTML = T[key][lang];
+  });
+  renderServices(lang);
+  renderCourses(lang);
+  renderIndustries(lang);
+  renderPortfolio(lang);
+  renderResources(lang);
+  document.documentElement.lang = lang;
+  document.getElementById('langToggle').textContent = lang === 'en' ? 'RW' : 'EN';
+  /* the province list and the need chips carry their own labels, so
+     they are repainted with everything else */
+  if(typeof reqFillProvinces === 'function'){ reqFillProvinces(); reqPaintNeeds(); }
+}
+
+let currentLang = 'en';
+renderAll(currentLang);
+
+/* ---------------- Live course catalog from Supabase ---------------- */
+const SUPABASE_URL = 'https://hmpwmligwlfmdoomzudz.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcHdtbGlnd2xmbWRvb216dWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxNjY5NjcsImV4cCI6MjEwMjc0Mjk2N30.f57yWBQ8vusMdb-r4WRuiyfK7ktlKPo4XKSiKF597Y0';
+/* Guarded: if the Supabase CDN fails to load, the rest of the page
+   (nav, language toggle, dropdown, reveals) must still work. */
+const sb = (typeof supabase !== 'undefined' && supabase.createClient)
+  ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,       // keep the session across pages
+        autoRefreshToken: true,     // don't drop the learner mid-lesson
+        detectSessionInUrl: true    // needed for e-mail confirmation links
+      }
+    })
+  : null;
+if(!sb) console.warn('Supabase unavailable — using fallback content.');
+
+async function loadCoursesFromDB(){
+  try{
+    if(!sb) return;
+    const { data, error } = await sb.from('courses').select('*').order('id');
+    if(error || !data || data.length===0) return; // keep fallback list on any problem
+
+    const fallbackByCode = {};
+    FALLBACK_COURSES.forEach(c=> fallbackByCode[c.code] = c);
+    data.sort((a,b)=> (a.sort_order??999)-(b.sort_order??999) || String(a.id).localeCompare(String(b.id)));
+
+    COURSES = data.map(row=>{
+      const k = fallbackByCode[row.id] || {};
+      const kr = k.rw || {}, ke = k.en || {};
+      return {
+        code: row.id,
+        track: row.track || k.track || 'core',
+        practical: (row.practical !== undefined && row.practical !== null)
+                     ? row.practical : !!k.practical,
+        en: { t: row.title            || ke.t || row.id,
+              d: row.description      || ke.d || '',
+              s: row.spec_en          || ke.s || '' },
+        rw: { t: row.title_rw         || kr.t || row.title || row.id,
+              d: row.description_rw   || kr.d || row.description || '',
+              s: row.spec_rw          || kr.s || '' }
+      };
+    });
+
+    renderCourses(currentLang);
+  }catch(e){
+    // silently keep the fallback course list already on screen
+  }
+}
+loadCoursesFromDB();
+
+/* ---------------- Service request form ---------------- */
+async function submitServiceRequest(e){
+  e.preventDefault();
+  const statusEl = document.getElementById('reqStatus');
+  const btn = document.getElementById('reqSubmitBtn');
+  statusEl.className = 'status-msg';
+
+  const name = document.getElementById('reqName').value.trim();
+  const email = document.getElementById('reqEmail').value.trim();
+
+  if(!name || !email){
+    statusEl.textContent = TR('req_err_fields');
+    statusEl.classList.add('show','err');
+    return;
+  }
+
+  const payload = {
+    client_name: name,
+    email: email,
+    phone: document.getElementById('reqPhone').value.trim() || null,
+    event_type: document.getElementById('reqEventType').value,
+    event_name: document.getElementById('reqEventName').value.trim() || null,
+    event_date: document.getElementById('reqDate').value || null,
+    location: reqComposeLocation(),
+    expected_attendees: document.getElementById('reqAttendees').value ? parseInt(document.getElementById('reqAttendees').value) : null,
+    details: reqComposeDetails()
+  };
+
+  const originalLabel = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = TR('req_submitting');
+
+  try{
+    if(!sb) throw new Error('Supabase unavailable');
+    /* Link the request to the account when one is signed in, so the
+     client can follow it in their dashboard. Anonymous submissions
+     from the public site keep working exactly as before. */
+  try{
+    const { data: sess } = await sb.auth.getSession();
+    if(sess && sess.session && sess.session.user) payload.requested_by = sess.session.user.id;
+  }catch(e){ /* anonymous submission */ }
+
+  const { error } = await sb.from('service_requests').insert(payload);
+    if(error) throw error;
+
+    statusEl.textContent = TR('req_ok');
+    statusEl.classList.add('show','ok');
+    document.getElementById('requestForm').reset();
+  }catch(err){
+    statusEl.textContent = TR('req_err_fail');
+    statusEl.classList.add('show','err');
+  }finally{
+    btn.disabled = false;
+    btn.textContent = originalLabel;
+  }
+}
+function TR(key){ return T[key] ? T[key][currentLang] : key; }
+
+document.getElementById('langToggle').addEventListener('click', ()=>{
+  currentLang = currentLang === 'en' ? 'rw' : 'en';
+  renderAll(currentLang);
+});
+
+/* ---------------- Mobile menu ---------------- */
+const burger = document.getElementById('burgerBtn');
+const mmenu = document.getElementById('mobileMenu');
+burger.addEventListener('click', ()=> mmenu.classList.toggle('open'));
+mmenu.querySelectorAll('a').forEach(a=> a.addEventListener('click', ()=> mmenu.classList.remove('open')));
+
+/* ---------------- Ops bar: clock + rotating status ---------------- */
+function pad(n){return n.toString().padStart(2,'0');}
+function tickClock(){
+  const d = new Date();
+}
+tickClock();
+setInterval(tickClock, 1000);
+
+const STATUSES = [
+  {en:"TRAINING: IN SESSION", rw:"AMASOMO: ARIMO GUTANGWA"},
+  {en:"PATROL: ACTIVE", rw:"IGENZURA: RIRAKOMEJE"},
+  {en:"OPERATIONS: 24/7", rw:"IMIKORERE: 24/7"}
+];
+let statusIdx = 0;
+setInterval(()=>{
+  statusIdx = (statusIdx+1) % STATUSES.length;
+}, 4000);
+const RESP = {en:"RESPONSE READY", rw:"TWITEGURIYE GUSUBIZA"};
+setInterval(()=>{ }, 4000);
+
+/* ---------------- Scroll reveal ---------------- */
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+},{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el=> io.observe(el));
+
+/* ---------- More dropdown ---------- */
+(function(){
+  var btn=document.getElementById('moreBtn'), panel=document.getElementById('morePanel');
+  if(!btn||!panel) return;
+  function close(){ panel.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
+  function toggle(e){ e.stopPropagation();
+    var open=panel.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open?'true':'false');
+  }
+  btn.addEventListener('click',toggle);
+  document.addEventListener('click',function(e){ if(!panel.contains(e.target)&&e.target!==btn) close(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'){ close(); btn.focus(); } });
+  panel.querySelectorAll('a').forEach(function(a){ a.addEventListener('click',close); });
+})();
+
+
+
+/* Sparks converging on the badge as the page opens. Built here rather
+   than written out, so the markup stays readable. */
+(function(){
+  const box=document.getElementById('kpsParticles');
+  if(!box) return;
+  if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const N=46;
+  for(let i=0;i<N;i++){
+    const a=Math.random()*Math.PI*2, d=90+Math.random()*190;
+    const s=document.createElement('i');
+    s.style.setProperty('--sx',(Math.cos(a)*d).toFixed(1)+'px');
+    s.style.setProperty('--sy',(Math.sin(a)*d).toFixed(1)+'px');
+    s.style.animationDelay=(Math.random()*1.1).toFixed(2)+'s';
+    box.appendChild(s);
+  }
+})();
+
+/* Verification runs against the same public function the full page uses,
+   so the answer here and the answer an employer gets are the same one. */
+async function vbCheck(){
+  const el=document.getElementById('vbOut');
+  const ref=(document.getElementById('vbNum').value||'').trim();
+  const t=k=>(T&&T[k]&&T[k][currentLang])||'';
+  if(!ref){ el.className='vb-out'; el.textContent=t('vb_enter'); return; }
+  if(!sb){ el.className='vb-out vb-no'; el.textContent=t('vb_offline'); return; }
+
+  el.className='vb-out'; el.textContent=t('vb_checking');
+  const {data,error}=await sb.rpc('verify_certificate',{p_ref:ref});
+  if(error || !data || !data.found){
+    el.className='vb-out vb-no';
+    el.innerHTML='<b>\u2715</b><span>'+t('vb_none')+'</span>';
+    return;
+  }
+  const ok = data.status==='valid';
+  el.className='vb-out '+(ok?'vb-ok':'vb-no');
+  el.innerHTML='<b>'+(ok?'\u2713':'\u2715')+'</b><span>'+
+    (data.holder||'')+' \u2014 '+(data.course||'')+
+    (data.issued?', '+data.issued:'')+
+    (ok?'':' \u00b7 '+String(data.status).toUpperCase())+'</span>';
+}
+
+/* ---------------------------------------------------------------
+   Light and dark.
+
+   The setting follows the reader, not the page: it is stored once
+   and read on every page, so a choice made in the course player is
+   still in force on the certificate register.
+
+   It is applied before first paint (see the inline script in <head>)
+   so nobody sees a flash of the wrong ground.
+---------------------------------------------------------------- */
+function kgTheme(){ try{ return localStorage.getItem('kg-theme') || 'dark'; }catch(e){ return 'dark'; } }
+function kgApplyTheme(t){
+  document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+  document.querySelectorAll('.kg-theme').forEach(b=>{
+    const light = t === 'light';
+    b.textContent = light ? '\u263D' : '\u2600';          /* moon when light, sun when dark */
+    b.setAttribute('aria-pressed', light ? 'true' : 'false');
+    b.setAttribute('title', light ? 'Switch to dark' : 'Switch to light');
+    b.setAttribute('aria-label', light ? 'Switch to dark' : 'Switch to light');
+  });
+}
+function kgToggleTheme(){
+  const next = kgTheme() === 'light' ? 'dark' : 'light';
+  try{ localStorage.setItem('kg-theme', next); }catch(e){}
+  kgApplyTheme(next);
+}
+kgApplyTheme(kgTheme());
+
+</script>
+</body>
+</html>

@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Course — Kagoma Protection Services</title>
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="var(--kg-bg)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Kagoma">
+<style>
+@font-face{
+  font-family:'Bricolage Grotesque';
+  src:url('fonts/BricolageGrotesque.woff2') format('woff2-variations');
+  font-weight:200 800;
+  font-stretch:75% 100%;
+  font-display:swap;
+}
+
+/* ============================================================
+   KAGOMA — theme tokens
+
+   One scale, two settings. Gold and red never move: a brand that
+   changes colour is not a brand. What flips is the ground and the
+   type on it.
+
+   Dark is the default. Light exists because an officer reading
+   forty lessons in Kigali daylight cannot see a dark screen.
+   ============================================================ */
+:root{
+  --kg-gold:#f4d332;
+  --kg-gold-dim:#c9a227;
+  --kg-red:#c90000;
+  --kg-red-dim:#8e0000;
+
+  --kg-bg:#000000;
+  --kg-surface:#0d0d0d;
+  --kg-surface-2:#151515;
+  --kg-border:#262626;
+  --kg-border-2:#3a3a3a;
+  --kg-text:#ffffff;
+  --kg-text-dim:#9c9c9c;
+  --kg-shadow:rgba(0,0,0,.55);
+}
+[data-theme="light"]{
+  --kg-bg:#ffffff;
+  --kg-surface:#f6f4ef;
+  --kg-surface-2:#ece9e1;
+  --kg-border:#ddd8cc;
+  --kg-border-2:#bdb6a5;
+  --kg-text:#141210;
+  --kg-text-dim:#5f5b54;
+  --kg-shadow:rgba(0,0,0,.14);
+  /* the brand red is too light-on-light for small type; the deeper
+     one keeps the hue and stays readable */
+  --kg-red:#b00000;
+  --kg-gold-dim:#8a6f10;
+}
+html,body{background:var(--kg-bg);color:var(--kg-text)}
+
+  :root{
+    --ink:var(--kg-bg);
+    --panel:var(--kg-surface);
+    --panel-2:var(--kg-surface-2);
+    --fog:var(--kg-text);
+    --fog-dim:var(--kg-text-dim);
+    --gold:var(--kg-gold);
+    --gold-bright:var(--kg-gold);
+    --red:var(--kg-red);
+    --line:rgba(255,255,255,0.10);
+    --line-strong:rgba(255,255,255,0.18);
+    --ok:var(--kg-gold);
+    --bad:var(--kg-red);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--fog);
+    font-family:Arial, Helvetica, sans-serif;
+    line-height:1.55;
+    padding-bottom:60px;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:0 20px;}
+
+  header{
+    border-bottom:1px solid var(--line);
+    padding:22px 0;
+    position:sticky;top:0;
+    background:rgba(10,10,10,0.94);
+    backdrop-filter:blur(8px);
+    z-index:10;
+  }
+  header .wrap{display:flex;align-items:center;gap:14px;}
+  header img{height:42px;width:auto;}
+  header .htitle{font-size:17px;font-weight:700;color:var(--kg-text);letter-spacing:0.01em;}
+  header .hsub{font-size:11.5px;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;margin-top:2px;}
+  header .navlinks{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
+  header .navlinks a, header .navlinks button{
+    font-size:12.5px;color:var(--fog-dim);border:1px solid var(--line-strong);padding:9px 14px;border-radius:3px;background:transparent;cursor:pointer;
+  }
+  header .navlinks a:hover, header .navlinks button:hover{color:var(--gold-bright);border-color:var(--gold);}
+
+  h2{font-size:20px;color:var(--kg-text);margin-bottom:6px;letter-spacing:0.01em;}
+  h3{font-size:16px;color:var(--kg-text);margin-bottom:10px;}
+  .lead{font-size:14px;color:var(--fog-dim);margin-bottom:26px;max-width:600px;}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:26px;}
+
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:12px;font-weight:700;letter-spacing:0.04em;color:var(--gold);text-transform:uppercase;margin-bottom:7px;}
+  .field input, .field select{
+    width:100%;
+    background:var(--ink);
+    border:1px solid var(--line-strong);
+    color:var(--kg-text);
+    padding:11px 13px;
+    font-size:14.5px;
+    border-radius:3px;
+    font-family:inherit;
+  }
+  .field input:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
+
+  .btn{
+    font-weight:700;font-size:14px;padding:13px 22px;border-radius:3px;border:none;cursor:pointer;letter-spacing:0.02em;
+  }
+  .btn-primary{background:var(--gold);color:var(--kg-gold-dim);}
+  .btn-primary:hover{background:var(--gold-bright);}
+  .btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+  .btn-outline{background:transparent;border:1px solid var(--line-strong);color:var(--kg-text);}
+  .btn-outline:hover{border-color:var(--gold);color:var(--gold-bright);}
+  .btn-small{font-size:12px;padding:8px 14px;}
+
+  .status-msg{font-size:13px;margin-top:14px;padding:10px 12px;border-radius:3px;display:none;}
+  .status-msg.show{display:block;}
+  .status-msg.ok{background:rgba(47,168,79,0.12);color:var(--kg-gold);border:1px solid rgba(47,168,79,0.35);}
+  .status-msg.err{background:rgba(201,0,0,0.12);color:var(--kg-red);border:1px solid rgba(201,0,0,0.35);}
+
+  /* auth tabs */
+  .auth-tabs{display:flex;gap:2px;margin:30px 0 26px;border:1px solid var(--line);width:fit-content;border-radius:3px;overflow:hidden;}
+  .auth-tab-btn{padding:12px 22px;background:var(--panel);color:var(--fog-dim);font-weight:700;font-size:13.5px;border:none;cursor:pointer;letter-spacing:0.02em;}
+  .auth-tab-btn.active{background:var(--gold);color:var(--kg-gold-dim);}
+  .auth-panel{display:none;max-width:420px;}
+  .auth-panel.active{display:block;}
+
+  /* dashboard */
+  #dashboardSection{display:none;}
+  .welcome-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:8px;}
+  section.d-section{margin-top:44px;}
+
+  .course-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px;}
+  @media (max-width:700px){.course-grid{grid-template-columns:1fr;}}
+  .course-card{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:18px 20px;}
+  .course-card .ccode{font-family:'Courier New',monospace;font-size:11px;color:var(--gold);}
+  .course-card h4{font-size:15.5px;color:var(--kg-text);margin:8px 0 6px;}
+  .course-card p{font-size:13px;color:var(--fog-dim);margin-bottom:14px;}
+  .badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:0.05em;padding:5px 10px;border-radius:3px;text-transform:uppercase;}
+  .badge-enrolled{background:rgba(244,211,50,0.15);color:var(--gold-bright);}
+  .badge-progress{background:rgba(90,140,255,0.15);color:var(--kg-gold);}
+  .badge-completed{background:rgba(47,168,79,0.15);color:var(--kg-gold);}
+
+  .list-row{
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+    padding:16px 18px;border:1px solid var(--line);border-radius:3px;margin-bottom:10px;background:var(--panel);
+  }
+  .list-row .who{font-size:14.5px;color:var(--kg-text);}
+  .list-row .meta{font-size:12px;color:var(--fog-dim);margin-top:4px;font-family:'Courier New',monospace;}
+  .list-row .actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+
+  .empty-note{font-size:13.5px;color:var(--fog-dim);padding:20px;text-align:center;border:1px dashed var(--line-strong);border-radius:4px;margin-top:14px;}
+
+  footer{border-top:1px solid var(--line);margin-top:60px;padding:24px 0;text-align:center;font-size:11.5px;color:var(--fog-dim);}
+  /* ---------- Account type chooser ---------- */
+  .role-pick{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  @media (max-width:520px){ .role-pick{grid-template-columns:1fr;} }
+  .role-opt{
+    display:block;cursor:pointer;position:relative;
+    border:1px solid var(--line-strong);border-radius:var(--radius);
+    padding:12px 13px;transition:border-color .16s ease,background .16s ease;
+  }
+  .role-opt:hover{border-color:var(--signal);}
+  .role-opt input{position:absolute;opacity:0;pointer-events:none;}
+  .role-opt:has(input:checked){border-color:var(--signal);background:rgba(244,211,50,.07);}
+  .role-opt:has(input:focus-visible){outline:2px solid var(--signal);outline-offset:2px;}
+  .role-t{display:block;font-weight:700;font-size:14px;color:var(--kg-text);}
+  .role-opt:has(input:checked) .role-t{color:var(--signal);}
+  .role-d{display:block;margin-top:3px;font-size:12px;color:var(--fog-dim);line-height:1.4;}
+  .muted{color:var(--fog-dim)}
+  .course-top{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;margin:26px 0 12px;flex-wrap:wrap}
+  .crumb{font-size:12px;color:var(--fog-dim);margin-bottom:6px}
+  .crumb a{color:var(--fog-dim)}
+  .crumb a:hover{color:var(--gold)}
+  .overall{text-align:right}
+  .ov-pct{font-size:34px;font-weight:bold;color:var(--gold);line-height:1}
+  .ov-label{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--fog-dim)}
+  .pc-bar{height:8px;background:var(--panel-2);border-radius:4px;overflow:hidden;margin-bottom:22px}
+  .pc-fill{height:100%;background:linear-gradient(90deg,var(--red),var(--gold));width:0;transition:width .5s}
+
+  .split{display:grid;grid-template-columns:330px 1fr;gap:18px;align-items:start}
+  @media(max-width:900px){.split{grid-template-columns:1fr}}
+  .outline{padding:16px;position:sticky;top:16px;max-height:calc(100vh - 40px);overflow:auto}
+  @media(max-width:900px){.outline{position:static;max-height:none}}
+
+  .mod{margin-bottom:16px}
+  .mod:last-child{margin-bottom:0}
+  .mod-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+    font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);
+    font-weight:bold;padding-bottom:7px;border-bottom:1px solid var(--line);margin-bottom:8px}
+  .mod-h .p{color:var(--fog-dim);font-weight:normal;letter-spacing:0;text-transform:none;white-space:nowrap}
+  .lrow{display:flex;align-items:flex-start;gap:9px;padding:8px 9px;border-radius:3px;
+    cursor:pointer;font-size:13.5px;color:var(--fog-dim);line-height:1.4;border:1px solid transparent}
+  .lrow:hover{background:var(--panel-2);color:var(--fog)}
+  .lrow.active{background:var(--panel-2);border-color:var(--gold);color:var(--kg-text)}
+  .lrow .tick{flex:none;width:16px;height:16px;border-radius:50%;border:1.5px solid var(--line-strong);
+    margin-top:2px;display:grid;place-items:center;font-size:10px;color:transparent}
+  .lrow.done .tick{border-color:var(--ok);color:var(--ok)}
+  .lrow.done .tick::before{content:"✓"}
+  .lrow.quiz{color:var(--gold)}
+  .lrow.quiz .tick{border-style:dashed}
+  .lrow .n{flex:none;color:var(--fog-dim);font-size:11.5px;min-width:26px}
+
+  .stage{min-height:420px;padding:30px}
+  .stage h3{font-size:20px;color:var(--kg-text);margin:0 0 4px}
+  .stage .rw-title{font-size:14px;color:var(--fog-dim);font-style:italic;margin-bottom:20px}
+  .body-en{font-size:15px;line-height:1.75;color:var(--fog);white-space:pre-wrap}
+  .body-rw{font-size:14px;line-height:1.7;color:var(--fog-dim);white-space:pre-wrap;
+    font-style:italic;margin-top:18px;padding-top:18px;border-top:1px solid var(--line)}
+  .stage video,.stage iframe{width:100%;aspect-ratio:16/9;border:1px solid var(--line-strong);border-radius:4px;background:var(--kg-bg)}
+  .navbtns{display:flex;justify-content:space-between;gap:12px;margin-top:26px;padding-top:20px;border-top:1px solid var(--line);flex-wrap:wrap}
+
+  /* quiz */
+  .q{margin-bottom:22px;padding-bottom:20px;border-bottom:1px solid var(--line)}
+  .q:last-of-type{border-bottom:0}
+  .q-p{font-size:15px;color:var(--kg-text);margin-bottom:4px}
+  .q-rw{font-size:13px;color:var(--fog-dim);font-style:italic;margin-bottom:12px}
+  .q-scn{font-size:13.5px;color:var(--fog-dim);background:var(--panel-2);
+    border-left:3px solid var(--gold);padding:11px 13px;border-radius:3px;margin-bottom:12px}
+  .opt{display:flex;gap:10px;align-items:flex-start;padding:11px 13px;border:1px solid var(--line-strong);
+    border-radius:4px;margin-bottom:8px;cursor:pointer;font-size:14px;line-height:1.5;transition:.15s}
+  .opt:hover{border-color:var(--gold)}
+  .opt:has(input:checked){border-color:var(--gold);background:rgba(244,211,50,.07)}
+  .opt input{margin-top:3px;accent-color:var(--gold);flex:none}
+  .opt .rw{display:block;font-size:12.5px;color:var(--fog-dim);font-style:italic;margin-top:2px}
+  .result{text-align:center;padding:34px 20px}
+  .result .big{font-size:56px;font-weight:bold;line-height:1}
+  .result .big.pass{color:var(--ok)} .result .big.fail{color:var(--bad)}
+  .result .verdict{font-size:16px;font-weight:bold;letter-spacing:.1em;text-transform:uppercase;margin-top:8px}
+  .result .verdict.pass{color:var(--ok)} .result .verdict.fail{color:var(--bad)}
+  .attempts{margin-top:22px;font-size:13px;color:var(--fog-dim)}
+  .attempts table{width:100%;border-collapse:collapse;margin-top:8px}
+  .attempts th,.attempts td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);font-size:12.5px}
+  .attempts th{color:var(--fog-dim);font-weight:normal;letter-spacing:.08em;text-transform:uppercase;font-size:10.5px}
+  .empty{color:var(--fog-dim);font-style:italic;text-align:center;padding:60px 20px}
+  .btn-sm{font-size:12.5px;padding:9px 16px}
+
+  @media (max-width:640px){
+    header .wrap{flex-wrap:wrap;row-gap:10px}
+    header .navlinks{width:100%;margin-left:0;justify-content:flex-start}
+    header .navlinks a, header .navlinks button{font-size:11.5px;padding:8px 10px}
+  }
+  /* the crest doubles as the way home, as on the public site */
+  .homelink{display:inline-flex;align-items:center;border-radius:4px;
+    transition:opacity .15s ease,transform .15s ease}
+  .homelink:hover{opacity:.85;transform:translateY(-1px)}
+  .homelink:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  .homelink img{display:block}
+  .ctabs{display:flex;gap:8px;margin:0 0 16px;flex-wrap:wrap}
+  .ctab{font-size:12.5px;font-weight:bold;padding:9px 15px;border:1px solid var(--line-strong);
+    border-radius:3px;background:transparent;color:var(--fog-dim);cursor:pointer}
+  .ctab:hover{color:var(--kg-text);border-color:var(--gold)}
+  .ctab.active{background:var(--gold);color:var(--kg-bg);border-color:var(--gold)}
+  .cview{padding:28px}
+  .cview h3{font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);
+    margin:22px 0 10px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  .cview h3:first-child{margin-top:0}
+  .cview p{font-size:14.5px;line-height:1.7;color:var(--fog);margin:0 0 10px}
+  .cview ul{margin:0 0 12px 20px;padding:0}
+  .cview li{font-size:14px;line-height:1.65;color:var(--fog);margin-bottom:6px}
+  .facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:4px 0 8px}
+  .fact{background:var(--panel-2);border:1px solid var(--line);border-radius:4px;padding:13px}
+  .fact .n{font-size:19px;font-weight:bold;color:var(--gold);line-height:1}
+  .fact .k{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--fog-dim);margin-top:5px}
+  .unitrow{border:1px solid var(--line);border-radius:4px;padding:14px;margin-bottom:10px;background:var(--panel-2)}
+  .unitrow h4{margin:0 0 4px;font-size:14px;color:var(--kg-text)}
+  .unitrow .um{font-size:12px;color:var(--fog-dim)}
+  .unitrow ul{margin:9px 0 0 18px}
+  .unitrow li{font-size:13px;color:var(--fog-dim)}
+  .restab{width:100%;border-collapse:collapse;font-size:13px}
+  .restab th,.restab td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  .restab th{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--fog-dim);font-weight:normal}
+  .restab td .fn{display:block;font-size:12px;color:var(--fog-dim);margin-top:3px}
+  .outcomes{margin:0 0 16px;padding:13px 15px;border-left:3px solid var(--gold);background:var(--panel-2);border-radius:0 4px 4px 0}
+  .outcomes b{display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:7px}
+  .outcomes ul{margin:0 0 0 17px;padding:0}
+  .outcomes li{font-size:13px;line-height:1.6;color:var(--fog-dim);margin-bottom:4px}
+  .focus{margin-top:16px;padding:12px 14px;border-left:3px solid var(--gold);
+    background:var(--panel-2);border-radius:0 4px 4px 0;font-size:13.5px;line-height:1.6;color:var(--fog-dim)}
+  .focus b{color:var(--gold);display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:5px}
+  .practice-note{font-size:12.5px;color:var(--fog-dim);line-height:1.55;margin:6px 0 14px}
+  /* ---------- Brand palette ----------
+     var(--kg-red)  var(--kg-text)  var(--kg-gold)  var(--kg-bg)
+     Red now carries both the brand and "not valid", so status is never
+     signalled by colour alone: a mark is added in front of the label.
+  ------------------------------------------------------------------ */
+  .tag.ok::before, .badge.ok::before, .status-msg.ok::before{content:"\2713 "}
+  .tag.bad::before, .badge.bad::before, .status-msg.err::before{content:"\2715 "}
+  .tag.warn::before, .badge.warn::before{content:"\25CF "}
+  /* ---------- Brand ground ----------
+     The portals sat on var(--kg-bg) while the front page sat on var(--kg-bg).
+     Close is not the same: side by side the difference shows, and the
+     palette names one black. */
+  body{background:var(--kg-bg)}
+  header{background:var(--kg-bg)!important;border-bottom:2px solid var(--kg-red)}
+  .card,.pane .card{background:var(--kg-surface);border-color:var(--kg-border)}
+  .row,.list-row{background:var(--kg-surface);border-color:var(--kg-border)}
+
+  /* ---------- Theme switch ---------- */
+  .kg-theme{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:36px;height:34px;padding:0;cursor:pointer;
+    background:transparent;border:1px solid var(--kg-border-2);border-radius:3px;
+    color:var(--kg-text);font-size:15px;line-height:1;
+  }
+  .kg-theme:hover{border-color:var(--kg-gold);color:var(--kg-gold)}
+  .kg-theme:focus-visible{outline:2px solid var(--kg-gold);outline-offset:2px}
+  @media (prefers-reduced-motion:no-preference){
+    html{transition:background-color .18s ease}
+  }
+
+  /* ---------- Readability in both settings ----------
+     Gold on black is a brand mark, not a reading colour: at 1.6:1 the
+     button labels and the small caps were hard to read. Buttons take
+     black type on gold; small labels take the dimmed gold, which is
+     dark enough on white and bright enough on black. */
+  .btn-primary,.btn.btn-primary,button.btn-primary,.vb-row button{
+    background:var(--kg-gold);color:#000000;border-color:var(--kg-gold);
+  }
+  [data-theme="light"] .btn-primary,[data-theme="light"] .vb-row button{
+    background:var(--kg-gold);color:#000000;
+  }
+  .hsub,.brand-sub,header .hsub{color:var(--kg-gold-dim)}
+  [data-theme="light"] .hsub,[data-theme="light"] header .hsub{color:var(--kg-gold-dim)}
+  label,.field label,.fgrid label{color:var(--kg-text-dim)}
+  [data-theme="light"] label,[data-theme="light"] .field label{color:#4a463f}
+  [data-theme="light"] .hero-title .accent{color:var(--kg-gold-dim)}
+  [data-theme="light"] .verify-bar label{color:#3d3320}
+
+  /* the tab strip kept a fixed dark surface, so light mode put dim type
+     on it; and the verify-bar label colour was reaching form labels */
+  .auth-tabs{background:var(--kg-surface);border-color:var(--kg-border)}
+  .auth-tab-btn{color:var(--kg-text-dim);background:transparent}
+  .auth-tab-btn.active{background:var(--kg-gold);color:#000000}
+  form label,.contact-form label,.field > label{color:var(--kg-text-dim)}
+  .verify-bar > .wrap > label{color:#3d3320}
+  /* ---------- Social ---------- */
+  .social{display:flex;gap:10px;margin:22px 0 18px;flex-wrap:wrap}
+  .social a{display:flex;align-items:center;justify-content:center;
+    width:42px;height:42px;border:1px solid var(--kg-border-2);border-radius:5px;
+    color:var(--kg-text-dim);transition:.15s}
+  .social a svg{width:19px;height:19px;fill:currentColor;display:block}
+  .social a:hover{border-color:var(--kg-gold);color:var(--kg-gold);
+    background:rgba(244,211,50,.07)}
+  .social a:focus-visible{outline:2px solid var(--kg-gold);outline-offset:2px}
+  /* an account Kagoma does not have yet is dimmed, not pretended */
+  .social a[href="#"]{opacity:.4;cursor:default}
+  .social a[href="#"]:hover{border-color:var(--kg-border-2);color:var(--kg-text-dim);background:none}
+  .kg-foot{border-top:1px solid var(--kg-border);margin-top:48px;padding:26px 20px 34px}
+  .kg-foot-in{max-width:1180px;margin:0 auto}
+  .kg-foot-r{font-size:11.5px;color:var(--kg-text-dim);letter-spacing:.04em}
+
+  /* ---------- Phone ----------
+     Measured on a 390px screen, not guessed:
+
+     · a field under 16px makes iOS zoom the whole page the moment it
+       is focused, and the visitor then has to pinch back out
+     · a tap target under about 44px is missed as often as it is hit
+     · anything under 12px is unreadable outdoors, which is where a
+       security officer reads it
+  ------------------------------------------------------------------ */
+  @media (max-width: 900px){
+    input, select, textarea{
+      font-size:16px!important;
+      min-height:46px;
+      padding:12px 14px;
+    }
+    textarea{min-height:96px;line-height:1.55}
+
+    button, .btn, a.btn, .chips button, .pick button,
+    header .navlinks a, header .navlinks button,
+    .kg-theme, #langToggle, #langBtn{
+      min-height:44px;
+      display:inline-flex;align-items:center;justify-content:center;
+    }
+
+    /* links inside running text keep their size; standalone ones grow */
+    .nav a, .navlinks a, .flink, .hb-btn, .course-more, .social a{
+      min-height:44px;
+    }
+
+    /* nothing on a phone should be smaller than this */
+    .small, .muted.small, .meta, .rline, .note, .ftag, .rights,
+    .field label, .f label{font-size:13px!important;line-height:1.6}
+
+    /* room between things a finger has to choose between */
+    .chips{gap:10px}
+    .pick{gap:10px}
+    .actions, .hb-act{gap:10px}
+  }
+
+  @media (max-width: 900px){
+    /* A footer link and a portal link are things a thumb has to hit,
+       not words in a sentence. They were 22px and 36px tall. */
+    .fcontact a, .flink, footer a,
+    header .navlinks a, header .navlinks button,
+    .contact-direct .cd{
+      min-height:44px;
+      display:inline-flex;align-items:center;
+      font-size:13.5px!important;
+    }
+    .contact-direct .cd{display:block;padding:18px}
+    .fcontact{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center}
+
+    /* the eye that shows a password sits inside the field; give the
+       whole thing a finger's width */
+    .pw-eye{min-width:44px;min-height:44px;
+      display:inline-flex;align-items:center;justify-content:center;font-size:17px}
+
+    /* the theme and language buttons are square by design; make them
+       square at a size a thumb can find */
+    .kg-theme, #langToggle, #langBtn{min-width:44px}
+  }
+
+  @media (max-width: 900px){
+    /* the last few measured below the line: a nav built with a
+       different class name, a section label, and the logo link */
+    .toollinks a, .tool-nav a, header a[href$=".html"]{
+      min-height:44px;display:inline-flex;align-items:center;
+      font-size:13.5px!important;
+    }
+    .homelink{min-width:44px;min-height:44px;
+      display:inline-flex;align-items:center;justify-content:center}
+    #l_roles, .field > label[id]{font-size:13px!important}
+  }
+
+  /* ---------- Kagoma type ----------
+     Bricolage Grotesque, one variable file, weights 200–800.
+     It replaces Archivo, EB Garamond and the Arial fallbacks the
+     portal pages were using, so every page reads as one company. */
+  :root{
+    --display:'Bricolage Grotesque', system-ui, sans-serif;
+    --body:'Bricolage Grotesque', system-ui, sans-serif;
+    --mono:'Bricolage Grotesque', system-ui, sans-serif;
+  }
+  html, body, button, input, select, textarea, .btn{
+    font-family:'Bricolage Grotesque', system-ui, -apple-system, sans-serif;
+  }
+  body{font-variation-settings:'wght' 400,'wdth' 100,'opsz' 14;
+       -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+  h1,.hero h1{font-variation-settings:'wght' 800,'wdth' 100,'opsz' 96;letter-spacing:-.025em}
+  h2,.sec-title{font-variation-settings:'wght' 700,'wdth' 100,'opsz' 48;letter-spacing:-.015em}
+  h3{font-variation-settings:'wght' 600,'opsz' 24}
+  h4{font-variation-settings:'wght' 600,'opsz' 24}
+  strong,b{font-variation-settings:'wght' 700}
+
+  /* anything that is a number lines up in a column */
+  .ref,.rf,.num,.n,.money,.cnum,code,
+  input[inputmode="numeric"],input[type="number"],input[type="tel"]{
+    font-variant-numeric:tabular-nums}
+  /* the staff door: present for people who work here, not offered to
+     visitors. It does not compete with anything a client came for. */
+  .staff-link{opacity:.45}
+  .staff-link:hover{opacity:1}
+  /* the footer links took the browser default blue on pages whose own
+     stylesheet never defined .flink */
+  .kg-foot a, .flink{color:var(--kg-text-dim,#9c9c9c);text-decoration:none}
+  .kg-foot a:hover, .flink:hover{color:var(--kg-gold,#f4d332)}
+  .kg-foot .sep{color:var(--kg-border-2,#3a3a3a)}
+  .staff-link{opacity:.45}
+  .staff-link:hover{opacity:1}
+  [data-theme="light"] .kg-foot a,[data-theme="light"] .flink{color:#5f5b54}
+</style>
+<script>
+  /* set the ground before the first paint, so the page never flashes
+     the wrong colour on the way in */
+  try{ document.documentElement.setAttribute('data-theme',
+       localStorage.getItem('kg-theme') || 'dark'); }catch(e){}
+</script>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a href="/" class="homelink" title="Kagoma Protection Services" aria-label="Back to the Kagoma home page"><img src="img/crest-60e57097.webp" alt="Kagoma Protection Services"></a>
+    <div>
+      <div class="htitle">KAGOMA PROTECTION SERVICES</div>
+      <div class="hsub" id="hsub">—</div>
+    </div>
+    <div class="navlinks">
+      <button class="kg-theme" onclick="kgToggleTheme()" aria-pressed="false" title="Switch to light">☀</button>
+      <button id="langToggle" onclick="toggleLang()">EN</button>
+      <a href="student.html" data-i18n="nav_student_link">Ikaye y'Umunyeshuri</a>
+      <a href="/">← <span data-i18n="backlink">Kagoma</span></a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div id="gate" class="card" style="margin-top:26px">
+    <p id="gateMsg" data-i18n="gate_signin">Injira kugira ngo ukurikire isomo.</p>
+    <a class="btn btn-primary" href="student.html" data-i18n="btn_signin">Injira</a>
+  </div>
+
+  <div id="player" style="display:none">
+
+    <div class="course-top">
+      <div>
+        <div class="crumb"><a href="student.html" data-i18n="nav_student_link">Ikaye y'Umunyeshuri</a> / <span id="ccode">—</span></div>
+        <h2 id="ctitle">—</h2>
+        <div class="muted" id="csub">—</div>
+      </div>
+      <div class="overall">
+        <div class="ov-pct" id="ovPct">0%</div>
+        <div class="ov-label" data-i18n="overall">Iterambere ryose</div>
+      </div>
+    </div>
+    <div class="pc-bar"><div class="pc-fill" id="ovFill"></div></div>
+
+    <div class="ctabs">
+      <button class="ctab active" id="ct_learn" onclick="showView('learn')" data-i18n="v_learn">Isomo</button>
+      <button class="ctab" id="ct_syll" onclick="showView('syll')" data-i18n="v_syll">Ibisobanuro</button>
+      <button class="ctab" id="ct_res" onclick="showView('res')" data-i18n="v_res">Ibikoresho</button>
+    </div>
+
+    <div id="view_syll" class="cview card" style="display:none"></div>
+    <div id="view_res"  class="cview card" style="display:none"></div>
+
+    <div class="split" id="view_learn">
+      <!-- ------- outline ------- -->
+      <aside class="outline card" id="outline"></aside>
+
+      <!-- ------- content ------- -->
+      <main class="stage card" id="stage">
+        <div class="empty" data-i18n="pick_lesson">Hitamo isomo ibumoso.</div>
+      </main>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<footer class="kg-foot">
+  <div class="kg-foot-in">
+    <div class="social" aria-label="Kagoma Protection Services on social media">
+      <a href="#" data-net="linkedin" aria-label="LinkedIn" title="LinkedIn" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.63-1.85 3.36-1.85 3.59 0 4.26 2.36 4.26 5.44v6.3zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
+      </a>
+      <a href="#" data-net="instagram" aria-label="Instagram" title="Instagram" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.3-1.46.72-2.13 1.38C1.35 2.68.93 3.35.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.38 2.13.67.66 1.34 1.08 2.13 1.38.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.3 1.46-.72 2.13-1.38.66-.67 1.08-1.34 1.38-2.13.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.3-.79-.72-1.46-1.38-2.13C21.32 1.35 20.65.93 19.86.63 19.1.33 18.22.13 16.95.07 15.67.01 15.26 0 12 0zm0 5.84a6.16 6.16 0 1 0 0 12.32 6.16 6.16 0 0 0 0-12.32zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm7.85-10.4a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z"/></svg>
+      </a>
+      <a href="#" data-net="youtube" aria-label="YouTube" title="YouTube" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19C0 8.08 0 12 0 12s0 3.92.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14C24 15.92 24 12 24 12s0-3.92-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg>
+      </a>
+      <a href="#" data-net="facebook" aria-label="Facebook" title="Facebook" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07z"/></svg>
+      </a>
+      <a href="#" data-net="x" aria-label="X" title="X" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.41l-5.8-7.58-6.64 7.58H.46l8.6-9.83L0 1.15h7.59l5.24 6.93 6.07-6.93zm-1.29 19.5h2.04L6.49 3.24H4.3l13.31 17.41z"/></svg>
+      </a>
+    </div>
+    <div style="margin:14px 0 10px;font-size:12.5px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <a href="privacy.html" class="flink">Privacy Notice</a>
+      <span class="sep">&middot;</span>
+      <a href="terms.html" class="flink">Terms &amp; Conditions</a>
+      <span class="sep">&middot;</span>
+      <a href="faq.html" class="flink">FAQ</a>
+      <span class="sep">&middot;</span>
+      <a href="certificates.html" class="flink">Certificate Verification</a>
+      <span class="sep">&middot;</span>
+      <a href="/contact" class="flink">Contact</a>
+      <span class="sep">&middot;</span>
+      <a href="admin.html" class="flink staff-link" rel="nofollow">Staff</a>
+      </div>
+      <div class="kg-foot-r">&copy; 2026 KAGOMA PROTECTIONS SERVICES LTD</div>
+  </div>
+</footer>
+<script>
+const SUPABASE_URL='https://gebydcdxxuysrhlxehwf.supabase.co';
+const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdlYnlkY2R4eHV5c3JobHhlaHdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxNDkwNzYsImV4cCI6MjEwNzcyNTA3Nn0.HPSRhB0j6Rh-tJn9Woc-Y_pb9slkK6XmF5YB2Jl6VWI';
+const sb=(typeof supabase!=='undefined'&&supabase.createClient)
+  ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,       // keep the session across pages
+        autoRefreshToken: true,     // don't drop the learner mid-lesson
+        detectSessionInUrl: true    // needed for e-mail confirmation links
+      }
+    }) : null;
+
+const TT={
+  hsub:{rw:"Isomo",en:"Course"},
+  nav_student_link:{rw:"Ikaye y'Umunyeshuri",en:"Student Portal"},
+  backlink:{rw:"Kagoma",en:"Kagoma"},
+  gate_signin:{rw:"Injira kugira ngo ukurikire isomo.",en:"Sign in to follow this course."},
+  gate_notenrolled:{rw:"Ntabwo wanditse kuri iri somo.",en:"You are not enrolled on this course."},
+  gate_nocourse:{rw:"Iri somo ntiriboneka.",en:"Course not found."},
+  gate_nocontent:{rw:"Iri somo ntirirashyirwaho ibirimo. Vugana na Kagoma.",
+                  en:"This course has no content loaded yet. Please contact Kagoma."},
+  gate_error:{rw:"Ntibishoboye kugenzura iyandikishwa ryawe. Ongera ugerageze.",
+              en:"Could not check your enrolment. Please try again."},
+  btn_enrol:{rw:"Iyandikishe ku isomo",en:"Enrol on this course"},
+  btn_signin:{rw:"Injira",en:"Sign In"},
+  overall:{rw:"Iterambere ryose",en:"Overall progress"},
+  pick_lesson:{rw:"Hitamo isomo ibumoso.",en:"Choose a lesson on the left."},
+  mark_done:{rw:"Nsoje iri somo",en:"Mark as complete"},
+  marked:{rw:"✓ Warangije",en:"✓ Completed"},
+  prev:{rw:"← Ibanza",en:"← Previous"}, next:{rw:"Ikurikira →",en:"Next →"},
+  v_learn:{rw:"Isomo",en:"Course"}, v_syll:{rw:"Ibisobanuro",en:"Syllabus"}, v_res:{rw:"Ibikoresho",en:"Resources"},
+  s_about:{rw:"Ibyerekeye iri somo",en:"About this course"},
+  s_outcomes:{rw:"Uzashobora",en:"You will be able to"},
+  s_units:{rw:"Ibice",en:"Units"},
+  s_grading:{rw:"Uko amanota atangwa",en:"How it is graded"},
+  s_req:{rw:"Ibisabwa",en:"Requirements"},
+  s_prereq:{rw:"Ugomba kubanza",en:"You must first complete"},
+  f_hours:{rw:"Amasaha",en:"Hours"}, f_units:{rw:"Ibice",en:"Units"},
+  f_lessons:{rw:"Amasomo",en:"Lessons"}, f_pass:{rw:"Amanota asabwa",en:"Pass mark"},
+  grading_txt:{rw:"Ikizamini cya nyuma cyonyine ni cyo gitanga amanota. Ibizamini biri ku iherezo rya buri gice ni ibyo kwitoza \u2014 ntibibarwa, kandi ushobora kubisubiramo uko ushaka kugeza wumva neza.",
+               en:"Only the final exam is graded. The assessments at the end of each unit are there to help you study \u2014 they do not count, and you may repeat them as often as you like until the material is clear."},
+  practical_txt:{rw:"Iri somo risaba n\u2019imyitozo ifatika isuzumwa n\u2019umwarimu wemewe. Icyemezo ntigitangwa hashingiwe ku kizamini cyanditse gusa.",
+                 en:"This course also requires practical work assessed by a qualified instructor. The certificate is not awarded on the written exam alone."},
+  self_paced:{rw:"Wiga ku muvuduko wawe \u2014 utangira igihe ushaka, ukarangiza igihe ushaka.",
+              en:"Self-paced \u2014 you decide when to start and when to finish."},
+  practice_label:{rw:"Ibyo kwitoza",en:"Practice"},
+  practice_note:{rw:"Ibi ntibibarwa mu manota yawe. Subiramo uko ushaka.",
+                 en:"This does not count towards your grade. Repeat it as often as you like."},
+  r_unit:{rw:"Igice",en:"Unit"}, r_material:{rw:"Isomo",en:"Material"},
+  r_time:{rw:"Igihe",en:"Time"}, r_min:{rw:"iminota",en:"min"},
+  focus_on:{rw:"Icyo kwitaho",en:"Focus on"},
+  quiz:{rw:"Ikizamini",en:"Quiz"}, final:{rw:"Ikizamini cya Nyuma",en:"Final Assessment"},
+  start_quiz:{rw:"Tangira ikizamini",en:"Start the quiz"},
+  submit:{rw:"Ohereza",en:"Submit"},
+  retry:{rw:"Ongera ugerageze",en:"Try again"},
+  answer_all:{rw:"Subiza ibibazo byose mbere yo kohereza.",en:"Answer every question before submitting."},
+  passed:{rw:"WATSINZE",en:"PASSED"}, failed:{rw:"NTIWATSINZE",en:"NOT PASSED"},
+  passmark:{rw:"Amanota asabwa",en:"Pass mark"},
+  attempts_h:{rw:"Inshuro wagerageje",en:"Attempt history"},
+  att_no:{rw:"Inshuro",en:"Attempt"}, att_score:{rw:"Amanota",en:"Score"},
+  att_res:{rw:"Icyavuyemo",en:"Result"}, att_date:{rw:"Itariki",en:"Date"},
+  no_attempts:{rw:"Ntabwo urakigerageza.",en:"You have not attempted this yet."},
+  no_more:{rw:"Nta nshuro isigaye.",en:"No attempts remaining."},
+  locked_final:{rw:"Rangiza amasomo yose mbere y'ikizamini cya nyuma.",
+                en:"Complete every lesson before the final assessment."},
+  cert_ready:{rw:"Watsinze ikizamini cya nyuma. Icyemezo kiratangwa na Kagoma.",
+              en:"You passed the final assessment. Kagoma will issue your certificate."},
+  err:{rw:"Habaye ikibazo.",en:"Something went wrong."}
+};
+let lang='en';
+const T=k=>(TT[k]||{})[lang]||k;
+function renderLang(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n'); if(TT[k]) el.textContent=TT[k][lang];
+  });
+  document.getElementById('langToggle').textContent = lang==='rw'?'EN':'RW';
+  if(course){ paintHeader(); paintOutline(); if(current) openNode(current,true); }
+}
+function toggleLang(){ lang = lang==='rw'?'en':'rw'; renderLang(); }
+
+const params=new URLSearchParams(location.search);
+const COURSE_ID=params.get('id');
+let user=null, course=null, tree=[], progress={}, current=null, finals=[];
+
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function gate(msgKey, action){
+  document.getElementById('gate').style.display='block';
+  document.getElementById('player').style.display='none';
+  document.getElementById('gateMsg').textContent=T(msgKey);
+  const btn=document.querySelector('#gate a.btn');
+  if(btn){
+    if(action==='enrol'){ btn.textContent=T('btn_enrol'); btn.href='student.html'; }
+    else if(action==='none'){ btn.style.display='none'; }
+    else { btn.textContent=T('btn_signin'); btn.href='student.html'; btn.style.display=''; }
+  }
+}
+
+async function boot(){
+  if(!sb||!COURSE_ID) return gate('gate_nocourse');
+  const {data:{user:u}}=await sb.auth.getUser();
+  if(!u) return gate('gate_signin');
+  user=u;
+
+  const {data:c}=await sb.from('courses').select('*').eq('id',COURSE_ID).maybeSingle();
+  if(!c) return gate('gate_nocourse');
+  course=c;
+
+  const {data:enr,error:enrErr}=await sb.from('enrollments').select('*')
+    .eq('student_id',u.id).eq('course_id',COURSE_ID).maybeSingle();
+  if(enrErr) return gate('gate_error','none');
+  if(!enr) return gate('gate_notenrolled','enrol');
+
+  document.getElementById('gate').style.display='none';
+  document.getElementById('player').style.display='block';
+
+  await Promise.all([loadTree(), loadSyllabus()]);
+  if(!tree.length && !finals.length) return gate('gate_nocontent','none');
+
+  paintHeader(); paintOutline(); await refreshProgress();
+
+  /* resume where the learner left off: first lesson not yet completed */
+  const all=tree.flatMap(m=>m.lessons);
+  const next=all.find(l=>!progress[l.id]) || all[0];
+  if(next) openNode({type:'lesson',id:next.id});
+}
+
+async function loadTree(){
+  const {data:mods}=await sb.from('modules').select('*')
+    .eq('course_id',COURSE_ID).order('sort_order');
+  const ids=(mods||[]).map(m=>m.id);
+  const {data:les}=ids.length
+    ? await sb.from('lessons').select('*').in('module_id',ids).order('sort_order')
+    : {data:[]};
+  const {data:ass}=await sb.from('assessments').select('*')
+    .eq('course_id',COURSE_ID).order('sort_order');
+  finals=(ass||[]).filter(a=>a.kind==='final');
+  tree=(mods||[]).map(m=>({
+    ...m,
+    lessons:(les||[]).filter(l=>l.module_id===m.id),
+    quiz:(ass||[]).find(a=>a.module_id===m.id)||null
+  }));
+  const {data:lp}=await sb.from('lesson_progress').select('lesson_id,completed')
+    .eq('student_id',user.id);
+  progress={}; (lp||[]).forEach(p=>progress[p.lesson_id]=p.completed);
+}
+
+let syllabus=null, resources=null;
+
+function showView(v){
+  ['learn','syll','res'].forEach(x=>{
+    const el=document.getElementById('view_'+x);
+    if(el) el.style.display = (x===v) ? (x==='learn'?'grid':'block') : 'none';
+    const t=document.getElementById('ct_'+x);
+    if(t) t.classList.toggle('active', x===v);
+  });
+  if(v==='syll') paintSyllabus();
+  if(v==='res')  paintResources();
+}
+
+const li = arr => (arr||[]).map(x=>`<li>${esc(x)}</li>`).join('');
+
+async function loadSyllabus(){
+  const {data}=await sb.rpc('course_syllabus',{p_course:COURSE_ID});
+  syllabus=data||null;
+}
+
+function paintSyllabus(){
+  const box=document.getElementById('view_syll'); if(!box||!syllabus) return;
+  const s=syllabus;
+  const rw = lang==='rw';
+  const outs = (rw && (s.outcomes_rw||[]).length) ? s.outcomes_rw : (s.outcomes||[]);
+  const lessons=(s.units||[]).reduce((a,u)=>a+(u.lessons||0),0);
+
+  box.innerHTML = `
+    <h3>${T('s_about')}</h3>
+    <p>${esc((rw && s.overview_rw) ? s.overview_rw : (s.overview||''))}</p>
+    ${s.self_paced?`<p class="practice-note">${T('self_paced')}</p>`:''}
+
+    <div class="facts">
+      ${s.study_hours?`<div class="fact"><div class="n">${s.study_hours}</div><div class="k">${T('f_hours')}</div></div>`:''}
+      <div class="fact"><div class="n">${(s.units||[]).length}</div><div class="k">${T('f_units')}</div></div>
+      <div class="fact"><div class="n">${lessons}</div><div class="k">${T('f_lessons')}</div></div>
+      <div class="fact"><div class="n">${s.pass_mark}%</div><div class="k">${T('f_pass')}</div></div>
+    </div>
+
+    ${outs.length?`<h3>${T('s_outcomes')}</h3><ul>${li(outs)}</ul>`:''}
+
+    <h3>${T('s_grading')}</h3>
+    <p>${T('grading_txt')}</p>
+    ${s.practical?`<p>${T('practical_txt')}</p>`:''}
+
+    ${(s.prerequisites||[]).length?`<h3>${T('s_prereq')}</h3><ul>${
+      s.prerequisites.map(p=>`<li>${esc(p.id)} — ${esc(p.title)}</li>`).join('')}</ul>`:''}
+
+    <h3>${T('s_req')}</h3>
+    <p>${esc((rw && s.requirements_rw) ? s.requirements_rw : (s.requirements||''))}</p>
+
+    <h3>${T('s_units')}</h3>
+    ${(s.units||[]).map(u=>{
+      const uo=(rw && (u.outcomes_rw||[]).length) ? u.outcomes_rw : (u.outcomes||[]);
+      return `<div class="unitrow">
+        <h4>${u.number}. ${esc((rw && u.title_rw)?u.title_rw:u.title)}</h4>
+        <div class="um">${u.lessons} ${T('f_lessons').toLowerCase()}${u.hours?' · '+u.hours+' '+T('f_hours').toLowerCase():''}</div>
+        ${uo.length?`<ul>${li(uo)}</ul>`:''}
+      </div>`;
+    }).join('')}`;
+}
+
+async function paintResources(){
+  const box=document.getElementById('view_res'); if(!box) return;
+  if(!resources){
+    const {data}=await sb.rpc('course_resources',{p_course:COURSE_ID});
+    resources=data||[];
+  }
+  const rw = lang==='rw';
+  box.innerHTML = `<h3>${T('v_res')}</h3>
+    <table class="restab">
+      <tr><th>${T('r_unit')}</th><th>${T('r_material')}</th><th>${T('r_time')}</th></tr>
+      ${resources.map(r=>`<tr>
+        <td>${r.unit}</td>
+        <td>${esc(r.number)} — ${esc((rw && r.title_rw)?r.title_rw:r.title)}
+          ${(r.focus||r.focus_rw)?`<span class="fn">${esc((rw && r.focus_rw)?r.focus_rw:r.focus)}</span>`:''}
+          ${r.source?`<span class="fn">${esc(r.source)}${r.licence?' · '+esc(r.licence):''}</span>`:''}
+        </td>
+        <td>${r.minutes?r.minutes+' '+T('r_min'):'—'}</td>
+      </tr>`).join('')}
+    </table>`;
+}
+
+function paintHeader(){
+  document.getElementById('hsub').textContent=T('hsub');
+  document.getElementById('ccode').textContent=course.id;
+  document.getElementById('ctitle').textContent=(lang==='rw'&&course.title_rw)?course.title_rw:course.title;
+  document.getElementById('csub').textContent=(lang==='rw'&&course.spec_rw)?course.spec_rw:(course.spec_en||'');
+}
+
+async function refreshProgress(){
+  const {data}=await sb.rpc('course_progress',{p_course:COURSE_ID});
+  const pct=(data&&data.overall_pct)||0;
+  document.getElementById('ovPct').textContent=pct+'%';
+  document.getElementById('ovFill').style.width=pct+'%';
+  const by={}; ((data&&data.modules)||[]).forEach(m=>by[m.module_id]=m.pct);
+  document.querySelectorAll('[data-modpct]').forEach(el=>{
+    el.textContent=(by[el.getAttribute('data-modpct')]??0)+'%';
+  });
+}
+
+function paintOutline(){
+  const done=id=>progress[id]?' done':'';
+  const act=(t,id)=>(current&&current.type===t&&current.id===id)?' active':'';
+  let html=tree.map(m=>`
+    <div class="mod">
+      <div class="mod-h"><span>${esc((lang==='rw'&&m.title_rw)?m.title_rw:m.title)}</span>
+        <span class="p" data-modpct="${m.id}">0%</span></div>
+      ${m.lessons.map(l=>`
+        <div class="lrow${done(l.id)}${act('lesson',l.id)}" onclick="openNode({type:'lesson',id:'${l.id}'})">
+          <span class="tick"></span><span class="n">${esc(l.number)}</span>
+          <span>${esc((lang==='rw'&&l.title_rw)?l.title_rw:l.title)}</span>
+        </div>`).join('')}
+      ${m.quiz?`
+        <div class="lrow quiz${act('assessment',m.quiz.id)}" onclick="openNode({type:'assessment',id:'${m.quiz.id}'})">
+          <span class="tick"></span><span class="n">◆</span>
+          <span>${m.quiz.graded===false ? T('practice_label') : T('quiz')}</span>
+        </div>`:''}
+    </div>`).join('');
+  html+=finals.map(f=>`
+    <div class="mod">
+      <div class="lrow quiz${act('assessment',f.id)}" onclick="openNode({type:'assessment',id:'${f.id}'})">
+        <span class="tick"></span><span class="n">★</span><span>${T('final')}</span>
+      </div>
+    </div>`).join('');
+  document.getElementById('outline').innerHTML=html;
+}
+
+/* ---------------- nodes ---------------- */
+const flat=()=>{
+  const out=[];
+  tree.forEach(m=>{ m.lessons.forEach(l=>out.push({type:'lesson',id:l.id}));
+                    if(m.quiz) out.push({type:'assessment',id:m.quiz.id}); });
+  finals.forEach(f=>out.push({type:'assessment',id:f.id}));
+  return out;
+};
+function step(dir){
+  const list=flat();
+  const i=list.findIndex(n=>n.type===current.type&&n.id===current.id);
+  const n=list[i+dir]; if(n) openNode(n);
+}
+function openNode(node,keep){
+  current=node; paintOutline();
+  if(node.type==='lesson') renderLesson(node.id,keep);
+  else renderAssessment(node.id);
+  if(!keep) window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ---------------- lesson ---------------- */
+function renderLesson(id){
+  let L=null; tree.forEach(m=>m.lessons.forEach(l=>{ if(l.id===id) L=l; }));
+  if(!L) return;
+  const title=(lang==='rw'&&L.title_rw)?L.title_rw:L.title;
+  const other=(lang==='rw')?L.title:L.title_rw;
+  let media='';
+  if(L.kind==='video'&&L.media_url)
+    media=`<iframe src="${esc(L.media_url)}" allowfullscreen title="${esc(title)}"></iframe>`;
+  if(L.kind==='pdf'&&L.media_url)
+    media=`<p><a class="btn btn-ghost btn-sm" href="${esc(L.media_url)}" target="_blank" rel="noopener">PDF ↗</a></p>`;
+  const bodyMain=(lang==='rw'&&L.body_rw)?L.body_rw:L.body;
+  const bodyAlt =(lang==='rw')?L.body:L.body_rw;
+  const isDone=!!progress[L.id];
+  /* the unit's outcomes belong at its start, where they still guide
+     the reading rather than summarise it afterwards */
+  let mod=null; tree.forEach(m=>{ if(m.lessons.some(x=>x.id===L.id)) mod=m; });
+  const firstOfUnit = mod && mod.lessons.length && mod.lessons[0].id===L.id;
+  const uo = mod ? ((lang==='rw' && (mod.outcomes_rw||[]).length) ? mod.outcomes_rw : (mod.outcomes||[])) : [];
+  const outcomesHtml = (firstOfUnit && uo.length)
+    ? `<div class="outcomes"><b>${T('s_outcomes')}</b><ul>${uo.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>` : '';
+
+  const focus = (lang==='rw' && L.focus_note_rw) ? L.focus_note_rw : L.focus_note;
+  const focusHtml = focus
+    ? `<div class="focus"><b>${T('focus_on')}</b>${esc(focus)}</div>` : '';
+
+  document.getElementById('stage').innerHTML=`
+    <h3>${esc(L.number)} — ${esc(title)}</h3>
+    <div class="rw-title">${esc(other||'')}</div>
+    ${outcomesHtml}
+    ${media}
+    <div class="body-en">${esc(bodyMain||'')}</div>
+    ${bodyAlt?`<div class="body-rw">${esc(bodyAlt)}</div>`:''}
+    ${focusHtml}
+    <div class="navbtns">
+      <button class="btn btn-ghost btn-sm" onclick="step(-1)">${T('prev')}</button>
+      <button class="btn ${isDone?'btn-ghost':'btn-primary'} btn-sm" id="doneBtn"
+        onclick="markDone('${L.id}')" ${isDone?'disabled':''}>${isDone?T('marked'):T('mark_done')}</button>
+      <button class="btn btn-ghost btn-sm" onclick="step(1)">${T('next')}</button>
+    </div>`;
+}
+async function markDone(id){
+  const btn=document.getElementById('doneBtn'); if(btn) btn.disabled=true;
+  await sb.from('lesson_progress').upsert(
+    {student_id:user.id, lesson_id:id, completed:true, last_seen_at:new Date().toISOString()},
+    {onConflict:'student_id,lesson_id'});
+  progress[id]=true; paintOutline(); await refreshProgress();
+  if(btn){ btn.textContent=T('marked'); btn.className='btn btn-ghost btn-sm'; }
+}
+
+/* ---------------- assessment ---------------- */
+let quizCache=null;
+async function renderAssessment(id){
+  const st=document.getElementById('stage');
+  const meta=[...tree.map(m=>m.quiz).filter(Boolean),...finals].find(a=>a.id===id);
+  const isFinal=meta&&meta.kind==='final';
+
+  if(isFinal){
+    const all=tree.flatMap(m=>m.lessons);
+    if(all.length && !all.every(l=>progress[l.id])){
+      st.innerHTML=`<div class="empty">${T('locked_final')}</div>`; return;
+    }
+  }
+
+  const {data:atts}=await sb.from('assessment_attempts').select('*')
+    .eq('assessment_id',id).eq('student_id',user.id).order('attempt_no');
+  const used=(atts||[]).length;
+  const max=meta?meta.max_attempts:null;
+  const best=(atts||[]).reduce((a,b)=>(b.score_pct>(a?.score_pct??-1)?b:a),null);
+
+  const isPractice = meta && meta.graded === false;
+  st.innerHTML=`
+    <h3>${esc((lang==='rw'&&meta?.title_rw)?meta.title_rw:(meta?.title||T('quiz')))}</h3>
+    ${isPractice
+      ? `<div class="rw-title">${T('practice_label')}</div>
+         <p class="practice-note">${T('practice_note')}</p>`
+      : `<div class="rw-title">${T('passmark')}: ${meta?meta.pass_mark:70}%</div>`}
+    ${best&&!isPractice?`<p class="muted">${T('att_score')}: <b style="color:${best.passed?'var(--ok)':'var(--bad)'}">${best.score_pct}%</b></p>`:''}
+    ${best&&isPractice?`<p class="muted">${T('att_score')}: <b>${best.score_pct}%</b></p>`:''}
+    ${(max!==null&&used>=max)
+      ? `<div class="empty">${T('no_more')}</div>`
+      : `<p><button class="btn btn-primary btn-sm" onclick="startQuiz('${id}')">${T('start_quiz')}</button></p>`}
+    ${attemptTable(atts)}`;
+}
+function attemptTable(atts){
+  if(!atts||!atts.length) return `<div class="attempts">${T('no_attempts')}</div>`;
+  return `<div class="attempts"><b>${T('attempts_h')}</b>
+    <table><tr><th>${T('att_no')}</th><th>${T('att_score')}</th><th>${T('att_res')}</th><th>${T('att_date')}</th></tr>
+    ${atts.map(a=>`<tr><td>${a.attempt_no}</td><td>${a.score_pct??'—'}%</td>
+      <td style="color:${a.passed?'var(--ok)':'var(--bad)'}">${a.passed?T('passed'):T('failed')}</td>
+      <td>${(a.submitted_at||'').slice(0,10)}</td></tr>`).join('')}
+    </table></div>`;
+}
+async function startQuiz(id){
+  const {data,error}=await sb.rpc('get_assessment',{p_assessment:id});
+  if(error||!data) return alert(T('err'));
+  quizCache=data;
+  const qs=(data.questions||[]);
+  document.getElementById('stage').innerHTML=`
+    <h3>${esc((lang==='rw'&&data.title_rw)?data.title_rw:data.title)}</h3>
+    <div class="rw-title">${T('passmark')}: ${data.pass_mark}%</div>
+    <form id="quizForm" onsubmit="return false">
+      ${qs.map((q,i)=>`
+        <div class="q">
+          ${q.scenario?`<div class="q-scn">${esc((lang==='rw'&&q.scenario_rw)?q.scenario_rw:q.scenario)}</div>`:''}
+          <div class="q-p">${i+1}. ${esc((lang==='rw'&&q.prompt_rw)?q.prompt_rw:q.prompt)}</div>
+          <div class="q-rw">${esc((lang==='rw')?q.prompt:(q.prompt_rw||''))}</div>
+          ${(q.options||[]).map(o=>`
+            <label class="opt"><input type="radio" name="q_${q.id}" value="${o.id}">
+              <span>${esc(o.label)}${o.label_rw?`<span class="rw">${esc(o.label_rw)}</span>`:''}</span>
+            </label>`).join('')}
+        </div>`).join('')}
+      <div class="navbtns">
+        <span></span>
+        <button class="btn btn-primary btn-sm" onclick="submitQuiz('${id}')">${T('submit')}</button>
+      </div>
+    </form>`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+async function submitQuiz(id){
+  const answers={}; let missing=false;
+  (quizCache.questions||[]).forEach(q=>{
+    const sel=document.querySelector(`input[name="q_${q.id}"]:checked`);
+    if(!sel) missing=true; else answers[q.id]=sel.value;
+  });
+  if(missing) return alert(T('answer_all'));
+  const {data,error}=await sb.rpc('submit_assessment',{p_assessment:id,p_answers:answers});
+  if(error||!data) return alert(T('err'));
+  const pass=data.passed;
+  document.getElementById('stage').innerHTML=`
+    <div class="result">
+      <div class="big ${pass?'pass':'fail'}">${data.score_pct}%</div>
+      <div class="verdict ${pass?'pass':'fail'}">${pass?T('passed'):T('failed')}</div>
+      <p class="muted" style="margin-top:10px">${T('passmark')}: ${data.pass_mark}%</p>
+      ${pass&&quizCache.kind==='final'?`<p style="color:var(--ok);margin-top:14px">${T('cert_ready')}</p>`:''}
+      <p style="margin-top:20px">
+        <button class="btn btn-ghost btn-sm" onclick="renderAssessment('${id}')">${T('retry')}</button>
+      </p>
+    </div>`;
+  await refreshProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+renderLang();
+boot();
+
+
+/* ---------------------------------------------------------------
+   Light and dark.
+
+   The setting follows the reader, not the page: it is stored once
+   and read on every page, so a choice made in the course player is
+   still in force on the certificate register.
+
+   It is applied before first paint (see the inline script in <head>)
+   so nobody sees a flash of the wrong ground.
+---------------------------------------------------------------- */
+function kgTheme(){ try{ return localStorage.getItem('kg-theme') || 'dark'; }catch(e){ return 'dark'; } }
+function kgApplyTheme(t){
+  document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+  document.querySelectorAll('.kg-theme').forEach(b=>{
+    const light = t === 'light';
+    b.textContent = light ? '\u263D' : '\u2600';          /* moon when light, sun when dark */
+    b.setAttribute('aria-pressed', light ? 'true' : 'false');
+    b.setAttribute('title', light ? 'Switch to dark' : 'Switch to light');
+    b.setAttribute('aria-label', light ? 'Switch to dark' : 'Switch to light');
+  });
+}
+function kgToggleTheme(){
+  const next = kgTheme() === 'light' ? 'dark' : 'light';
+  try{ localStorage.setItem('kg-theme', next); }catch(e){}
+  kgApplyTheme(next);
+}
+kgApplyTheme(kgTheme());
+
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 270" role="img" aria-label="First Aid for Security Professionals">
+<defs>
+  <linearGradient id="gKG-107" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#111"/><stop offset="1" stop-color="#000"/>
+  </linearGradient>
+  <clipPath id="cKG-107"><rect width="480" height="270"/></clipPath>
+</defs>
+<rect width="480" height="270" fill="url(#gKG-107)"/>
+<g clip-path="url(#cKG-107)" opacity=".85"><g opacity=".6"><path d="M300 135 L330 135 L345 100 L365 175 L385 118 L400 135 L455 135" stroke="#c90000" stroke-width="2.4" fill="none"/><rect x="355" y="60" width="16" height="48" fill="#f4d332" opacity=".5"/><rect x="339" y="76" width="48" height="16" fill="#f4d332" opacity=".5"/></g></g>
+<rect x="0" y="266" width="480" height="4" fill="#c90000"/>
+<text x="28" y="48" fill="#f4d332" font-family="'Bricolage Grotesque',sans-serif"
+      font-size="13" font-weight="700" letter-spacing="3.4">KG-107</text>
+</svg>

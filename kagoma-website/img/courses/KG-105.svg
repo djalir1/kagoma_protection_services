@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 270" role="img" aria-label="International Security &amp; Risk Management">
+<defs>
+  <linearGradient id="gKG-105" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#111"/><stop offset="1" stop-color="#000"/>
+  </linearGradient>
+  <clipPath id="cKG-105"><rect width="480" height="270"/></clipPath>
+</defs>
+<rect width="480" height="270" fill="url(#gKG-105)"/>
+<g clip-path="url(#cKG-105)" opacity=".85"><g stroke="#f4d332" stroke-width="1" fill="none" opacity=".45"><ellipse cx="380" cy="135" rx="20" ry="95"/><ellipse cx="380" cy="135" rx="34" ry="95"/><ellipse cx="380" cy="135" rx="48" ry="95"/><ellipse cx="380" cy="135" rx="62" ry="95"/><ellipse cx="380" cy="135" rx="76" ry="95"/><ellipse cx="380" cy="135" rx="90" ry="95"/><circle cx="380" cy="135" r="95" stroke="#c90000" stroke-width="1.6"/></g></g>
+<rect x="0" y="266" width="480" height="4" fill="#c90000"/>
+<text x="28" y="48" fill="#f4d332" font-family="'Bricolage Grotesque',sans-serif"
+      font-size="13" font-weight="700" letter-spacing="3.4">KG-105</text>
+</svg>

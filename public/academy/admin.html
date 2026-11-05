@@ -1,0 +1,1753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin — Kagoma Protection Services</title>
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="var(--kg-bg)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Kagoma">
+<style>
+@font-face{
+  font-family:'Bricolage Grotesque';
+  src:url('fonts/BricolageGrotesque.woff2') format('woff2-variations');
+  font-weight:200 800;
+  font-stretch:75% 100%;
+  font-display:swap;
+}
+
+/* ============================================================
+   KAGOMA — theme tokens
+
+   One scale, two settings. Gold and red never move: a brand that
+   changes colour is not a brand. What flips is the ground and the
+   type on it.
+
+   Dark is the default. Light exists because an officer reading
+   forty lessons in Kigali daylight cannot see a dark screen.
+   ============================================================ */
+:root{
+  --kg-gold:#f4d332;
+  --kg-gold-dim:#c9a227;
+  --kg-red:#c90000;
+  --kg-red-dim:#8e0000;
+
+  --kg-bg:#000000;
+  --kg-surface:#0d0d0d;
+  --kg-surface-2:#151515;
+  --kg-border:#262626;
+  --kg-border-2:#3a3a3a;
+  --kg-text:#ffffff;
+  --kg-text-dim:#9c9c9c;
+  --kg-shadow:rgba(0,0,0,.55);
+}
+[data-theme="light"]{
+  --kg-bg:#ffffff;
+  --kg-surface:#f6f4ef;
+  --kg-surface-2:#ece9e1;
+  --kg-border:#ddd8cc;
+  --kg-border-2:#bdb6a5;
+  --kg-text:#141210;
+  --kg-text-dim:#5f5b54;
+  --kg-shadow:rgba(0,0,0,.14);
+  /* the brand red is too light-on-light for small type; the deeper
+     one keeps the hue and stays readable */
+  --kg-red:#b00000;
+  --kg-gold-dim:#8a6f10;
+}
+html,body{background:var(--kg-bg);color:var(--kg-text)}
+
+  :root{
+    --ink:var(--kg-bg);
+    --panel:var(--kg-surface);
+    --panel-2:var(--kg-surface-2);
+    --fog:var(--kg-text);
+    --fog-dim:var(--kg-text-dim);
+    --gold:var(--kg-gold);
+    --gold-bright:var(--kg-gold);
+    --red:var(--kg-red);
+    --line:rgba(255,255,255,0.10);
+    --line-strong:rgba(255,255,255,0.18);
+    --ok:var(--kg-gold);
+    --bad:var(--kg-red);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--fog);
+    font-family:Arial, Helvetica, sans-serif;
+    line-height:1.55;
+    padding-bottom:60px;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:0 20px;}
+
+  header{
+    border-bottom:1px solid var(--line);
+    padding:22px 0;
+    position:sticky;top:0;
+    background:rgba(10,10,10,0.94);
+    backdrop-filter:blur(8px);
+    z-index:10;
+  }
+  header .wrap{display:flex;align-items:center;gap:14px;}
+  header img{height:42px;width:auto;}
+  header .htitle{font-size:17px;font-weight:700;color:var(--kg-text);letter-spacing:0.01em;}
+  header .hsub{font-size:11.5px;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;margin-top:2px;}
+  header .navlinks{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
+  header .navlinks a, header .navlinks button{
+    font-size:12.5px;color:var(--fog-dim);border:1px solid var(--line-strong);padding:9px 14px;border-radius:3px;background:transparent;cursor:pointer;
+  }
+  header .navlinks a:hover, header .navlinks button:hover{color:var(--gold-bright);border-color:var(--gold);}
+
+  h2{font-size:20px;color:var(--kg-text);margin-bottom:6px;letter-spacing:0.01em;}
+  h3{font-size:16px;color:var(--kg-text);margin-bottom:10px;}
+  .lead{font-size:14px;color:var(--fog-dim);margin-bottom:26px;max-width:600px;}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:26px;}
+
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:12px;font-weight:700;letter-spacing:0.04em;color:var(--gold);text-transform:uppercase;margin-bottom:7px;}
+  .field input, .field select{
+    width:100%;
+    background:var(--ink);
+    border:1px solid var(--line-strong);
+    color:var(--kg-text);
+    padding:11px 13px;
+    font-size:14.5px;
+    border-radius:3px;
+    font-family:inherit;
+  }
+  .field input:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
+
+  .btn{
+    font-weight:700;font-size:14px;padding:13px 22px;border-radius:3px;border:none;cursor:pointer;letter-spacing:0.02em;
+  }
+  .btn-primary{background:var(--gold);color:var(--kg-gold-dim);}
+  .btn-primary:hover{background:var(--gold-bright);}
+  .btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+  .btn-outline{background:transparent;border:1px solid var(--line-strong);color:var(--kg-text);}
+  .btn-outline:hover{border-color:var(--gold);color:var(--gold-bright);}
+  .btn-small{font-size:12px;padding:8px 14px;}
+
+  .status-msg{font-size:13px;margin-top:14px;padding:10px 12px;border-radius:3px;display:none;}
+  .status-msg.show{display:block;}
+  .status-msg.ok{background:rgba(47,168,79,0.12);color:var(--kg-gold);border:1px solid rgba(47,168,79,0.35);}
+  .status-msg.err{background:rgba(201,0,0,0.12);color:var(--kg-red);border:1px solid rgba(201,0,0,0.35);}
+
+  /* auth tabs */
+  .auth-tabs{display:flex;gap:2px;margin:30px 0 26px;border:1px solid var(--line);width:fit-content;border-radius:3px;overflow:hidden;}
+  .auth-tab-btn{padding:12px 22px;background:var(--panel);color:var(--fog-dim);font-weight:700;font-size:13.5px;border:none;cursor:pointer;letter-spacing:0.02em;}
+  .auth-tab-btn.active{background:var(--gold);color:var(--kg-gold-dim);}
+  .auth-panel{display:none;max-width:420px;}
+  .auth-panel.active{display:block;}
+
+  /* dashboard */
+  #dashboardSection{display:none;}
+  .welcome-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:8px;}
+  section.d-section{margin-top:44px;}
+
+  .course-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px;}
+  @media (max-width:700px){.course-grid{grid-template-columns:1fr;}}
+  .course-card{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:18px 20px;}
+  .course-card .ccode{font-family:'Courier New',monospace;font-size:11px;color:var(--gold);}
+  .course-card h4{font-size:15.5px;color:var(--kg-text);margin:8px 0 6px;}
+  .course-card p{font-size:13px;color:var(--fog-dim);margin-bottom:14px;}
+  .badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:0.05em;padding:5px 10px;border-radius:3px;text-transform:uppercase;}
+  .badge-enrolled{background:rgba(244,211,50,0.15);color:var(--gold-bright);}
+  .badge-progress{background:rgba(90,140,255,0.15);color:var(--kg-gold);}
+  .badge-completed{background:rgba(47,168,79,0.15);color:var(--kg-gold);}
+
+  .list-row{
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+    padding:16px 18px;border:1px solid var(--line);border-radius:3px;margin-bottom:10px;background:var(--panel);
+  }
+  .list-row .who{font-size:14.5px;color:var(--kg-text);}
+  .list-row .meta{font-size:12px;color:var(--fog-dim);margin-top:4px;font-family:'Courier New',monospace;}
+  .list-row .actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+
+  .empty-note{font-size:13.5px;color:var(--fog-dim);padding:20px;text-align:center;border:1px dashed var(--line-strong);border-radius:4px;margin-top:14px;}
+
+  footer{border-top:1px solid var(--line);margin-top:60px;padding:24px 0;text-align:center;font-size:11.5px;color:var(--fog-dim);}
+  /* ---------- Account type chooser ---------- */
+  .role-pick{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  @media (max-width:520px){ .role-pick{grid-template-columns:1fr;} }
+  .role-opt{
+    display:block;cursor:pointer;position:relative;
+    border:1px solid var(--line-strong);border-radius:var(--radius);
+    padding:12px 13px;transition:border-color .16s ease,background .16s ease;
+  }
+  .role-opt:hover{border-color:var(--signal);}
+  .role-opt input{position:absolute;opacity:0;pointer-events:none;}
+  .role-opt:has(input:checked){border-color:var(--signal);background:rgba(244,211,50,.07);}
+  .role-opt:has(input:focus-visible){outline:2px solid var(--signal);outline-offset:2px;}
+  .role-t{display:block;font-weight:700;font-size:14px;color:var(--kg-text);}
+  .role-opt:has(input:checked) .role-t{color:var(--signal);}
+  .role-d{display:block;margin-top:3px;font-size:12px;color:var(--fog-dim);line-height:1.4;}
+  .muted{color:var(--fog-dim)}
+  .small{font-size:12.5px;line-height:1.5}
+  .dash-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin:26px 0 18px;flex-wrap:wrap}
+  .dash-head h2{margin:0}
+
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:22px}
+  .stat{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:16px 14px}
+  .stat .n{font-size:26px;font-weight:bold;color:var(--gold);line-height:1}
+  .stat .k{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--fog-dim);margin-top:6px}
+
+  .tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+  .tab{font-size:12.5px;font-weight:bold;padding:10px 16px;border:1px solid var(--line-strong);
+    border-radius:3px;background:transparent;color:var(--fog-dim);cursor:pointer}
+  .tab:hover{color:var(--kg-text);border-color:var(--gold)}
+  .tab.active{background:var(--gold);color:var(--kg-bg);border-color:var(--gold)}
+  .pane{display:none}
+  .pane.active{display:block}
+
+  .card h3{font-size:15px;letter-spacing:.04em;text-transform:uppercase;color:var(--gold);
+    margin:0 0 10px;padding-bottom:9px;border-bottom:1px solid var(--line)}
+  .filterrow{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:14px 0}
+  .filterrow select,#certSearch{padding:9px 12px;font-size:13px;background:var(--panel-2);
+    color:var(--fog);border:1px solid var(--line-strong);border-radius:3px}
+  #certSearch{width:100%;margin:12px 0}
+  .tog{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--fog-dim);cursor:pointer}
+  .tog input{width:16px;height:16px;accent-color:var(--gold);flex:none}
+
+  .list{display:flex;flex-direction:column;gap:10px}
+  .row{border:1px solid var(--line);border-radius:4px;padding:13px;background:var(--panel-2);
+    display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap}
+  .qform{display:none;flex-basis:100%;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+  .qform.open{display:block}
+  .qgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  @media(max-width:700px){.qgrid{grid-template-columns:1fr 1fr}}
+  .qform .field{margin-bottom:9px}
+  .qform label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--fog-dim);display:block;margin-bottom:4px}
+  .qform input{width:100%;padding:8px 10px;font-size:13px;background:var(--panel);
+    color:var(--fog);border:1px solid var(--line-strong);border-radius:3px}
+  .row h4{margin:0 0 3px;font-size:14px;color:var(--kg-text)}
+  .row .meta{font-size:12px;color:var(--fog-dim);line-height:1.55}
+  .row .act{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+  .empty{font-size:13px;color:var(--fog-dim);font-style:italic;padding:14px 0}
+  .tag{font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:3px;
+    border:1px solid var(--line-strong);color:var(--fog-dim);white-space:nowrap}
+  .tag.ok{border-color:var(--ok);color:var(--ok)}
+  .tag.warn{border-color:var(--gold);color:var(--gold)}
+  .tag.bad{border-color:var(--bad);color:var(--bad)}
+  .btn-mini{font-size:11.5px;padding:7px 13px}
+  select.stage{padding:7px 10px;font-size:12px;background:var(--panel);color:var(--fog);
+    border:1px solid var(--line-strong);border-radius:3px}
+
+  @media (max-width:640px){
+    header .wrap{flex-wrap:wrap;row-gap:10px}
+    header .navlinks{width:100%;margin-left:0;justify-content:flex-start}
+    header .navlinks a, header .navlinks button{font-size:11.5px;padding:8px 10px}
+  }
+  /* the crest doubles as the way home, as on the public site */
+  .homelink{display:inline-flex;align-items:center;border-radius:4px;
+    transition:opacity .15s ease,transform .15s ease}
+  .homelink:hover{opacity:.85;transform:translateY(-1px)}
+  .homelink:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  .homelink img{display:block}
+  .btn-block{width:100%;display:flex;align-items:center;justify-content:center;gap:9px}
+  .pw-wrap{position:relative}
+  .pw-wrap input{width:100%;padding-right:44px}
+  .pw-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);
+    background:none;border:0;cursor:pointer;font-size:15px;line-height:1;
+    padding:7px 9px;border-radius:3px;color:var(--fog-dim);opacity:.7}
+  .pw-eye:hover{opacity:1;color:var(--gold)}
+  .pw-eye[aria-pressed="true"]{color:var(--gold);opacity:1}
+  .linkish{background:none;border:0;color:var(--fog-dim);font-size:13px;cursor:pointer;
+    padding:12px 0 0;text-decoration:underline;text-underline-offset:3px}
+  .linkish:hover{color:var(--gold)}
+  .bar-row{margin-bottom:16px}
+  .bar-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:6px}
+  .bar-k{font-size:13px;color:var(--fog)}
+  .bar-v{font-size:15px;font-weight:bold;color:var(--gold)}
+  .bar-v span{font-size:12px;font-weight:normal;color:var(--fog-dim);margin-left:6px}
+  .bar{height:10px;background:var(--panel-2);border-radius:5px;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:5px}
+  .bar i.male{background:var(--kg-red)}
+  .bar i.female{background:var(--kg-red)}
+  .bar i.undisclosed,.bar i.unknown{background:var(--kg-text-dim)}
+  /* ---------- Brand palette ----------
+     var(--kg-red)  var(--kg-text)  var(--kg-gold)  var(--kg-bg)
+     Red now carries both the brand and "not valid", so status is never
+     signalled by colour alone: a mark is added in front of the label.
+  ------------------------------------------------------------------ */
+  .tag.ok::before, .badge.ok::before, .status-msg.ok::before{content:"\2713 "}
+  .tag.bad::before, .badge.bad::before, .status-msg.err::before{content:"\2715 "}
+  .tag.warn::before, .badge.warn::before{content:"\25CF "}
+  /* ---------- Brand ground ----------
+     The portals sat on var(--kg-bg) while the front page sat on var(--kg-bg).
+     Close is not the same: side by side the difference shows, and the
+     palette names one black. */
+  body{background:var(--kg-bg)}
+  header{background:var(--kg-bg)!important;border-bottom:2px solid var(--kg-red)}
+  .card,.pane .card{background:var(--kg-surface);border-color:var(--kg-border)}
+  .row,.list-row{background:var(--kg-surface);border-color:var(--kg-border)}
+
+  /* ---------- Theme switch ---------- */
+  .kg-theme{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:36px;height:34px;padding:0;cursor:pointer;
+    background:transparent;border:1px solid var(--kg-border-2);border-radius:3px;
+    color:var(--kg-text);font-size:15px;line-height:1;
+  }
+  .kg-theme:hover{border-color:var(--kg-gold);color:var(--kg-gold)}
+  .kg-theme:focus-visible{outline:2px solid var(--kg-gold);outline-offset:2px}
+  @media (prefers-reduced-motion:no-preference){
+    html{transition:background-color .18s ease}
+  }
+
+  /* ---------- Readability in both settings ----------
+     Gold on black is a brand mark, not a reading colour: at 1.6:1 the
+     button labels and the small caps were hard to read. Buttons take
+     black type on gold; small labels take the dimmed gold, which is
+     dark enough on white and bright enough on black. */
+  .btn-primary,.btn.btn-primary,button.btn-primary,.vb-row button{
+    background:var(--kg-gold);color:#000000;border-color:var(--kg-gold);
+  }
+  [data-theme="light"] .btn-primary,[data-theme="light"] .vb-row button{
+    background:var(--kg-gold);color:#000000;
+  }
+  .hsub,.brand-sub,header .hsub{color:var(--kg-gold-dim)}
+  [data-theme="light"] .hsub,[data-theme="light"] header .hsub{color:var(--kg-gold-dim)}
+  label,.field label,.fgrid label{color:var(--kg-text-dim)}
+  [data-theme="light"] label,[data-theme="light"] .field label{color:#4a463f}
+  [data-theme="light"] .hero-title .accent{color:var(--kg-gold-dim)}
+  [data-theme="light"] .verify-bar label{color:#3d3320}
+
+  /* the tab strip kept a fixed dark surface, so light mode put dim type
+     on it; and the verify-bar label colour was reaching form labels */
+  .auth-tabs{background:var(--kg-surface);border-color:var(--kg-border)}
+  .auth-tab-btn{color:var(--kg-text-dim);background:transparent}
+  .auth-tab-btn.active{background:var(--kg-gold);color:#000000}
+  form label,.contact-form label,.field > label{color:var(--kg-text-dim)}
+  .verify-bar > .wrap > label{color:#3d3320}
+
+  /* ---------- Phone ----------
+     Measured on a 390px screen, not guessed:
+
+     · a field under 16px makes iOS zoom the whole page the moment it
+       is focused, and the visitor then has to pinch back out
+     · a tap target under about 44px is missed as often as it is hit
+     · anything under 12px is unreadable outdoors, which is where a
+       security officer reads it
+  ------------------------------------------------------------------ */
+  @media (max-width: 900px){
+    input, select, textarea{
+      font-size:16px!important;
+      min-height:46px;
+      padding:12px 14px;
+    }
+    textarea{min-height:96px;line-height:1.55}
+
+    button, .btn, a.btn, .chips button, .pick button,
+    header .navlinks a, header .navlinks button,
+    .kg-theme, #langToggle, #langBtn{
+      min-height:44px;
+      display:inline-flex;align-items:center;justify-content:center;
+    }
+
+    /* links inside running text keep their size; standalone ones grow */
+    .nav a, .navlinks a, .flink, .hb-btn, .course-more, .social a{
+      min-height:44px;
+    }
+
+    /* nothing on a phone should be smaller than this */
+    .small, .muted.small, .meta, .rline, .note, .ftag, .rights,
+    .field label, .f label{font-size:13px!important;line-height:1.6}
+
+    /* room between things a finger has to choose between */
+    .chips{gap:10px}
+    .pick{gap:10px}
+    .actions, .hb-act{gap:10px}
+  }
+
+  @media (max-width: 900px){
+    /* A footer link and a portal link are things a thumb has to hit,
+       not words in a sentence. They were 22px and 36px tall. */
+    .fcontact a, .flink, footer a,
+    header .navlinks a, header .navlinks button,
+    .contact-direct .cd{
+      min-height:44px;
+      display:inline-flex;align-items:center;
+      font-size:13.5px!important;
+    }
+    .contact-direct .cd{display:block;padding:18px}
+    .fcontact{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center}
+
+    /* the eye that shows a password sits inside the field; give the
+       whole thing a finger's width */
+    .pw-eye{min-width:44px;min-height:44px;
+      display:inline-flex;align-items:center;justify-content:center;font-size:17px}
+
+    /* the theme and language buttons are square by design; make them
+       square at a size a thumb can find */
+    .kg-theme, #langToggle, #langBtn{min-width:44px}
+  }
+
+  @media (max-width: 900px){
+    /* the last few measured below the line: a nav built with a
+       different class name, a section label, and the logo link */
+    .toollinks a, .tool-nav a, header a[href$=".html"]{
+      min-height:44px;display:inline-flex;align-items:center;
+      font-size:13.5px!important;
+    }
+    .homelink{min-width:44px;min-height:44px;
+      display:inline-flex;align-items:center;justify-content:center}
+    #l_roles, .field > label[id]{font-size:13px!important}
+  }
+  .note-block{margin-top:16px;padding:14px 16px;border-left:3px solid var(--kg-gold);
+    background:rgba(244,211,50,.06);border-radius:0 4px 4px 0;
+    font-size:12.5px;line-height:1.7;color:var(--kg-text-dim)}
+  .note-block b{color:var(--kg-text)}
+  .st-row{display:flex;justify-content:space-between;align-items:center;gap:12px;
+    flex-wrap:wrap;border:1px solid var(--kg-border);border-radius:5px;
+    padding:13px;background:var(--kg-surface-2);margin-bottom:9px}
+  .st-row h4{margin:0 0 3px;font-size:14.5px;color:var(--kg-text)}
+  .st-row .meta{font-size:12.5px;color:var(--kg-text-dim);line-height:1.55}
+  .kg-foot{border-top:1px solid var(--kg-border);margin-top:48px;padding:26px 20px 34px}
+  .kg-foot-in{max-width:1180px;margin:0 auto}
+  .kg-foot-r{font-size:11.5px;color:var(--kg-text-dim);letter-spacing:.04em}
+  .flink{color:var(--kg-text-dim);text-decoration:none}
+  .flink:hover{color:var(--kg-gold)}
+  .sep{color:var(--kg-border-2)}
+
+  /* ---------- Kagoma type ----------
+     Bricolage Grotesque, one variable file, weights 200–800.
+     It replaces Archivo, EB Garamond and the Arial fallbacks the
+     portal pages were using, so every page reads as one company. */
+  :root{
+    --display:'Bricolage Grotesque', system-ui, sans-serif;
+    --body:'Bricolage Grotesque', system-ui, sans-serif;
+    --mono:'Bricolage Grotesque', system-ui, sans-serif;
+  }
+  html, body, button, input, select, textarea, .btn{
+    font-family:'Bricolage Grotesque', system-ui, -apple-system, sans-serif;
+  }
+  body{font-variation-settings:'wght' 400,'wdth' 100,'opsz' 14;
+       -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+  h1,.hero h1{font-variation-settings:'wght' 800,'wdth' 100,'opsz' 96;letter-spacing:-.025em}
+  h2,.sec-title{font-variation-settings:'wght' 700,'wdth' 100,'opsz' 48;letter-spacing:-.015em}
+  h3{font-variation-settings:'wght' 600,'opsz' 24}
+  h4{font-variation-settings:'wght' 600,'opsz' 24}
+  strong,b{font-variation-settings:'wght' 700}
+
+  /* anything that is a number lines up in a column */
+  .ref,.rf,.num,.n,.money,.cnum,code,
+  input[inputmode="numeric"],input[type="number"],input[type="tel"]{
+    font-variant-numeric:tabular-nums}
+  /* the footer links took the browser default blue on pages whose own
+     stylesheet never defined .flink */
+  .kg-foot a, .flink{color:var(--kg-text-dim,#9c9c9c);text-decoration:none}
+  .kg-foot a:hover, .flink:hover{color:var(--kg-gold,#f4d332)}
+  .kg-foot .sep{color:var(--kg-border-2,#3a3a3a)}
+  .staff-link{opacity:.45}
+  .staff-link:hover{opacity:1}
+  [data-theme="light"] .kg-foot a,[data-theme="light"] .flink{color:#5f5b54}
+  .cl-warn{margin-top:10px;padding:9px 12px;border-left:3px solid var(--kg-red);
+    background:rgba(201,0,0,.08);border-radius:0 4px 4px 0;
+    font-size:12.5px;line-height:1.6;color:var(--kg-text-dim)}
+  .tag.warn{border-color:#b8860b;color:#e0b84a}
+</style>
+<script>
+  /* set the ground before the first paint, so the page never flashes
+     the wrong colour on the way in */
+  try{ document.documentElement.setAttribute('data-theme',
+       localStorage.getItem('kg-theme') || 'dark'); }catch(e){}
+</script>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a href="/" class="homelink" title="Kagoma Protection Services" aria-label="Back to the Kagoma home page"><img src="img/crest-60e57097.webp" alt="Kagoma Protection Services"></a>
+    <div>
+      <div class="htitle">KAGOMA PROTECTION SERVICES</div>
+      <div class="hsub" data-i18n="hsub">Admin Desk</div>
+    </div>
+    <div class="navlinks">
+      <button class="kg-theme" onclick="kgToggleTheme()" aria-pressed="false" title="Switch to light">☀</button>
+      <button id="langToggle" onclick="toggleLang()">EN</button>
+      <a href="staffing.html" data-i18n="nav_staffing">Event Staffing</a>
+      <a href="office.html" data-i18n="nav_office">Office</a>
+      <a href="certificates.html" data-i18n="nav_certs">Certificates</a>
+      <a href="/">← <span data-i18n="backlink">Kagoma</span></a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- gate -->
+  <div id="gate" class="card" style="margin-top:26px">
+    <h2 data-i18n="gate_h">Staff sign-in</h2>
+    <p class="muted" id="gateMsg" data-i18n="gate_signin">Sign in with a Kagoma staff account.</p>
+    <div class="field"><label data-i18n="lbl_email">Email</label><input type="email" id="liEmail" autocomplete="email" name="email"></div>
+    <div class="field"><label data-i18n="lbl_password">Password</label>
+      <div class="pw-wrap">
+        <input type="password" id="liPw" autocomplete="current-password"
+               onkeydown="if(event.key==='Enter')doLogin();" name="password">
+        <button type="button" class="pw-eye" id="pwEye" onclick="togglePw()"
+                aria-label="Show password" aria-pressed="false">&#128065;</button>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-block" id="loginBtn" onclick="doLogin()" data-i18n="btn_login">Sign In</button>
+    <div class="status-msg" id="loginStatus"></div>
+    <button type="button" class="linkish" onclick="doReset()" data-i18n="forgot">Wibagiwe ijambobanga?</button>
+  </div>
+
+  <!-- dashboard -->
+  <div id="dash" style="display:none">
+
+    <div class="dash-head">
+      <div><h2 id="greet">—</h2><div class="muted" data-i18n="dash_sub">Kagoma administration</div></div>
+      <button class="btn btn-ghost" onclick="doLogout()" data-i18n="btn_logout">Sign Out</button>
+    </div>
+
+    <div class="stats" id="stats"></div>
+
+    <div class="tabs">
+      <button class="tab active" id="tab_vet"    onclick="showTab('vet')"    data-i18n="tab_vet">Vetting</button>
+      <button class="tab"        id="tab_apps"   onclick="showTab('apps')"   data-i18n="tab_apps">Applications</button>
+      <button class="tab"        id="tab_issue"  onclick="showTab('issue')"  data-i18n="tab_issue">Issue certificates</button>
+      <button class="tab"        id="tab_certs"  onclick="showTab('certs')"  data-i18n="tab_certs">Certificate register</button>
+      <button class="tab"        id="tab_reqs"   onclick="showTab('reqs')"   data-i18n="tab_reqs">Service requests</button>
+      <button class="tab"        id="tab_pay"    onclick="showTab('pay')"    data-i18n="tab_pay">Payments</button>
+      <button class="tab"        id="tab_prac"   onclick="showTab('prac')"   data-i18n="tab_prac">Practical</button>
+      <button class="tab"        id="tab_clients" onclick="showTab('clients')" data-i18n="tab_clients">Clients</button>
+        <button class="tab"        id="tab_staff"   onclick="showTab('staff')"   data-i18n="tab_staff">Staff access</button>
+        <button class="tab"        id="tab_demo"   onclick="showTab('demo')"   data-i18n="tab_demo">Who we reach</button>
+    </div>
+
+    <!-- ---- vetting ---- -->
+    <div class="pane active" id="pane_vet">
+      <div class="card">
+        <h3 data-i18n="sec_vet">Applicants awaiting checks</h3>
+        <p class="muted small" data-i18n="vet_hint">Nobody can be enrolled before they are approved here. Check the identity details against a document before approving.</p>
+        <button class="btn btn-ghost btn-mini" onclick="exportCsv('vetting')" data-i18n="btn_csv">Export to Excel (CSV)</button>
+        <div id="vetList" class="list" style="margin-top:14px"></div>
+        <div class="status-msg" id="vetStatus"></div>
+      </div>
+    </div>
+
+    <!-- ---- applications ---- -->
+    <div class="pane" id="pane_apps">
+      <div class="card">
+        <h3 data-i18n="sec_apps">Course applications</h3>
+        <p class="muted small" data-i18n="apps_hint">Approving an application is what creates the enrolment. An applicant who does not meet the entry requirements cannot be approved until those are cleared.</p>
+        <div id="appsList" class="list" style="margin-top:14px"></div>
+        <div class="status-msg" id="appsStatus"></div>
+      </div>
+    </div>
+
+    <!-- ---- issue ---- -->
+    <div class="pane" id="pane_issue">
+      <div class="card">
+        <h3 data-i18n="sec_eligible">Learners eligible for a certificate</h3>
+        <p class="muted small" data-i18n="elig_hint">A learner appears here once they have passed the final assessment. Where a course has no final assessment yet, 100% lesson progress qualifies.</p>
+        <div class="filterrow">
+          <select id="fCourse" onchange="loadEligible()"></select>
+          <label class="tog"><input type="checkbox" id="fHide" checked onchange="renderEligible()"><span data-i18n="hide_issued">Hide those who already have one</span></label>
+        </div>
+        <button class="btn btn-ghost btn-mini" onclick="exportCsv('eligible')" data-i18n="btn_csv">Export to Excel (CSV)</button>
+        <div id="eligList" class="list" style="margin-top:14px"></div>
+        <div class="status-msg" id="issueStatus"></div>
+      </div>
+    </div>
+
+    <!-- ---- register ---- -->
+    <div class="pane" id="pane_certs">
+      <div class="card">
+        <h3 data-i18n="sec_register">Certificate register</h3>
+        <p class="muted small" data-i18n="reg_hint">Suspending or revoking takes effect immediately on the public verification page.</p>
+        <input type="text" id="certSearch" oninput="renderCerts()" placeholder="Search name, course or number…" name="certSearch">
+        <button class="btn btn-ghost btn-mini" onclick="exportCsv('certificates')" data-i18n="btn_csv">Export to Excel (CSV)</button>
+        <div id="certList" class="list" style="margin-top:14px"></div>
+        <div class="status-msg" id="certStatus"></div>
+      </div>
+    </div>
+
+    <!-- ---- payments ---- -->
+    <div class="pane" id="pane_pay">
+      <div class="card">
+        <h3 data-i18n="sec_pay">Record a payment</h3>
+        <p class="muted small" data-i18n="pay_hint">Money received on the Kagoma MoMo line is recorded here. Enter the transaction ID from the SMS so the receipt can be traced.</p>
+        <div class="qgrid">
+          <div class="field"><label data-i18n="p_student">Student</label><select id="pStudent"></select></div>
+          <div class="field"><label data-i18n="p_course">Course</label><select id="pCourse" onchange="showBalance()"></select></div>
+          <div class="field"><label data-i18n="p_amount">Amount (RWF)</label><input type="number" id="pAmount" min="0" step="500" name="pAmount"></div>
+          <div class="field"><label data-i18n="p_method">Method</label>
+            <select id="pMethod">
+              <option value="momo">MTN MoMo</option>
+              <option value="airtel">Airtel Money</option>
+              <option value="bank">Bank</option>
+              <option value="cash">Cash</option>
+            </select>
+          </div>
+        </div>
+        <div class="qgrid">
+          <div class="field"><label data-i18n="p_ref">Transaction ID</label><input type="text" id="pRef" placeholder="e.g. 1234567890" name="pRef"></div>
+          <div class="field"><label data-i18n="p_phone">Payer phone</label><input type="text" id="pPhone" placeholder="078..." name="phone" autocomplete="tel"></div>
+          <div class="field"><label data-i18n="p_date">Paid on</label><input type="date" id="pDate" name="pDate"></div>
+          <div class="field"><label data-i18n="p_note">Note</label><input type="text" id="pNote" name="pNote"></div>
+        </div>
+        <div class="muted small" id="pBalance" style="margin:6px 0 12px"></div>
+        <button class="btn btn-primary btn-mini" onclick="savePayment()" data-i18n="btn_save_pay">Record payment</button>
+        <div class="status-msg" id="payStatus"></div>
+      </div>
+      <div class="card">
+        <h3 data-i18n="sec_pay_pending">Payments awaiting confirmation</h3>
+        <p class="muted small" data-i18n="pend_hint">Submitted by learners after paying. Check the transaction ID against the Kagoma MoMo statement before confirming — a claim counts for nothing until it is confirmed here.</p>
+        <div id="pendList" class="list" style="margin-top:14px"></div>
+        <div class="status-msg" id="pendStatus"></div>
+      </div>
+      <div class="card">
+        <h3 data-i18n="sec_pay_list">Recent payments</h3>
+        <button class="btn btn-ghost btn-mini" onclick="exportCsv('payments')" data-i18n="btn_csv">Export to Excel (CSV)</button>
+        <div id="payList" class="list" style="margin-top:14px"></div>
+      </div>
+    </div>
+
+    <!-- ---- practical ---- -->
+    <div class="pane" id="pane_prac">
+      <div class="card">
+        <h3 data-i18n="sec_prac">Record a practical assessment</h3>
+        <p class="muted small" data-i18n="prac_hint">Five courses cannot be certified on the written exam alone. Recording a pass here releases the certificate; without it, the certificate is held back even after the final exam.</p>
+        <div class="qgrid">
+          <div class="field"><label data-i18n="p_student">Student</label><select id="aStudent"></select></div>
+          <div class="field"><label data-i18n="p_course">Course</label><select id="aCourse"></select></div>
+          <div class="field"><label data-i18n="a_result">Result</label>
+            <select id="aResult">
+              <option value="pass" data-i18n="r_pass">Pass</option>
+              <option value="partial" data-i18n="r_partial">Partial</option>
+              <option value="fail" data-i18n="r_fail">Fail</option>
+            </select>
+          </div>
+          <div class="field"><label data-i18n="a_date">Assessed on</label><input type="date" id="aDate" name="aDate"></div>
+        </div>
+        <div class="qgrid">
+          <div class="field"><label data-i18n="a_assessor">Assessor</label><input type="text" id="aAssessor" name="aAssessor"></div>
+          <div class="field"><label data-i18n="a_qual">Assessor qualification</label><input type="text" id="aQual" placeholder="e.g. Certified first aid instructor" name="aQual"></div>
+        </div>
+        <div class="field"><label data-i18n="a_notes">What was assessed</label><input type="text" id="aNotes" name="aNotes"></div>
+        <button class="btn btn-primary btn-mini" onclick="savePractical()" data-i18n="btn_save_prac">Record assessment</button>
+        <div class="status-msg" id="pracStatus"></div>
+      </div>
+      <div class="card">
+        <h3 data-i18n="sec_prac_list">Recent assessments</h3>
+        <button class="btn btn-ghost btn-mini" onclick="exportCsv('practical')" data-i18n="btn_csv">Export to Excel (CSV)</button>
+        <div id="pracList" class="list" style="margin-top:14px"></div>
+      </div>
+    </div>
+
+    <!-- ---- demographics ---- -->
+    <div class="pane" id="pane_clients">
+        <div class="card">
+          <h3 id="cl_h">Add a client</h3>
+          <p class="muted small" id="cl_p" style="line-height:1.65">
+            A client is added once. The master agreement is signed once with them, and every
+            event then carries its own Service Order under it.
+          </p>
+          <div class="grid" style="margin-top:14px">
+            <div class="field"><label id="cl_n">Legal name</label><input type="text" id="clName"></div>
+            <div class="field"><label id="cl_t">TIN</label><input type="text" id="clTin"></div>
+            <div class="field"><label id="cl_c">Contact person</label><input type="text" id="clContact"></div>
+            <div class="field"><label id="cl_ph">Phone</label><input type="tel" id="clPhone"></div>
+          </div>
+          <button class="btn btn-primary btn-mini" onclick="addClient()" id="cl_add" style="margin-top:12px">Add client</button>
+          <div class="status-msg" id="clMsg"></div>
+        </div>
+
+        <div class="card">
+          <h3 id="cl_reg">Clients and what they signed</h3>
+          <div id="clientList" style="margin-top:12px"></div>
+          <div class="status-msg" id="clListMsg"></div>
+        </div>
+      </div>
+
+      <div class="pane" id="pane_staff">
+        <div class="card">
+          <h3 id="sa_h">Give a colleague access</h3>
+          <p class="muted small" id="sa_p" style="line-height:1.65">
+            They sign up on the student page first, with the e-mail you enter here.
+            You then give that account access.
+          </p>
+
+          <div class="grid" style="margin-top:14px">
+            <div class="field"><label for="saEmail" id="sa_em">Their e-mail</label>
+              <input type="email" id="saEmail" name="email" autocomplete="off"></div>
+            <div class="field"><label for="saTitle" id="sa_ti">Their job</label>
+              <input type="text" id="saTitle" name="staff_title" placeholder="Event supervisor"></div>
+            <div class="field"><label for="saLevel" id="sa_lv">Level</label>
+              <select id="saLevel" name="level">
+                <option value="staff" id="sa_o1">Staff — events, roster, documents</option>
+                <option value="admin" id="sa_o2">Administrator — everything</option>
+              </select></div>
+          </div>
+
+          <button class="btn btn-primary btn-mini" onclick="grantAccess()" id="sa_btn"
+                  style="margin-top:12px">Give access</button>
+          <div class="status-msg" id="saMsg"></div>
+
+          <div class="note-block" id="sa_note">
+            <b>Staff</b> run events: the roster, the clock, the office documents.
+            They cannot revoke a certificate, change the company details, or give
+            access to anyone else.<br>
+            <b>Administrator</b> can do all of that. Give it only to someone who
+            answers for the whole company.
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 id="sa_who">Who has access</h3>
+          <div id="staffList" style="margin-top:12px"></div>
+          <div class="status-msg" id="slMsg"></div>
+        </div>
+      </div>
+
+      <div class="pane" id="pane_demo">
+      <div class="card">
+        <h3 data-i18n="sec_gender">Gender</h3>
+        <p class="muted small" data-i18n="demo_hint">Students and professionals only; employers and clients are organisations. Anyone who declined to answer is counted separately rather than guessed at.</p>
+        <div id="genderBars" style="margin-top:16px"></div>
+      </div>
+      <div class="card">
+        <h3 data-i18n="sec_country">Countries</h3>
+        <button class="btn btn-ghost btn-mini" onclick="exportCsv('demographics')" data-i18n="btn_csv">Export to Excel (CSV)</button>
+        <div id="countryList" class="list" style="margin-top:14px"></div>
+      </div>
+    </div>
+
+    <!-- ---- requests ---- -->
+    <div class="pane" id="pane_reqs">
+      <div class="card">
+        <h3 data-i18n="sec_requests">Service requests</h3>
+        <p class="muted small" data-i18n="req_hint">Request → Risk assessment → Quotation → Approval → Deployment → Report</p>
+        <div id="reqList" class="list"></div>
+        <div class="status-msg" id="reqStatus"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<footer class="kg-foot">
+  <div class="kg-foot-in">
+    <div style="margin:14px 0 10px;font-size:12.5px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <a href="privacy.html" class="flink">Privacy Notice</a>
+      <span class="sep">&middot;</span>
+      <a href="terms.html" class="flink">Terms &amp; Conditions</a>
+      <span class="sep">&middot;</span>
+      <a href="faq.html" class="flink">FAQ</a>
+      <span class="sep">&middot;</span>
+      <a href="certificates.html" class="flink">Certificate Verification</a>
+      <span class="sep">&middot;</span>
+      <a href="/contact" class="flink">Contact</a>
+    </div>
+    <div class="kg-foot-r">&copy; 2026 KAGOMA PROTECTIONS SERVICES LTD</div>
+  </div>
+</footer>
+<script>
+const SUPABASE_URL='https://gebydcdxxuysrhlxehwf.supabase.co';
+const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdlYnlkY2R4eHV5c3JobHhlaHdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxNDkwNzYsImV4cCI6MjEwNzcyNTA3Nn0.HPSRhB0j6Rh-tJn9Woc-Y_pb9slkK6XmF5YB2Jl6VWI';
+const sb=(typeof supabase!=='undefined'&&supabase.createClient)
+  ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,       // keep the session across pages
+        autoRefreshToken: true,     // don't drop the learner mid-lesson
+        detectSessionInUrl: true    // needed for e-mail confirmation links
+      }
+    }) : null;
+
+const TT={
+  tab_clients:{rw:"Abakiriya",en:"Clients"},
+  cl_h:{rw:"Ongeraho umukiriya",en:"Add a client"},
+  cl_p:{rw:"Umukiriya yongerwaho rimwe. Amasezerano rusange asinywa rimwe na we, hanyuma buri birori bikagira Service Order yabyo.",
+        en:"A client is added once. The master agreement is signed once with them, and every event then carries its own Service Order under it."},
+  cl_n:{rw:"Izina ry'ikigo",en:"Legal name"},
+  cl_t:{rw:"TIN",en:"TIN"},
+  cl_c:{rw:"Umuntu ushinzwe",en:"Contact person"},
+  cl_ph:{rw:"Telefoni",en:"Phone"},
+  cl_add:{rw:"Ongeraho",en:"Add client"},
+  cl_reg:{rw:"Abakiriya n'ibyo basinye",en:"Clients and what they signed"},
+  cl_need_name:{rw:"Andika izina ry'ikigo.",en:"Enter the legal name."},
+  cl_added:{rw:"%s yongewemo.",en:"%s added."},
+  cl_dup:{rw:"Uwo mukiriya asanzwe ari ku rutonde.",en:"That client is already on the register."},
+  cl_no_table:{rw:"Koresha 45_client_register.sql muri Supabase mbere.",
+               en:"Run 45_client_register.sql in Supabase first."},
+  cl_none:{rw:"Nta mukiriya urashyirwaho.",en:"No clients on the register yet."},
+  cl_no_msa:{rw:"NTA MASEZERANO",en:"NO AGREEMENT"},
+  cl_no_msa_long:{rw:"Nta masezerano rusange ari ku rutonde",en:"No master agreement on file"},
+  cl_signed:{rw:"Yasinywe",en:"Signed"},
+  cl_orders:{rw:"Service Order",en:"Service Orders"},
+  cl_last:{rw:"iheruka",en:"last"},
+  cl_warn:{rw:"Service Order %n zidafite amasezerano rusange yasinywe inyuma yazo.",
+           en:"%n Service Order(s) with no signed master agreement behind them."},
+
+  tab_staff:{rw:"Uburenganzira bw'abakozi",en:"Staff access"},
+  sa_h:{rw:"Ha mugenzi wawe uburenganzira",en:"Give a colleague access"},
+  sa_p:{rw:"Abanza kwiyandikisha ku ipaji y'umunyeshuri akoresheje email uzandika hano. Hanyuma ukayiha uburenganzira.",
+        en:"They sign up on the student page first, with the e-mail you enter here. You then give that account access."},
+  sa_em:{rw:"Email ye",en:"Their e-mail"},
+  sa_ti:{rw:"Akazi ke",en:"Their job"},
+  sa_lv:{rw:"Urwego",en:"Level"},
+  sa_o1:{rw:"Umukozi \u2014 ibirori, urutonde, inyandiko",en:"Staff \u2014 events, roster, documents"},
+  sa_o2:{rw:"Umuyobozi \u2014 byose",en:"Administrator \u2014 everything"},
+  sa_btn:{rw:"Muhe uburenganzira",en:"Give access"},
+  sa_who:{rw:"Abafite uburenganzira",en:"Who has access"},
+  sa_need_email:{rw:"Andika email ye.",en:"Enter their e-mail."},
+  sa_no_account:{rw:"Nta konti ifite iyo email. Abanze yiyandikishe.",en:"No account with that e-mail. Ask them to sign up first."},
+  sa_yourself:{rw:"Ntushobora guhindura uburenganzira bwawe bwite.",en:"You cannot change your own access."},
+  sa_no_table:{rw:"Koresha 40_staff_access.sql muri Supabase mbere.",en:"Run 40_staff_access.sql in Supabase first."},
+  sa_done:{rw:"%s ubu afite uburenganzira.",en:"%s now has access."},
+  sa_taken:{rw:"Uburenganzira bwa %s bwakuweho.",en:"Access withdrawn from %s."},
+  sa_none:{rw:"Ni wowe wenyine ufite uburenganzira.",en:"You are the only one with access."},
+  sa_you:{rw:"WOWE",en:"YOU"},
+  sa_by:{rw:"yabuhawe na",en:"granted by"},
+  sa_take:{rw:"Kuraho",en:"Withdraw"},
+  sa_lvl_admin:{rw:"Umuyobozi \u2014 byose",en:"Administrator \u2014 everything"},
+  sa_lvl_staff:{rw:"Umukozi \u2014 ibirori n'inyandiko",en:"Staff \u2014 events and documents"},
+  sa_confirm_admin:{rw:"Umuyobozi ashobora gukuraho icyemezo cyose Kagoma yatanze, no guha abandi uburenganzira.\n\nUha %s urwo rwego koko?",
+                    en:"An administrator can revoke any certificate Kagoma has issued, and give access to others.\n\nGive %s that level?"},
+  sa_confirm_take:{rw:"Kuraho uburenganzira bwa %s?",en:"Withdraw access from %s?"},
+  sa_last_admin:{rw:"Ni we muyobozi wenyine usigaye. Banza uhe undi urwo rwego.",en:"That is the only administrator left. Give someone else that level first."},
+
+  hsub:{rw:"Ibiro by'Ubuyobozi",en:"Admin Desk"},
+  nav_certs:{rw:"Ibyemezo",en:"Certificates"},
+  nav_office:{rw:"Ibiro",en:"Office"},
+  nav_staffing:{rw:"Abakozi b'Ibirori",en:"Event Staffing"},
+  backlink:{rw:"Kagoma",en:"Kagoma"},
+  forgot:{rw:"Wibagiwe ijambobanga?",en:"Forgot password?"},
+  reset_need_email:{rw:"Banza wandike email yawe hejuru.",en:"Please enter your email address above first."},
+  reset_sent:{rw:"Twakoherereje email yo kwisubiza ijambobanga.",en:"We have sent you a password reset link."},
+  reset_fail:{rw:"Ntibishoboye kohereza. Ongera ugerageze.",en:"Could not send the reset link. Please try again."},
+  gate_h:{rw:"Injira nk'umukozi wa Kagoma",en:"Staff sign-in"},
+  gate_signin:{rw:"Injira ukoresheje konti y'umukozi wa Kagoma.",en:"Sign in with a Kagoma staff account."},
+  gate_notadmin:{rw:"Iyi konti ntabwo ifite uburenganzira bw'ubuyobozi.",en:"This account does not have admin rights."},
+  lbl_email:{rw:"Email",en:"Email"}, lbl_password:{rw:"Ijambobanga",en:"Password"},
+  btn_login:{rw:"Injira",en:"Sign In"}, btn_logout:{rw:"Sohoka",en:"Sign Out"},
+  btn_working:{rw:"Turimo gukora...",en:"Working..."},
+  dash_sub:{rw:"Ubuyobozi bwa Kagoma",en:"Kagoma administration"},
+  tab_vet:{rw:"Kugenzura",en:"Vetting"},
+  tab_apps:{rw:"Ibyifuzo by'amasomo",en:"Applications"},
+  sec_vet:{rw:"Abasabye bategereje kugenzurwa",en:"Applicants awaiting checks"},
+  vet_hint:{rw:"Kwiga ni ubuntu kandi bifunguye. Kwemeza hano ni byo bituma umunyeshuri ashobora guhabwa icyemezo no kugaragara mu rutonde rw'abanyamwuga. Genzura amakuru ye ku nyandiko mbere yo kwemeza.",
+            en:"Learning is open to anyone. Approving here is what allows a learner to be certified and to appear in the professional directory. Check the identity details against a document before approving."},
+  sec_apps:{rw:"Ibyifuzo by'amasomo",en:"Course applications"},
+  apps_hint:{rw:"Kwemeza icyifuzo ni cyo gitanga iyandikisha. Usabye utujuje ibisabwa ntashobora kwemerwa mbere y'uko abyuzuza.",
+             en:"Approving an application is what creates the enrolment. An applicant who does not meet the entry requirements cannot be approved until those are cleared."},
+  v_approve:{rw:"Emeza",en:"Approve"}, v_reject:{rw:"Anga",en:"Reject"}, v_suspend:{rw:"Hagarika",en:"Suspend"},
+  v_years:{rw:"imyaka",en:"yrs"},
+  r_not_vetted:{rw:"Ntaragenzurwa",en:"Not yet vetted"},
+  r_underage:{rw:"Imyaka isabwa:",en:"Minimum age:"},
+  r_no_dob:{rw:"Nta tariki y'amavuko",en:"No date of birth on record"},
+  r_prereq:{rw:"Asabwa kubanza:",en:"Must first complete:"},
+  no_vet:{rw:"Nta muntu utegereje kugenzurwa.",en:"Nobody is waiting to be checked."},
+  no_apps:{rw:"Nta cyifuzo gitegereje. Kwiyandikisha ku isomo ubu bihita bikorwa \u2014 igenzurwa rireba icyemezo, atari ukwiga.",
+           en:"Nothing waiting. Enrolment is immediate now \u2014 vetting governs the certificate, not access to the material."},
+  not_eligible:{rw:"Ntujuje ibisabwa",en:"Entry requirements not met"},
+  ask_note:{rw:"Impamvu (ntibisabwa):",en:"Reason (optional):"},
+  ok_done:{rw:"Byakozwe.",en:"Done."},
+  tab_issue:{rw:"Gutanga ibyemezo",en:"Issue certificates"},
+  tab_certs:{rw:"Igitabo cy'ibyemezo",en:"Certificate register"},
+  tab_reqs:{rw:"Ibyifuzo bya serivisi",en:"Service requests"},
+  tab_pay:{rw:"Kwishyura",en:"Payments"},
+  tab_prac:{rw:"Isuzuma rifatika",en:"Practical"},
+  tab_demo:{rw:"Abadusanga",en:"Who we reach"},
+  sec_gender:{rw:"Igitsina",en:"Gender"},
+  sec_country:{rw:"Ibihugu",en:"Countries"},
+  demo_hint:{rw:"Abanyeshuri n'abanyamwuga gusa; abakoresha n'abakiriya ni ibigo. Utavuze abarwa ukwe aho gukekwa.",
+             en:"Students and professionals only; employers and clients are organisations. Anyone who declined to answer is counted separately rather than guessed at."},
+  g_male:{rw:"Abagabo",en:"Male"}, g_female:{rw:"Abagore",en:"Female"},
+  g_undisclosed:{rw:"Batavuze",en:"Prefer not to say"}, g_unknown:{rw:"Batanditse",en:"Not recorded"},
+  no_demo:{rw:"Nta makuru arahari.",en:"No data yet."},
+  sec_pay:{rw:"Andika ubwishyu",en:"Record a payment"},
+  pay_hint:{rw:"Amafaranga yakiriwe kuri MoMo ya Kagoma yandikwa hano. Andika nimero y'igikorwa iri muri SMS kugira ngo ubwishyu bushobore gukurikiranwa.",
+            en:"Money received on the Kagoma MoMo line is recorded here. Enter the transaction ID from the SMS so the receipt can be traced."},
+  sec_pay_list:{rw:"Ubwishyu buheruka",en:"Recent payments"},
+  sec_pay_pending:{rw:"Ubwishyu butegereje kwemezwa",en:"Payments awaiting confirmation"},
+  pend_hint:{rw:"Butanzwe n'abanyeshuri bamaze kwishyura. Genzura nimero y'igikorwa kuri MoMo ya Kagoma mbere yo kwemeza \u2014 ubwishyu ntibubarwa mbere y'uko bwemezwa hano.",
+             en:"Submitted by learners after paying. Check the transaction ID against the Kagoma MoMo statement before confirming \u2014 a claim counts for nothing until it is confirmed here."},
+  p_confirm:{rw:"Emeza",en:"Confirm"}, p_reject:{rw:"Anga",en:"Reject"},
+  p_owes:{rw:"Asigaye",en:"Owes"},
+  no_pend:{rw:"Nta bwishyu butegereje.",en:"Nothing awaiting confirmation."},
+  sec_prac:{rw:"Andika isuzuma rifatika",en:"Record a practical assessment"},
+  prac_hint:{rw:"Amasomo atanu ntashobora guhabwa icyemezo hashingiwe ku kizamini cyanditse gusa. Kwandika ko yatsinze hano bituma icyemezo gitangwa; utabikoze, icyemezo kiba gifashwe n'ubwo yatsinze ikizamini cya nyuma.",
+             en:"Five courses cannot be certified on the written exam alone. Recording a pass here releases the certificate; without it, the certificate is held back even after the final exam."},
+  sec_prac_list:{rw:"Amasuzuma aheruka",en:"Recent assessments"},
+  p_student:{rw:"Umunyeshuri",en:"Student"}, p_course:{rw:"Isomo",en:"Course"},
+  p_amount:{rw:"Amafaranga (RWF)",en:"Amount (RWF)"}, p_method:{rw:"Uburyo",en:"Method"},
+  p_ref:{rw:"Nimero y'igikorwa",en:"Transaction ID"}, p_phone:{rw:"Telefoni y'uwishyuye",en:"Payer phone"},
+  p_date:{rw:"Yishyuye",en:"Paid on"}, p_note:{rw:"Icyitonderwa",en:"Note"},
+  btn_save_pay:{rw:"Andika ubwishyu",en:"Record payment"},
+  btn_save_prac:{rw:"Andika isuzuma",en:"Record assessment"},
+  btn_csv:{rw:"Ohereza muri Excel (CSV)",en:"Export to Excel (CSV)"},
+  a_result:{rw:"Icyavuyemo",en:"Result"}, a_date:{rw:"Ryakozwe",en:"Assessed on"},
+  a_assessor:{rw:"Uwasuzumye",en:"Assessor"}, a_qual:{rw:"Icyemezo cy'uwasuzumye",en:"Assessor qualification"},
+  a_notes:{rw:"Ibyasuzumwe",en:"What was assessed"},
+  r_pass:{rw:"Yatsinze",en:"Pass"}, r_partial:{rw:"Igice",en:"Partial"}, r_fail:{rw:"Ntiyatsinze",en:"Fail"},
+  bal_owed:{rw:"Asigaye kwishyura:",en:"Still owed:"},
+  bal_clear:{rw:"Yishyuye byose.",en:"Fully paid."},
+  need_fields:{rw:"Uzuza umunyeshuri, isomo n'amafaranga.",en:"Please choose a student, a course and an amount."},
+  need_prac:{rw:"Uzuza umunyeshuri, isomo n'uwasuzumye.",en:"Please choose a student, a course and an assessor."},
+  no_pay:{rw:"Nta bwishyu buranditswe.",en:"No payments recorded yet."},
+  no_prac:{rw:"Nta suzuma riranditswe.",en:"No assessments recorded yet."},
+  ok_pay:{rw:"Ubwishyu bwanditswe.",en:"Payment recorded."},
+  ok_prac:{rw:"Isuzuma ryanditswe.",en:"Assessment recorded."},
+  no_rows:{rw:"Nta makuru yo kohereza.",en:"Nothing to export."},
+  sec_eligible:{rw:"Abanyeshuri bujuje ibisabwa",en:"Learners eligible for a certificate"},
+  elig_hint:{rw:"Umunyeshuri agaragara hano amaze gutsinda ikizamini cya nyuma. Aho isomo ritaragira ikizamini cya nyuma, kurangiza amasomo 100% bihagije.",
+             en:"A learner appears here once they have passed the final assessment. Where a course has no final assessment yet, 100% lesson progress qualifies."},
+  hide_issued:{rw:"Hisha abamaze kubona icyemezo",en:"Hide those who already have one"},
+  sec_register:{rw:"Igitabo cy'ibyemezo",en:"Certificate register"},
+  reg_hint:{rw:"Guhagarika cyangwa gukuraho bihita bigaragara ku ipaji yo kugenzura.",
+            en:"Suspending or revoking takes effect immediately on the public verification page."},
+  sec_requests:{rw:"Ibyifuzo bya serivisi",en:"Service requests"},
+  req_hint:{rw:"Icyifuzo → Isuzuma ry'ibyago → Igiciro → Kwemeza → Gushyira ku murimo → Raporo",
+            en:"Request → Risk assessment → Quotation → Approval → Deployment → Report"},
+  all_courses:{rw:"Amasomo yose",en:"All courses"},
+  btn_issue:{rw:"Tanga icyemezo",en:"Issue certificate"},
+  already:{rw:"Afite icyemezo",en:"Has certificate"},
+  passed:{rw:"Yatsinze",en:"Passed"},
+  no_elig:{rw:"Nta munyeshuri wujuje ibisabwa ubu.",en:"No learner is eligible right now."},
+  no_certs:{rw:"Nta cyemezo kiratangwa.",en:"No certificates issued yet."},
+  no_reqs:{rw:"Nta cyifuzo cyakiriwe.",en:"No service requests received."},
+  ok_issued:{rw:"Icyemezo cyatanzwe:",en:"Certificate issued:"},
+  ok_saved:{rw:"Byabitswe.",en:"Saved."},
+  err:{rw:"Habaye ikibazo. Ongera ugerageze.",en:"Something went wrong. Please try again."},
+  err_login:{rw:"Email cyangwa ijambobanga si byo.",en:"Incorrect email or password."},
+  err_fill:{rw:"Uzuza ibisabwa byose.",en:"Please fill in all fields."},
+  err_offline:{rw:"Ntibishoboye guhuza na seriveri.",en:"Could not reach the server."},
+  btn_print:{rw:"Capa",en:"Print"},
+  btn_quote:{rw:"Igiciro",en:"Quotation"},
+  btn_send_quote:{rw:"Ohereza igiciro",en:"Send quotation"},
+  q_officers:{rw:"Abakozi",en:"Officers"}, q_days:{rw:"Iminsi",en:"Days"},
+  q_amount:{rw:"Igiciro (RWF)",en:"Amount (RWF)"}, q_valid:{rw:"Kigeza",en:"Valid until"},
+  q_notes:{rw:"Ibisobanuro",en:"Notes"},
+  q_hint:{rw:"Umukiriya azabibona ako kanya mu ikaye ye, ashobore kwemera cyangwa kwanga.",
+          en:"The client sees this immediately in their portal and can accept or decline."},
+  q_need_amount:{rw:"Andika igiciro.",en:"Please enter an amount."},
+  q_sent:{rw:"Igiciro cyoherejwe.",en:"Quotation sent."},
+  st_valid:{rw:"Nyacyo",en:"Valid"}, st_suspended:{rw:"Cyahagaritswe",en:"Suspended"}, st_revoked:{rw:"Cyakuweho",en:"Revoked"},
+  confirm_revoke:{rw:"Kuraho icyemezo burundu? Impamvu:",en:"Revoke this certificate permanently? Reason:"},
+  s_students:{rw:"Abanyeshuri",en:"Students"}, s_pros:{rw:"Abanyamwuga",en:"Professionals"},
+  s_employers:{rw:"Abakoresha",en:"Employers"}, s_clients:{rw:"Abakiriya",en:"Clients"},
+  s_courses:{rw:"Amasomo",en:"Courses"}, s_certs:{rw:"Ibyemezo",en:"Certificates"},
+  s_reqs:{rw:"Ibyifuzo",en:"Requests"}, s_jobs:{rw:"Akazi gafunguye",en:"Open jobs"}
+};
+let lang='en';
+const T=k=>(TT[k]||{})[lang]||k;
+function renderLang(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n'); if(TT[k]) el.textContent=TT[k][lang];
+  });
+  document.getElementById('langToggle').textContent = lang==='rw'?'EN':'RW';
+  document.getElementById('certSearch').placeholder = lang==='rw'
+    ? 'Shakisha izina, isomo cyangwa nimero…' : 'Search name, course or number…';
+  if(user){ paintStats(); fillCourses(); loadStudents(); renderEligible(); renderCerts(); renderReqs(); renderDemographics(); renderVetting(); renderApplications(); renderPending(); }
+}
+function toggleLang(){ lang=lang==='rw'?'en':'rw'; renderLang(); }
+
+const $=id=>document.getElementById(id);
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function msg(id,t,ok){const e=$(id); e.textContent=t; e.className='status-msg show '+(ok?'ok':'err');}
+
+let user=null, stats=null, eligible=[], certs=[], reqs=[], courses=[];
+
+function togglePw(){
+  const i=document.getElementById('liPw'), b=document.getElementById('pwEye');
+  const show=i.type==='password';
+  i.type=show?'text':'password';
+  b.setAttribute('aria-pressed', show?'true':'false');
+  b.setAttribute('aria-label', show?'Hide password':'Show password');
+  i.focus();
+}
+async function doReset(){
+  /* Opened from a file on this computer, the reset link has nowhere
+     to point back to. Say so plainly rather than blaming the server. */
+  if(location.protocol === 'file:' || !location.origin || location.origin === 'null'){
+    const e=document.getElementById('loginStatus');
+    if(e){ e.textContent='Open the site from your Kagoma web address first — a reset link cannot point at a file on this computer.';
+           e.className='status-msg show err'; }
+    return;
+  }
+  if(!sb) return msg('loginStatus', T('reset_fail'), false);
+  const email=liEmail.value.trim();
+  if(!email) return msg('loginStatus', T('reset_need_email'), false);
+  const __rs = (t)=>{ const e=document.getElementById('loginStatus'); if(e){e.textContent=t; e.className='status-msg show err';} };
+  /* A password reset can fail for reasons the person can act on
+     (rate limit, bad address) and reasons only Kagoma can fix
+     (redirect URL not whitelisted). Showing the real message means
+     nobody has to guess which. */
+  const origin = (location.origin && location.origin !== 'null')
+    ? location.origin + location.pathname
+    : null;                       // opened from a file:// path, not a site
+  if(!origin){
+    return __rs('The reset link needs the site to be online. Open it from your Kagoma web address, not from a file on this computer.');
+  }
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: origin });
+  if(error){
+    console.error('reset failed:', error);
+    const m = (error.message || '').toLowerCase();
+    if(m.includes('rate') || m.includes('limit') || error.status === 429){
+      return __rs('Too many reset e-mails have been sent from this project in the last hour. Please wait and try again.');
+    }
+    if(m.includes('redirect')){
+      return __rs('This address is not on the allowed list in Supabase (Authentication -> URL Configuration).');
+    }
+    return __rs(error.message || 'Could not send the reset link.');
+  }
+  msg('loginStatus', error?T('reset_fail'):T('reset_sent'), !error);
+}
+
+/* No Google button here on purpose: an admin account is created by
+   Kagoma staff and promoted in the database, never self-served. */
+async function doLogin(){
+  if(!sb) return msg('loginStatus',T('err_offline'),false);
+  const email=liEmail.value.trim(), pw=liPw.value;
+  if(!email||!pw) return msg('loginStatus',T('err_fill'),false);
+  const b=loginBtn; b.disabled=true; b.textContent=T('btn_working');
+  const {error}=await sb.auth.signInWithPassword({email,password:pw});
+  b.disabled=false; b.textContent=T('btn_login');
+  if(error) return msg('loginStatus',T('err_login'),false);
+  await boot();
+}
+async function doLogout(){ if(sb) await sb.auth.signOut(); location.reload(); }
+
+async function boot(){
+  if(!sb) return;
+  const {data:{user:u}}=await sb.auth.getUser();
+  if(!u) return;
+  /* admin_overview() throws for non-staff — that is the gate */
+  const {data:ov,error}=await sb.rpc('admin_overview');
+  if(error||!ov){ msg('loginStatus',T('gate_notadmin'),false); return; }
+  user=u; stats=ov;
+  $('gate').style.display='none'; $('dash').style.display='block';
+  const {data:p}=await sb.from('profiles').select('full_name').eq('id',u.id).maybeSingle();
+  $('greet').textContent=(p&&p.full_name)||u.email;
+  paintStats();
+  await loadCourses();
+  await Promise.all([loadStudents(),loadEligible(),loadCerts(),loadReqs(),loadPayments(),loadPracticals(),loadDemographics(),loadVetting(),loadApplications(),loadPending()]);
+  const today=new Date().toISOString().slice(0,10);
+  if($('pDate')) $('pDate').value=today;
+  if($('aDate')) $('aDate').value=today;
+}
+
+function paintStats(){
+  if(!stats) return;
+  const items=[['s_students','students'],['s_pros','professionals'],['s_employers','employers'],
+    ['s_clients','clients'],['s_courses','active_courses'],['s_certs','certificates'],
+    ['s_reqs','service_requests'],['s_jobs','open_jobs']];
+  $('stats').innerHTML=items.map(([k,f])=>
+    `<div class="stat"><div class="n">${stats[f]??0}</div><div class="k">${T(k)}</div></div>`).join('');
+}
+function showTab(t){
+  ['vet','apps','issue','certs','reqs','pay','prac','clients','staff','demo'].forEach(x=>{
+    const pane=$('pane_'+x), tab=$('tab_'+x);
+    if(!pane||!tab) return;
+    pane.classList.toggle('active',x===t);
+    tab.classList.toggle('active',x===t);
+  });
+  if(t==='staff') loadStaff();
+  if(t==='clients') loadClients();
+}
+
+/* ---------------- courses ---------------- */
+async function loadCourses(){
+  const {data}=await sb.from('courses').select('id,title,title_rw,sort_order').order('sort_order');
+  courses=data||[]; fillCourses();
+}
+function fillCourses(){
+  const s=$('fCourse'); if(!s) return;
+  const keep=s.value;
+  s.innerHTML=`<option value="">${T('all_courses')}</option>`+courses.map(c=>
+    `<option value="${esc(c.id)}">${esc(c.id)} — ${esc((lang==='rw'&&c.title_rw)?c.title_rw:c.title)}</option>`).join('');
+  s.value=keep;
+}
+
+/* ---------------- eligible ---------------- */
+async function loadEligible(){
+  const c=$('fCourse').value||null;
+  const {data,error}=await sb.rpc('admin_eligible',{p_course:c});
+  eligible=(error||!data)?[]:data;
+  renderEligible();
+}
+function renderEligible(){
+  const hide=$('fHide').checked;
+  const list=eligible.filter(e=>!(hide&&e.already));
+  $('eligList').innerHTML = list.length ? list.map(e=>`
+    <div class="row">
+      <div>
+        <h4>${esc(e.full_name)}</h4>
+        <div class="meta">${esc(e.course_id)} — ${esc(e.course_title)}<br>
+          ${e.best_score!=null?T('passed')+': '+e.best_score+'%':'Progress: '+(e.progress||0)+'%'}</div>
+      </div>
+      <div class="act">
+        ${e.already
+          ? `<span class="tag ok">${T('already')}</span>`
+          : `<button class="btn btn-primary btn-mini"
+               onclick="issueCert('${e.student_id}','${esc(e.course_id)}',this)">${T('btn_issue')}</button>`}
+      </div>
+    </div>`).join('') : `<div class="empty">${T('no_elig')}</div>`;
+}
+async function issueCert(studentId, courseId, btn){
+  btn.disabled=true; btn.textContent=T('btn_working');
+  const {data,error}=await sb.rpc('issue_certificate',
+    {p_student:studentId, p_course:courseId, p_level:'certified', p_expiry:null});
+  if(error||!data){ btn.disabled=false; btn.textContent=T('btn_issue'); return msg('issueStatus',T('err'),false); }
+  msg('issueStatus', T('ok_issued')+' '+data.certificate_number, true);
+  await Promise.all([loadEligible(),loadCerts(),refreshStats()]);
+}
+async function refreshStats(){
+  const {data}=await sb.rpc('admin_overview');
+  if(data){ stats=data; paintStats(); }
+}
+
+/* ---------------- register ---------------- */
+async function loadCerts(){
+  const {data,error}=await sb.rpc('admin_certificates',{p_limit:200});
+  certs=(error||!data)?[]:data;
+  renderCerts();
+}
+function renderCerts(){
+  const q=($('certSearch').value||'').trim().toLowerCase();
+  const list=certs.filter(c=>!q||[c.student_name,c.course_name,c.certificate_number]
+    .filter(Boolean).join(' ').toLowerCase().includes(q));
+  $('certList').innerHTML = list.length ? list.map(c=>{
+    const cls=c.status==='valid'?'ok':c.status==='suspended'?'warn':'bad';
+    const label=c.status==='valid'?T('st_valid'):c.status==='suspended'?T('st_suspended'):T('st_revoked');
+    return `
+    <div class="row">
+      <div>
+        <h4>${esc(c.student_name)}</h4>
+        <div class="meta">${esc(c.course_name)}<br>
+          ${esc(c.certificate_number||'')} &middot; ${c.issue_date||''}${c.final_score!=null?' &middot; '+c.final_score+'%':''}</div>
+      </div>
+      <div class="act">
+        <span class="tag ${cls}">${label}</span>
+        <a class="btn btn-ghost btn-mini" target="_blank" rel="noopener"
+           href="certificate.html?cert=${encodeURIComponent(c.certificate_number||c.id)}">${T('btn_print')}</a>
+        ${c.status!=='revoked'?`
+          ${c.status==='valid'
+            ? `<button class="btn btn-ghost btn-mini" onclick="setStatus('${esc(c.id)}','suspended')">${T('st_suspended')}</button>`
+            : `<button class="btn btn-ghost btn-mini" onclick="setStatus('${esc(c.id)}','valid')">${T('st_valid')}</button>`}
+          <button class="btn btn-ghost btn-mini" onclick="revokeCert('${esc(c.id)}')">${T('st_revoked')}</button>
+        `:''}
+      </div>
+    </div>`;
+  }).join('') : `<div class="empty">${T('no_certs')}</div>`;
+}
+async function setStatus(id,status){
+  const {error}=await sb.rpc('set_certificate_status',{p_cert:id,p_status:status,p_reason:null});
+  if(error) return msg('certStatus',T('err'),false);
+  msg('certStatus',T('ok_saved'),true); await loadCerts();
+}
+async function revokeCert(id){
+  const reason=prompt(T('confirm_revoke'));
+  if(reason===null) return;
+  const {error}=await sb.rpc('set_certificate_status',
+    {p_cert:id,p_status:'revoked',p_reason:reason.trim()||null});
+  if(error) return msg('certStatus',T('err'),false);
+  msg('certStatus',T('ok_saved'),true); await Promise.all([loadCerts(),refreshStats()]);
+}
+
+/* ---------------- vetting ---------------- */
+let vetQueue=[], appsQueue=[];
+
+async function loadVetting(){
+  const {data,error}=await sb.rpc('admin_vetting_queue');
+  vetQueue=(error||!data)?[]:data;
+  renderVetting();
+}
+function ageOf(dob){
+  if(!dob) return null;
+  return Math.floor((Date.now()-new Date(dob))/31557600000);
+}
+function renderVetting(){
+  $('vetList').innerHTML = vetQueue.length ? vetQueue.map(v=>{
+    const a=ageOf(v.date_of_birth);
+    return `
+    <div class="row">
+      <div>
+        <h4>${esc(v.full_name||'—')} ${v.status!=='pending'?`<span class="tag bad">${esc(v.status)}</span>`:''}</h4>
+        <div class="meta">
+          ${esc(v.email||'')}${v.phone?' · '+esc(v.phone):''}<br>
+          ${v.date_of_birth?v.date_of_birth+(a!=null?' · '+a+' '+T('v_years'):''):'—'}
+          ${v.country?' · '+esc(v.country):''}${v.gender?' · '+esc(v.gender):''}<br>
+          ${esc(v.address||'')}${v.national_id?'<br>ID '+esc(v.national_id):''}
+        </div>
+      </div>
+      <div class="act">
+        <button class="btn btn-primary btn-mini" onclick="vet('${v.id}','approved')">${T('v_approve')}</button>
+        <button class="btn btn-ghost btn-mini" onclick="vet('${v.id}','rejected')">${T('v_reject')}</button>
+        <button class="btn btn-ghost btn-mini" onclick="vet('${v.id}','suspended')">${T('v_suspend')}</button>
+      </div>
+    </div>`;
+  }).join('') : `<div class="empty">${T('no_vet')}</div>`;
+}
+async function vet(id,status){
+  let note=null;
+  if(status!=='approved'){ note=prompt(T('ask_note')); if(note===null) return; }
+  const {error}=await sb.rpc('set_vetting',{p_student:id,p_status:status,p_note:note||null});
+  if(error) return msg('vetStatus',T('err'),false);
+  msg('vetStatus',T('ok_done'),true);
+  await Promise.all([loadVetting(),loadApplications(),refreshStats()]);
+}
+
+/* ---------------- course applications ---------------- */
+async function loadApplications(){
+  const {data,error}=await sb.rpc('admin_applications');
+  appsQueue=(error||!data)?[]:data;
+  renderApplications();
+}
+function reasonLine(r){
+  if(r.code==='not_vetted') return T('r_not_vetted');
+  if(r.code==='underage')   return T('r_underage')+' '+r.need;
+  if(r.code==='no_dob')     return T('r_no_dob');
+  if(r.code==='missing_prerequisite') return T('r_prereq')+' '+(r.course||r.course_id);
+  return r.code;
+}
+function renderApplications(){
+  $('appsList').innerHTML = appsQueue.length ? appsQueue.map(a=>{
+    const el=a.eligibility||{}; const ok=el.eligible===true;
+    const why=(el.reasons||[]).map(r=>'· '+esc(reasonLine(r))).join('<br>');
+    return `
+    <div class="row">
+      <div>
+        <h4>${esc(a.full_name||'—')}</h4>
+        <div class="meta">${esc(a.course_id)} — ${esc(a.course)}<br>
+          ${(a.created_at||'').slice(0,10)}
+          ${a.motivation?'<br>'+esc(a.motivation):''}
+          ${ok?'':'<br><span style="color:var(--bad)">'+T('not_eligible')+'</span><br>'+why}
+        </div>
+      </div>
+      <div class="act">
+        ${ok
+          ? `<button class="btn btn-primary btn-mini" onclick="decide('${a.id}','approved')">${T('v_approve')}</button>`
+          : `<span class="tag bad">${T('not_eligible')}</span>`}
+        <button class="btn btn-ghost btn-mini" onclick="decide('${a.id}','rejected')">${T('v_reject')}</button>
+      </div>
+    </div>`;
+  }).join('') : `<div class="empty">${T('no_apps')}</div>`;
+}
+async function decide(id,decision){
+  let note=null;
+  if(decision==='rejected'){ note=prompt(T('ask_note')); if(note===null) return; }
+  const {data,error}=await sb.rpc('decide_application',
+    {p_application:id,p_decision:decision,p_note:note||null});
+  if(error) return msg('appsStatus',T('err'),false);
+  if(data && data.ok===false){
+    return msg('appsStatus', T('not_eligible')+': '+
+      (data.eligibility?.reasons||[]).map(reasonLine).join('; '), false);
+  }
+  msg('appsStatus',T('ok_done'),true);
+  await Promise.all([loadApplications(),loadEligible(),refreshStats()]);
+}
+
+/* ---------------- payments ---------------- */
+let students=[], payments=[], practicals=[];
+
+async function loadStudents(){
+  const {data}=await sb.from('profiles').select('id,full_name,role')
+    .in('role',['student','professional']).order('full_name');
+  students=data||[];
+  ['pStudent','aStudent'].forEach(id=>{
+    const s=$(id); if(!s) return;
+    s.innerHTML='<option value="">—</option>'+students.map(p=>
+      `<option value="${p.id}">${esc(p.full_name||'(no name)')}</option>`).join('');
+  });
+  ['pCourse','aCourse'].forEach(id=>{
+    const s=$(id); if(!s) return;
+    const list = id==='aCourse' ? courses.filter(c=>c.practical) : courses;
+    s.innerHTML='<option value="">—</option>'+list.map(c=>
+      `<option value="${esc(c.id)}">${esc(c.id)} — ${esc((lang==='rw'&&c.title_rw)?c.title_rw:c.title)}</option>`).join('');
+  });
+}
+
+async function showBalance(){
+  const st=$('pStudent').value, cs=$('pCourse').value;
+  const el=$('pBalance'); if(!el) return;
+  if(!st||!cs){ el.textContent=''; return; }
+  const {data}=await sb.rpc('balance_for',{p_student:st,p_course:cs});
+  const bal=Number(data||0);
+  el.textContent = bal>0 ? T('bal_owed')+' '+bal.toLocaleString()+' RWF' : T('bal_clear');
+  el.style.color = bal>0 ? 'var(--gold)' : 'var(--ok)';
+  if(bal>0 && !$('pAmount').value) $('pAmount').value=bal;
+}
+
+async function savePayment(){
+  const st=$('pStudent').value, cs=$('pCourse').value, amt=$('pAmount').value;
+  if(!st||!cs||!amt) return msg('payStatus',T('need_fields'),false);
+  const {error}=await sb.from('payments').insert({
+    student_id:st, course_id:cs, amount_rwf:parseFloat(amt),
+    method:$('pMethod').value, reference:$('pRef').value.trim()||null,
+    payer_phone:$('pPhone').value.trim()||null, note:$('pNote').value.trim()||null,
+    paid_on:$('pDate').value||new Date().toISOString().slice(0,10),
+    recorded_by:user.id, status:'confirmed'
+  });
+  if(error) return msg('payStatus', error.message.includes('duplicate')
+    ? 'Transaction ID already recorded.' : T('err'), false);
+  msg('payStatus',T('ok_pay'),true);
+  ['pAmount','pRef','pPhone','pNote'].forEach(i=>$(i).value='');
+  await loadPayments(); showBalance();
+}
+
+async function loadPayments(){
+  const {data}=await sb.from('payments')
+    .select('*, profiles!payments_student_id_fkey(full_name), courses(title)')
+    .order('paid_on',{ascending:false}).limit(100);
+  payments=data||[];
+  $('payList').innerHTML = payments.length ? payments.map(p=>`
+    <div class="row">
+      <div>
+        <h4>${esc(p.profiles?.full_name||'—')}</h4>
+        <div class="meta">${esc(p.courses?.title||p.course_id||'')}<br>
+          ${Number(p.amount_rwf).toLocaleString()} RWF · ${esc(p.method)} · ${p.paid_on}
+          ${p.reference?' · '+esc(p.reference):''}</div>
+      </div>
+      <div class="act"><span class="tag ${p.status==='confirmed'?'ok':'warn'}">${esc(p.status)}</span></div>
+    </div>`).join('') : `<div class="empty">${T('no_pay')}</div>`;
+}
+
+/* ---------------- payments awaiting confirmation ---------------- */
+let pending=[];
+
+async function loadPending(){
+  const {data,error}=await sb.rpc('admin_pending_payments');
+  pending=(error||!data)?[]:data;
+  renderPending();
+}
+function renderPending(){
+  $('pendList').innerHTML = pending.length ? pending.map(p=>`
+    <div class="row">
+      <div>
+        <h4>${esc(p.full_name||'—')} — ${Number(p.amount).toLocaleString()} RWF</h4>
+        <div class="meta">${esc(p.course||p.course_id||'')}<br>
+          ${esc(p.method)}${p.reference?' · '+esc(p.reference):''}${p.phone?' · '+esc(p.phone):''} · ${p.paid_on}<br>
+          ${T('p_owes')}: ${Number(p.owed||0).toLocaleString()} RWF</div>
+      </div>
+      <div class="act">
+        <button class="btn btn-primary btn-mini" onclick="decidePay('${p.id}','confirmed')">${T('p_confirm')}</button>
+        <button class="btn btn-ghost btn-mini" onclick="decidePay('${p.id}','failed')">${T('p_reject')}</button>
+      </div>
+    </div>`).join('') : `<div class="empty">${T('no_pend')}</div>`;
+}
+async function decidePay(id,decision){
+  let note=null;
+  if(decision==='failed'){ note=prompt(T('ask_note')); if(note===null) return; }
+  const {error}=await sb.rpc('confirm_payment',{p_payment:id,p_decision:decision,p_note:note||null});
+  if(error) return msg('pendStatus',T('err'),false);
+  msg('pendStatus',T('ok_done'),true);
+  await Promise.all([loadPending(),loadPayments()]);
+}
+
+/* ---------------- practical assessment ---------------- */
+async function savePractical(){
+  const st=$('aStudent').value, cs=$('aCourse').value, who=$('aAssessor').value.trim();
+  if(!st||!cs||!who) return msg('pracStatus',T('need_prac'),false);
+  const {error}=await sb.from('practical_assessments').insert({
+    student_id:st, course_id:cs, assessor_name:who,
+    assessor_qualification:$('aQual').value.trim()||null,
+    assessed_on:$('aDate').value||new Date().toISOString().slice(0,10),
+    result:$('aResult').value, notes:$('aNotes').value.trim()||null,
+    recorded_by:user.id
+  });
+  if(error) return msg('pracStatus',T('err'),false);
+  msg('pracStatus',T('ok_prac'),true);
+  ['aAssessor','aQual','aNotes'].forEach(i=>$(i).value='');
+  await Promise.all([loadPracticals(),loadEligible(),loadCerts()]);
+}
+
+async function loadPracticals(){
+  const {data}=await sb.from('practical_assessments')
+    .select('*, profiles!practical_assessments_student_id_fkey(full_name), courses(title)')
+    .order('assessed_on',{ascending:false}).limit(100);
+  practicals=data||[];
+  $('pracList').innerHTML = practicals.length ? practicals.map(a=>`
+    <div class="row">
+      <div>
+        <h4>${esc(a.profiles?.full_name||'—')}</h4>
+        <div class="meta">${esc(a.courses?.title||a.course_id)}<br>
+          ${esc(a.assessor_name)} · ${a.assessed_on}${a.notes?' · '+esc(a.notes):''}</div>
+      </div>
+      <div class="act"><span class="tag ${a.result==='pass'?'ok':a.result==='partial'?'warn':'bad'}">${esc(a.result)}</span></div>
+    </div>`).join('') : `<div class="empty">${T('no_prac')}</div>`;
+}
+
+/* ---------------- who we reach ---------------- */
+let demo=null;
+
+async function loadDemographics(){
+  const {data,error}=await sb.rpc('admin_demographics');
+  if(error||!data) return;
+  demo=data;
+  renderDemographics();
+}
+
+function renderDemographics(){
+  if(!demo) return;
+  const order=['male','female','undisclosed','unknown'];
+  const rows=[...(demo.gender||[])].sort(
+    (a,b)=>order.indexOf(a.key)-order.indexOf(b.key));
+
+  $('genderBars').innerHTML = rows.length ? rows.map(r=>`
+    <div class="bar-row">
+      <div class="bar-top">
+        <span class="bar-k">${T('g_'+r.key)||r.key}</span>
+        <span class="bar-v">${r.pct}%<span>${r.n}</span></span>
+      </div>
+      <div class="bar"><i class="${esc(r.key)}" style="width:${r.pct}%"></i></div>
+    </div>`).join('') + `<div class="muted small" style="margin-top:4px">${demo.total} ${T('s_students')} + ${T('s_pros')}</div>`
+    : `<div class="empty">${T('no_demo')}</div>`;
+
+  const cs=demo.countries||[];
+  $('countryList').innerHTML = cs.length ? cs.map(c=>`
+    <div class="row">
+      <div>
+        <h4>${esc(c.name)}</h4>
+        <div class="meta">${esc(c.code)}</div>
+      </div>
+      <div class="act"><span class="bar-v">${c.pct}%<span>${c.n}</span></span></div>
+    </div>`).join('') : `<div class="empty">${T('no_demo')}</div>`;
+}
+
+/* ---------------- CSV export ---------------- */
+function exportCsv(what){
+  const sets={
+    payments:{rows:payments, cols:[
+      ['Student',r=>r.profiles?.full_name],['Course',r=>r.courses?.title||r.course_id],
+      ['Amount RWF',r=>r.amount_rwf],['Method',r=>r.method],['Reference',r=>r.reference],
+      ['Phone',r=>r.payer_phone],['Paid on',r=>r.paid_on],['Status',r=>r.status]]},
+    practical:{rows:practicals, cols:[
+      ['Student',r=>r.profiles?.full_name],['Course',r=>r.courses?.title||r.course_id],
+      ['Assessor',r=>r.assessor_name],['Qualification',r=>r.assessor_qualification],
+      ['Result',r=>r.result],['Assessed on',r=>r.assessed_on],['Notes',r=>r.notes]]},
+    certificates:{rows:certs, cols:[
+      ['Certificate No',r=>r.certificate_number],['Student',r=>r.student_name],
+      ['Course',r=>r.course_name],['Issued',r=>r.issue_date],['Expires',r=>r.expiry_date],
+      ['Score',r=>r.final_score],['Level',r=>r.level],['Status',r=>r.status]]},
+    vetting:{rows:vetQueue, cols:[
+      ['Last name',r=>r.last_name],['First name',r=>r.first_name],
+      ['Email',r=>r.email],['Phone',r=>r.phone],['Date of birth',r=>r.date_of_birth],
+      ['Address',r=>r.address],['Country',r=>r.country],['Gender',r=>r.gender],
+      ['Role',r=>r.role],['Status',r=>r.status]]},
+    demographics:{rows:(demo? [
+        ...(demo.gender||[]).map(g=>({group:'Gender', key:g.key, n:g.n, pct:g.pct})),
+        ...(demo.countries||[]).map(c=>({group:'Country', key:c.name+' ('+c.code+')', n:c.n, pct:c.pct}))
+      ] : []), cols:[
+      ['Group',r=>r.group],['Value',r=>r.key],['Count',r=>r.n],['Percent',r=>r.pct]]},
+    eligible:{rows:eligible, cols:[
+      ['Student',r=>r.full_name],['Course code',r=>r.course_id],['Course',r=>r.course_title],
+      ['Best score',r=>r.best_score],['Progress',r=>r.progress],
+      ['Already certified',r=>r.already?'yes':'no']]}
+  };
+  const s=sets[what];
+  if(!s || !s.rows.length) return alert(T('no_rows'));
+
+  /* Excel opens CSV in the system locale, so quote every field and
+     lead with a BOM, otherwise Kinyarwanda characters come out wrong. */
+  const q=v=>{ const t=(v===null||v===undefined)?'':String(v);
+               return '"'+t.replace(/"/g,'""')+'"'; };
+  const lines=[s.cols.map(c=>q(c[0])).join(',')];
+  s.rows.forEach(r=>lines.push(s.cols.map(c=>q(c[1](r))).join(',')));
+
+  const blob=new Blob(['\uFEFF'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='kagoma-'+what+'-'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a); a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove();},2000);
+}
+
+/* ---------------- service requests ---------------- */
+const STAGES=['requested','assessment','quotation','approved','deployment','reported','cancelled'];
+const STAGE_LBL={
+  requested:{rw:'Icyifuzo',en:'Request'}, assessment:{rw:'Isuzuma ry\u2019ibyago',en:'Risk assessment'},
+  quotation:{rw:'Igiciro',en:'Quotation'}, approved:{rw:'Cyemejwe',en:'Approved'},
+  deployment:{rw:'Ku murimo',en:'Deployment'}, reported:{rw:'Raporo',en:'Report'},
+  cancelled:{rw:'Cyahagaritswe',en:'Cancelled'}
+};
+async function loadReqs(){
+  const {data,error}=await sb.rpc('admin_requests',{p_limit:100});
+  reqs=(error||!data)?[]:data;
+  renderReqs();
+}
+function renderReqs(){
+  $('reqList').innerHTML = reqs.length ? reqs.map(r=>`
+    <div class="row">
+      <div>
+        <h4>${esc(r.client_name||'—')}</h4>
+        <div class="meta">${esc(r.reference||'')}${r.event_name?' &middot; '+esc(r.event_name):''}<br>
+          ${esc(r.location||'')}${r.event_date?' &middot; '+r.event_date:''} &middot; ${esc(r.email||'')}</div>
+      </div>
+      <div class="act">
+        <select class="stage" onchange="advance('${esc(r.id)}',this.value)">
+          ${STAGES.map(s=>`<option value="${s}"${s===r.status?' selected':''}>${STAGE_LBL[s][lang]}</option>`).join('')}
+        </select>
+        <button class="btn btn-ghost btn-mini" onclick="toggleQuote('${esc(r.id)}')">${T('btn_quote')}</button>
+      </div>
+      <div class="qform" id="qf_${esc(r.id)}">
+        <div class="qgrid">
+          <div class="field"><label>${T('q_officers')}</label><input type="number" id="qo_${esc(r.id)}" min="1" name="qo_${esc(r.id)}"></div>
+          <div class="field"><label>${T('q_days')}</label><input type="number" id="qd_${esc(r.id)}" min="1" name="qd_${esc(r.id)}"></div>
+          <div class="field"><label>${T('q_amount')}</label><input type="number" id="qa_${esc(r.id)}" min="0" step="1000" name="qa_${esc(r.id)}"></div>
+          <div class="field"><label>${T('q_valid')}</label><input type="date" id="qv_${esc(r.id)}" name="qv_${esc(r.id)}"></div>
+        </div>
+        <div class="field"><label>${T('q_notes')}</label><input type="text" id="qn_${esc(r.id)}" name="qn_${esc(r.id)}"></div>
+        <button class="btn btn-primary btn-mini" onclick="sendQuote('${esc(r.id)}')">${T('btn_send_quote')}</button>
+        <div class="muted" style="font-size:12px;margin-top:7px">${T('q_hint')}</div>
+      </div>
+    </div>`).join('') : `<div class="empty">${T('no_reqs')}</div>`;
+}
+function toggleQuote(id){
+  const f=document.getElementById('qf_'+id);
+  if(f) f.classList.toggle('open');
+}
+async function sendQuote(id){
+  const amount=document.getElementById('qa_'+id).value;
+  if(!amount) return msg('reqStatus',T('q_need_amount'),false);
+  const {error}=await sb.from('quotations').insert({
+    request_id:id,
+    officers:document.getElementById('qo_'+id).value?parseInt(document.getElementById('qo_'+id).value):null,
+    days:document.getElementById('qd_'+id).value?parseInt(document.getElementById('qd_'+id).value):null,
+    amount:parseFloat(amount),
+    currency:'RWF',
+    valid_until:document.getElementById('qv_'+id).value||null,
+    notes:document.getElementById('qn_'+id).value.trim()||null,
+    created_by:user.id,
+    status:'sent'
+  });
+  if(error) return msg('reqStatus',T('err'),false);
+  /* sending a price moves the request to the quotation stage,
+     so the client sees the pipeline advance at the same moment */
+  await sb.rpc('advance_service_request',{p_request:id,p_stage:'quotation',p_note:null});
+  msg('reqStatus',T('q_sent'),true);
+  await Promise.all([loadReqs(),refreshStats()]);
+}
+
+async function advance(id,stage){
+  const {error}=await sb.rpc('advance_service_request',{p_request:id,p_stage:stage,p_note:null});
+  if(error) return msg('reqStatus',T('err'),false);
+  msg('reqStatus',T('ok_saved'),true); await Promise.all([loadReqs(),refreshStats()]);
+}
+
+renderLang();
+boot();
+
+
+/* ---------------------------------------------------------------
+   Light and dark.
+
+   The setting follows the reader, not the page: it is stored once
+   and read on every page, so a choice made in the course player is
+   still in force on the certificate register.
+
+   It is applied before first paint (see the inline script in <head>)
+   so nobody sees a flash of the wrong ground.
+---------------------------------------------------------------- */
+function kgTheme(){ try{ return localStorage.getItem('kg-theme') || 'dark'; }catch(e){ return 'dark'; } }
+function kgApplyTheme(t){
+  document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+  document.querySelectorAll('.kg-theme').forEach(b=>{
+    const light = t === 'light';
+    b.textContent = light ? '\u263D' : '\u2600';          /* moon when light, sun when dark */
+    b.setAttribute('aria-pressed', light ? 'true' : 'false');
+    b.setAttribute('title', light ? 'Switch to dark' : 'Switch to light');
+    b.setAttribute('aria-label', light ? 'Switch to dark' : 'Switch to light');
+  });
+}
+function kgToggleTheme(){
+  const next = kgTheme() === 'light' ? 'dark' : 'light';
+  try{ localStorage.setItem('kg-theme', next); }catch(e){}
+  kgApplyTheme(next);
+}
+kgApplyTheme(kgTheme());
+
+/* Rwandan names are written family name first, in full capitals, with
+   the given names in ordinary case: KIRENGA Eric, MUKAMANA Jeanne d'Arc.
+   Typing is inconsistent, so the sheet formats what it is given rather
+   than printing it as typed. Particles keep their small letter, and a
+   letter after an apostrophe or a hyphen is capitalised: d'Arc, Jean-Paul. */
+function rwName(raw){
+  const s = String(raw || '').trim().replace(/\s+/g, ' ');
+  if (!s) return '';
+
+  const SMALL = ['d','de','du','da','van','von','der','den','bin','al','la','le'];
+
+  const titled = (w) => w
+    .toLocaleLowerCase()
+    .replace(/(^|[\s'\u2019-])([a-z\u00e0-\u00ff])/g, (m, sep, ch) => sep + ch.toLocaleUpperCase());
+
+  const parts = s.split(' ');
+  return parts.map((w, i) => {
+    if (i === 0) return w.toLocaleUpperCase();          // family name
+    const bare = w.replace(/[.'\u2019-].*$/, '').toLocaleLowerCase();
+
+    /* d'Arc keeps its small d, the way the name is written. A particle
+       standing alone stays small too: de la Croix, van der Berg. */
+    if (SMALL.includes(bare)) {
+      return /['\u2019]/.test(w)
+        ? w.toLocaleLowerCase().replace(/(['\u2019])([a-z\u00e0-\u00ff])/,
+            (m, ap, ch) => ap + ch.toLocaleUpperCase())
+        : w.toLocaleLowerCase();
+    }
+    return titled(w);
+  }).join(' ');
+}
+
+
+/* ---------------- staff access ----------------
+   One staff role meant a gate supervisor had to be made an
+   administrator, and an administrator can revoke any certificate
+   Kagoma has issued. Nobody should hold more authority than the job
+   needs, so there are two levels and this is where they are given. */
+
+async function grantAccess(){
+  const email = $('saEmail').value.trim();
+  const level = $('saLevel').value;
+  const title = $('saTitle').value.trim() || null;
+  if(!email) return msg('saMsg', T('sa_need_email'), false);
+
+  if(level === 'admin' &&
+     !confirm(T('sa_confirm_admin').replace('%s', email))) return;
+
+  const {data,error} = await sb.rpc('grant_staff_access',
+    {p_email:email, p_level:level, p_title:title});
+
+  if(error){
+    console.error('grant_staff_access', error);
+    return msg('saMsg', /does not exist|schema cache/i.test(error.message||'')
+      ? T('sa_no_table') : T('err') + ' ' + (error.message||''), false);
+  }
+  if(data && data.ok === false){
+    return msg('saMsg',
+      data.reason==='no_account' ? T('sa_no_account')
+    : data.reason==='yourself'   ? T('sa_yourself')
+    : T('err'), false);
+  }
+
+  msg('saMsg', T('sa_done').replace('%s', email), true);
+  $('saEmail').value=''; $('saTitle').value='';
+  await loadStaff();
+}
+
+async function loadStaff(){
+  const box = $('staffList'); if(!box) return;
+  const {data,error} = await sb.rpc('staff_list');
+  if(error){
+    box.innerHTML = '<div class="muted small">' +
+      (/does not exist|schema cache/i.test(error.message||'')
+        ? T('sa_no_table') : T('err')) + '</div>';
+    return;
+  }
+  const rows = data || [];
+  box.innerHTML = rows.length ? rows.map(function(s){
+    /* full_name is empty until the person fills it in, and the old
+       fallback then printed their e-mail twice: once as the name and
+       once underneath it. */
+    const hasName = s.name && s.name.trim();
+    return '<div class="st-row">'
+      + '<div><h4>' + esc(hasName ? s.name : s.email.split('@')[0])
+      + (s.is_you ? ' <span class="tag">' + T('sa_you') + '</span>' : '')
+      + '</h4><div class="meta">' + esc(s.email)
+      + (s.title ? ' \u00b7 ' + esc(s.title) : '')
+      + '<br>' + (s.level === 'admin' ? T('sa_lvl_admin') : T('sa_lvl_staff'))
+      + (s.granted_by ? ' \u00b7 ' + T('sa_by') + ' ' + esc(s.granted_by) : '')
+      + '</div></div>'
+      + '<div>' + (s.is_you ? ''
+          : '<button class="btn btn-ghost btn-mini" onclick="takeAccess(\''
+            + s.id + '\',\'' + esc(s.name || s.email) + '\')">' + T('sa_take') + '</button>')
+      + '</div></div>';
+  }).join('') : '<div class="muted small">' + T('sa_none') + '</div>';
+}
+
+async function takeAccess(id, who){
+  if(!confirm(T('sa_confirm_take').replace('%s', who))) return;
+  const {data,error} = await sb.rpc('revoke_staff_access', {p_id:id});
+  if(error) return msg('slMsg', T('err'), false);
+  if(data && data.ok === false){
+    return msg('slMsg',
+      data.reason==='last_admin' ? T('sa_last_admin')
+    : data.reason==='yourself'   ? T('sa_yourself')
+    : T('err'), false);
+  }
+  msg('slMsg', T('sa_taken').replace('%s', who), true);
+  await loadStaff();
+}
+
+
+/* ---------------- clients, agreements and orders ----------------
+   The office can print a Master Service Agreement and a Service Order.
+   Until now nothing recorded which client had signed which, so on the
+   morning of an event nobody could answer the question that matters:
+   is there a signed agreement behind this job? */
+
+/* admin.html had no money formatter; the client register prints
+   amounts, so it needs one. */
+function money(n){ return Number(n||0).toLocaleString('en-US',{maximumFractionDigits:0}); }
+
+async function addClient(){
+  const name=$('clName').value.trim();
+  if(!name) return msg('clMsg', T('cl_need_name'), false);
+
+  const {error}=await sb.from('clients').insert({
+    legal_name:name,
+    tin:$('clTin').value.trim()||null,
+    contact_name:$('clContact').value.trim()||null,
+    contact_phone:$('clPhone').value.trim()||null,
+    created_by:user.id
+  });
+  if(error){
+    console.error('add client', error);
+    return msg('clMsg', /does not exist|schema cache/i.test(error.message||'')
+      ? T('cl_no_table')
+      : /duplicate|unique/i.test(error.message||'') ? T('cl_dup')
+      : T('err')+' '+(error.message||''), false);
+  }
+  msg('clMsg', T('cl_added').replace('%s', name), true);
+  ['clName','clTin','clContact','clPhone'].forEach(i=>$(i).value='');
+  await loadClients();
+}
+
+async function loadClients(){
+  const box=$('clientList'); if(!box) return;
+  const {data,error}=await sb.rpc('client_register');
+  if(error){
+    box.innerHTML='<div class="muted small">'+
+      (/does not exist|schema cache/i.test(error.message||'') ? T('cl_no_table') : T('err'))+'</div>';
+    return;
+  }
+  const rows=data||[];
+  if(!rows.length){ box.innerHTML='<div class="muted small">'+T('cl_none')+'</div>'; return; }
+
+  box.innerHTML=rows.map(function(c){
+    const a=c.agreement;
+    /* the one thing worth seeing at a glance */
+    const badge = !a ? '<span class="tag bad">'+T('cl_no_msa')+'</span>'
+      : a.status==='signed' ? '<span class="tag done">'+T('cl_signed')+' '+(a.signed_on||'')+'</span>'
+      : '<span class="tag warn">'+esc(a.status)+'</span>';
+    const warn = (c.orders_unsigned>0)
+      ? '<div class="cl-warn">'+T('cl_warn').replace('%n', c.orders_unsigned)+'</div>' : '';
+    return '<div class="st-row" style="flex-direction:column;align-items:stretch">'
+      + '<div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap">'
+      + '<div><h4>'+esc(c.name)+'</h4><div class="meta">'
+      + (c.tin?'TIN '+esc(c.tin):'') + (c.contact?' \u00b7 '+esc(c.contact):'')
+      + '<br>'+(a?esc(a.ref):T('cl_no_msa_long'))
+      + ' \u00b7 '+c.orders+' '+T('cl_orders')
+      + (c.last_event?' \u00b7 '+T('cl_last')+' '+c.last_event:'')
+      + (c.billed?' \u00b7 '+money(c.billed)+' RWF':'')
+      + '</div></div><div>'+badge+'</div></div>'+warn+'</div>';
+  }).join('');
+}
+
+</script>
+</body>
+</html>

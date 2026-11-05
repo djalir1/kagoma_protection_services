@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Kagoma Protection Services — User Manual</title>
+<style>
+  @page { size: A4; margin: 18mm 16mm 20mm; }
+  :root { --gold:#b8920f; --ink:#141210; --dim:#5f5b54; --line:#ddd8cc; --soft:#f6f4ef; --red:#a30000; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Arial, sans-serif; color: var(--ink); font-size: 10.5pt; line-height: 1.5; margin: 0; }
+  h1 { font-size: 26pt; margin: 0 0 4px; letter-spacing: .5px; }
+  h2 { font-size: 15pt; margin: 26px 0 8px; padding-bottom: 4px; border-bottom: 2px solid var(--gold); break-after: avoid; }
+  h3 { font-size: 11.5pt; margin: 16px 0 4px; break-after: avoid; }
+  p { margin: 6px 0; }
+  ul, ol { margin: 6px 0 6px 20px; padding: 0; }
+  li { margin: 2px 0; }
+  code, .mono { font-family: Consolas, "Courier New", monospace; font-size: 9.5pt; background: var(--soft); padding: 1px 4px; border-radius: 3px; }
+  table { width: 100%; border-collapse: collapse; margin: 8px 0; font-size: 9.5pt; break-inside: avoid; }
+  th, td { border: 1px solid var(--line); padding: 5px 7px; text-align: left; vertical-align: top; }
+  th { background: var(--soft); font-weight: 600; }
+  .cover { height: 245mm; display: flex; flex-direction: column; justify-content: center; border-left: 6px solid var(--gold); padding-left: 18mm; break-after: page; }
+  .eyebrow { text-transform: uppercase; letter-spacing: 3px; font-size: 9pt; color: var(--gold); font-weight: 700; }
+  .sub { color: var(--dim); font-size: 12pt; margin-top: 8px; max-width: 130mm; }
+  .meta { margin-top: 30mm; color: var(--dim); font-size: 9.5pt; }
+  .note { border-left: 4px solid var(--gold); background: var(--soft); padding: 8px 12px; margin: 10px 0; break-inside: avoid; }
+  .warn { border-left-color: var(--red); }
+  .steps { counter-reset: s; list-style: none; margin-left: 0; }
+  .steps li { counter-increment: s; position: relative; padding-left: 28px; margin: 6px 0; }
+  .steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 19px; height: 19px; border-radius: 50%; background: var(--ink); color: #fff; font-size: 8.5pt; text-align: center; line-height: 19px; font-weight: 700; }
+  .flow { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin: 8px 0; font-size: 9pt; }
+  .flow span { border: 1px solid var(--line); background: #fff; padding: 3px 8px; border-radius: 12px; }
+  .flow b { color: var(--gold); }
+  .toc li { margin: 3px 0; }
+  .pb { break-before: page; }
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div class="eyebrow">Kagoma Protection Services</div>
+  <h1>User Manual</h1>
+  <div class="sub">How the website, the Training &amp; Development platform, the portals and the admin dashboard work, and how to run them day to day.</div>
+  <div class="meta">Version 1.0 · October 2026<br>Website · Kagoma Academy · Admin dashboard · Supabase project “Kagoma-site”</div>
+</section>
+
+<h2>Contents</h2>
+<ol class="toc">
+  <li>How the system fits together</li>
+  <li>The public website and its menus</li>
+  <li>Training &amp; Development</li>
+  <li>Student journey: from sign-up to certificate</li>
+  <li>Certificates and verification</li>
+  <li>Professionals, employers and clients</li>
+  <li>Work applications and event staffing</li>
+  <li>The admin dashboard (/admin)</li>
+  <li>The academy console and staff office</li>
+  <li>Staff access levels</li>
+  <li>Payments</li>
+  <li>Setup checklist and maintenance</li>
+  <li>Troubleshooting</li>
+</ol>
+
+<h2>1. How the system fits together</h2>
+<p>There are three parts, all sharing one database (Supabase project <b>Kagoma-site</b>):</p>
+<table>
+  <tr><th style="width:28%">Part</th><th>Address</th><th>What it is for</th></tr>
+  <tr><td>Public website</td><td><code>/</code>, <code>/about</code>, <code>/services</code>, <code>/industries</code>, <code>/training</code>, <code>/contact</code></td><td>Presents Kagoma, takes security enquiries, and lists the courses.</td></tr>
+  <tr><td>Kagoma Academy platform</td><td><code>/academy/…</code></td><td>Portals for students, professionals, employers, clients and workers; the course player; certificates; the staff office.</td></tr>
+  <tr><td>Admin dashboard</td><td><code>/admin</code></td><td>Sign in as an administrator to view and edit every record in the database.</td></tr>
+</table>
+<p>Every person has <b>one account</b> (email + password). What they can open depends on the account’s <b>role</b>: student, professional, employer, client, staff or admin.</p>
+
+<h2>2. The public website and its menus</h2>
+<h3>Main menu</h3>
+<table>
+  <tr><th style="width:28%">Menu item</th><th>Contents</th></tr>
+  <tr><td>Home, About, Services, Industries</td><td>Company information.</td></tr>
+  <tr><td>Training &amp; Development ▾</td><td>Courses · Student Portal · Certificate Register · Apply for Work</td></tr>
+  <tr><td>Contact</td><td>The “Request a consultation” form.</td></tr>
+  <tr><td>Portals ▾</td><td>Student · Professional · Employer · Client · Staff Office · Event Desk · Admin</td></tr>
+</table>
+<p>On phones and small screens the same items appear under the menu button (☰), grouped the same way. The <b>Request a Quote</b> button always opens the Contact page.</p>
+<h3>Contact form</h3>
+<p>Every enquiry sent from <code>/contact</code> is saved as a <b>security service request</b> with its own reference (for example <span class="mono">KPS-SR-2026-00001</span>). It appears instantly in the admin dashboard under <i>Clients &amp; sales → Service Requests</i>, and in the academy console under <i>Requests</i>.</p>
+
+<h2>3. Training &amp; Development</h2>
+<p>The page at <code>/training</code> is the front door to the academy. It shows:</p>
+<ul>
+  <li><b>The catalogue</b>: 20 courses in two tracks. There are 12 <i>Professional</i> courses (KG-101 to KG-112) and 8 <i>Executive Protection</i> volumes (EP-V1 to EP-V8). You can search them and filter by track. A ▲ marks courses with a practical component, which certified instructors assess in person.</li>
+  <li><b>Check a Kagoma certificate</b>: anyone can type a certificate number and see whether it is valid, suspended, revoked or expired.</li>
+  <li><b>The platform</b>: links to each portal.</li>
+  <li><b>In-house corporate training</b>: asks organisations to get in touch through the Contact page.</li>
+</ul>
+<p>Lessons are bilingual (English and Kinyarwanda). The learner switches language with the <b>RW/EN</b> button in the portal.</p>
+
+<h2>4. Student journey: from sign-up to certificate</h2>
+<div class="flow"><span>Create account</span><b>→</b><span>Enrol</span><b>→</b><span>Study lessons</span><b>→</b><span>Module practice quizzes</span><b>→</b><span>Final exam (70%)</span><b>→</b><span>Vetting by Kagoma</span><b>→</b><span>Certificate fee</span><b>→</b><span>Certificate issued</span></div>
+<ol class="steps">
+  <li><b>Create an account.</b> Open <i>Training &amp; Development → Student Portal</i> and register with your name, email, password, date of birth, phone, national ID and address. The account starts as <i>pending vetting</i>.</li>
+  <li><b>Enrol and study.</b> Choose a course and press <i>Enrol</i>. Study is open: anyone signed in can start learning straight away. Progress is saved lesson by lesson and shows as a percentage.</li>
+  <li><b>Practice quizzes.</b> Each module ends with a short quiz. These are ungraded and can be repeated as often as needed.</li>
+  <li><b>Final exam.</b> Each course has a final exam drawn from the module question banks. The pass mark is <b>70%</b> and a learner has <b>3 attempts</b>. The result appears immediately.</li>
+  <li><b>Vetting.</b> Before a certificate can be issued, Kagoma staff must approve the learner’s identity (<i>Vetting</i> in the academy console). Some courses also require another course first: KG-108 needs KG-109, KG-110 needs KG-108, and KG-112 needs KG-106. The minimum age is 18.</li>
+  <li><b>Certificate fee.</b> After passing, the learner pays the certificate fee: <b>25,000 RWF</b> for professional courses and <b>15,000 RWF</b> for EP volumes. They pay by MoMo (<span class="mono">*182*8*1*061457*amount#</span>, payee KAGOMA PROTECTIONS SERVICES LTD) or by bank transfer, then enter the transaction reference in the portal.</li>
+  <li><b>Confirmation and issue.</b> Staff confirm the payment under <i>Payments</i>. Once the full fee is confirmed, the certificate is <b>issued automatically</b>, as long as the exam is passed and, for ▲ courses, a practical pass is recorded.</li>
+</ol>
+<div class="note">If a course’s certificate fee is set to 0 (or left empty), the certificate is issued the moment the final exam is passed.</div>
+<h3>Applying through staff instead (optional)</h3>
+<p>A learner can also <i>apply</i> for a course. Applications appear under <i>Applications</i> in the academy console. When staff approve one, the system checks eligibility (vetting, age and prerequisites) and enrols the learner.</p>
+
+<h2>5. Certificates and verification</h2>
+<ul>
+  <li>Each certificate has a number like <span class="mono">KAGOMA-CERT-2026-000001</span> and a private verification token for its QR or link.</li>
+  <li><b>Statuses:</b> valid, suspended or revoked. A certificate past its expiry date shows as expired.</li>
+  <li><b>Public check:</b> the box on <code>/training</code> and the Certificate Register at <code>/academy/certificates.html</code>. They show only the holder’s name, course, issue date and status.</li>
+  <li>Only administrators can suspend or revoke a certificate, and every change is written to an audit log (<i>Certificate Audit</i>).</li>
+  <li>Holders see their own certificates in the Student Portal and can open a printable copy (<code>/academy/certificate.html</code>).</li>
+</ul>
+
+<h2>6. Professionals, employers and clients</h2>
+<table>
+  <tr><th style="width:22%">Portal</th><th>Who</th><th>What they do</th></tr>
+  <tr><td>Professional</td><td>Learners with a valid certificate who have been vetted</td><td>Build a profile (headline, skills, work history) and publish it so employers can find them. A profile cannot be published without approved vetting and a valid certificate. Professionals can also see open jobs, apply for them, and answer employers’ messages.</td></tr>
+  <tr><td>Employer</td><td>Companies hiring security staff</td><td>Browse published profiles of certified professionals, see their skills and certificates, contact them, and send Kagoma a recruitment request (role, quantity, location, start date). Jobs are added by Kagoma in the admin dashboard (<i>Jobs</i> table).</td></tr>
+  <tr><td>Client</td><td>Organisations buying security services</td><td>Submit security requests and follow each one through the pipeline: <i>requested → assessment → quotation → approved → deployment → reported</i>. They can accept or decline quotations.</td></tr>
+</table>
+
+<h2>7. Work applications and event staffing</h2>
+<h3>Apply for Work (talent pool)</h3>
+<p>Casual workers (stewards, ushers, accreditation staff and so on) register at <code>/academy/work.html</code> with their name, phone, ID, full Rwandan address (province, district, sector, cell, village), roles, experience and availability. Applicants must be 18 or older. Staff screen them as <i>new → screened → approved / standby / rejected</i>.</p>
+<h3>Events (Event Desk, /academy/staffing.html, staff only)</h3>
+<ol class="steps">
+  <li>Staff create an event (name, venue, date, call time, hourly rate, staff needed) on the Event Desk.</li>
+  <li>To advertise it, set <i>publish</i>. It then appears as an open shift on the <i>Apply for Work</i> page, and pool members can offer their availability using their phone number.</li>
+  <li>Staff add people to the roster from the pool, or share the event’s join link or QR code so workers can register themselves on the day.</li>
+  <li>At the gate, staff <b>clock people in and out</b>. Hours and pay are calculated from the event’s rate, and staff can adjust a shift with a note.</li>
+  <li>The <b>manifest</b> lists every worker’s ID and address for the authorities. <b>Payroll</b> totals people, shifts, hours and amount.</li>
+</ol>
+
+<h2>8. The admin dashboard (/admin)</h2>
+<ol class="steps">
+  <li>Go to <code>/admin</code> and sign in with an administrator email and password. Accounts without admin rights are refused.</li>
+  <li><b>Overview</b> shows key counts (people, enrolments, certificates, requests, payments, applications) and buttons to the academy console and staff office.</li>
+  <li>The left sidebar lists every table, grouped as <i>People, Training, Certificates, Clients &amp; sales, Payments, Staffing &amp; jobs, Office</i>. The number beside each table is its record count. On a phone, use the drop-down at the top instead.</li>
+  <li>Open a table to <b>search</b> it (text columns), page through it 25 records at a time, and use the buttons:
+    <ul>
+      <li><b>New</b>: add a record. Leave a field blank to use its default (IDs, dates and reference numbers fill themselves in).</li>
+      <li><b>✎ Edit</b>: change a record. Only the fields you change are saved.</li>
+      <li><b>🗑 Delete</b>: remove a record after confirming. Records that depend on it, such as a module’s lessons, may be deleted with it.</li>
+    </ul>
+  </li>
+  <li>Use <b>Sign out</b> at the bottom of the sidebar when you finish.</li>
+</ol>
+<div class="note warn"><b>Edit with care.</b> The dashboard writes straight to the database. For day-to-day work such as approving people, confirming payments and issuing certificates, use the academy console (next section). It runs the business rules: eligibility checks, automatic certificates and audit logs.</div>
+<h3>Useful tables</h3>
+<table>
+  <tr><th style="width:30%">Table</th><th>Holds</th></tr>
+  <tr><td>Profiles</td><td>Every account: name, role, vetting status, contact and address details.</td></tr>
+  <tr><td>Courses / Modules / Lessons</td><td>The catalogue and its content, including fees (<i>certificate_fee_rwf</i>).</td></tr>
+  <tr><td>Assessments / Questions / Question Options</td><td>Quizzes and final exams. <i>is_correct</i> marks the right answer.</td></tr>
+  <tr><td>Enrollments / Lesson Progress / Assessment Attempts</td><td>Who is studying what, how far they are, and their exam scores.</td></tr>
+  <tr><td>Certificates</td><td>Every certificate issued.</td></tr>
+  <tr><td>Service Requests / Quotations / Service Stages</td><td>Security enquiries and the client pipeline.</td></tr>
+  <tr><td>Payments</td><td>Student fee payments: pending, confirmed or failed.</td></tr>
+  <tr><td>Work Pool / Events / Event Staff / Shifts</td><td>Talent pool and event staffing.</td></tr>
+  <tr><td>Company Settings</td><td>Company details, MoMo code and bank account printed on documents.</td></tr>
+</table>
+
+<h2>9. The academy console and staff office</h2>
+<h3>Academy console (/academy/admin.html)</h3>
+<table>
+  <tr><th style="width:28%">Tab</th><th>Use it to</th></tr>
+  <tr><td>Applications</td><td>Approve or reject course applications. Eligibility is checked automatically.</td></tr>
+  <tr><td>Vetting</td><td>Check new applicants’ identity details and approve, reject or suspend them.</td></tr>
+  <tr><td>Payments</td><td>Confirm or reject payments that students submitted.</td></tr>
+  <tr><td>Practical</td><td>Record practical assessments (assessor, date, pass/fail) for ▲ courses.</td></tr>
+  <tr><td>Issue / Certificates</td><td>Issue a certificate by hand to an eligible learner; view the register; suspend or revoke a certificate with a reason.</td></tr>
+  <tr><td>Requests</td><td>Move a security request through its stages and send quotations.</td></tr>
+  <tr><td>Clients</td><td>Client register: master agreements, service orders, balances.</td></tr>
+  <tr><td>Demographics</td><td>Learners by gender and country.</td></tr>
+  <tr><td>Staff</td><td>Give colleagues staff or admin access, or remove it.</td></tr>
+</table>
+<h3>Staff office (/academy/office.html)</h3>
+<p>The office creates company documents with automatic references: agreements (KPS-AGR), service orders, quotations (KPS-QTN), invoices (KPS-INV), receipts (KPS-RCT), NDAs, risk assessments, post orders, incident reports, service reports, employment letters, employee rules, the code of conduct and warnings. It also holds the company profile and the managing director’s signature, which only staff can see.</p>
+<h3>Event Desk (/academy/staffing.html)</h3>
+<p>The Event Desk is where staff run events: the roster, offers from the talent pool, clock-in and clock-out, shift adjustments, the manifest and payroll (see section 7). For client events it also shows whether the client is cleared: a signed agreement, an approved order and the deposit paid.</p>
+
+<h2>10. Staff access levels</h2>
+<table>
+  <tr><th style="width:18%">Level</th><th>Can</th><th>Cannot</th></tr>
+  <tr><td>Staff</td><td>Run events, rosters and clock-in; create documents; manage clients, service orders and Kinyarwanda review.</td><td>Revoke certificates, change company settings, or grant access to others.</td></tr>
+  <tr><td>Admin</td><td>Everything, including the <code>/admin</code> dashboard and granting access.</td><td>Remove the last remaining admin.</td></tr>
+</table>
+<p>To give someone access: they create a normal account first, then an admin opens <i>Staff</i> in the academy console, enters their email and chooses <i>staff</i> or <i>admin</i>.</p>
+
+<h2>11. Payments</h2>
+<ul>
+  <li><b>MoMo:</b> merchant code <span class="mono">061457</span>. The portal fills in the dial string <span class="mono">*182*8*1*061457*&lt;amount&gt;#</span> for the learner.</li>
+  <li><b>Bank:</b> Equity Bank Rwanda PLC, account 4002201404367, KAGOMA PROTECTIONS SERVICES LTD.</li>
+  <li>The learner enters the transaction reference from the SMS. Each reference can be used only once.</li>
+  <li>Staff confirm payments under <i>Payments</i> in the academy console. Confirming a certificate fee in full issues the certificate.</li>
+  <li>Online card and MoMo checkout (Flutterwave) is built in but switched off. It turns on when <i>psp_live</i> is set to true in Company Settings after the merchant account is approved. It also needs a server-side payment webhook, which is not set up yet.</li>
+  <li>Course study is currently free: course fees are empty. To charge for a course, set its <i>fee_rwf</i>.</li>
+</ul>
+
+<h2>12. Setup checklist and maintenance</h2>
+<ol class="steps">
+  <li><b>Create the first admin.</b> In Supabase go to Authentication → Users → <i>Add user</i>, enter the admin email and password, and tick <i>Auto Confirm User</i>. Then make that account an admin. The last step in <code>kagoma-website/sql/47_admin_dashboard.sql</code> does this.</li>
+  <li><b>Load the course content</b> (modules, lessons, quizzes, final exams). In Supabase go to SQL Editor → New query, paste the course-content file and press Run. This is a one-off step. Afterwards the summary should list 20 courses, each with modules, lessons and final-exam questions.</li>
+  <li><b>Email sign-up.</b> Supabase sends a confirmation email to new accounts by default. Check Authentication → Email templates, and set the Site URL (Authentication → URL Configuration) to the live domain.</li>
+  <li><b>Certificate emails.</b> Certificates queue a message in <i>Email Outbox</i>. Sending those emails needs an email service to be connected, which is not set up yet.</li>
+  <li><b>Backups.</b> Supabase keeps daily backups on paid plans. Export important tables regularly on the free plan.</li>
+</ol>
+
+<h2>13. Troubleshooting</h2>
+<table>
+  <tr><th style="width:35%">Problem</th><th>What to check</th></tr>
+  <tr><td>“Invalid login credentials” at /admin</td><td>The account must exist in Authentication → Users and be confirmed. Reset the password there if needed.</td></tr>
+  <tr><td>“Not an administrator”</td><td>The account’s <i>role</i> in Profiles must be <b>admin</b>.</td></tr>
+  <tr><td>“This course has no content loaded yet”</td><td>The course-content step in section 12 has not been run.</td></tr>
+  <tr><td>Certificate not issued after passing</td><td>Check vetting status, prerequisites, the certificate fee (confirmed in full?) and, for ▲ courses, a practical pass.</td></tr>
+  <tr><td>A professional cannot be listed</td><td>They need approved vetting and at least one valid certificate.</td></tr>
+  <tr><td>Contact form does not send</td><td>Check the internet connection and the browser console. Requests appear in Service Requests.</td></tr>
+</table>
+
+</body>
+</html>

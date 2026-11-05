@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Client Portal — Kagoma Protection Services</title>
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="var(--kg-bg)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Kagoma">
+<style>
+@font-face{
+  font-family:'Bricolage Grotesque';
+  src:url('fonts/BricolageGrotesque.woff2') format('woff2-variations');
+  font-weight:200 800;
+  font-stretch:75% 100%;
+  font-display:swap;
+}
+
+/* ============================================================
+   KAGOMA — theme tokens
+
+   One scale, two settings. Gold and red never move: a brand that
+   changes colour is not a brand. What flips is the ground and the
+   type on it.
+
+   Dark is the default. Light exists because an officer reading
+   forty lessons in Kigali daylight cannot see a dark screen.
+   ============================================================ */
+:root{
+  --kg-gold:#f4d332;
+  --kg-gold-dim:#c9a227;
+  --kg-red:#c90000;
+  --kg-red-dim:#8e0000;
+
+  --kg-bg:#000000;
+  --kg-surface:#0d0d0d;
+  --kg-surface-2:#151515;
+  --kg-border:#262626;
+  --kg-border-2:#3a3a3a;
+  --kg-text:#ffffff;
+  --kg-text-dim:#9c9c9c;
+  --kg-shadow:rgba(0,0,0,.55);
+}
+[data-theme="light"]{
+  --kg-bg:#ffffff;
+  --kg-surface:#f6f4ef;
+  --kg-surface-2:#ece9e1;
+  --kg-border:#ddd8cc;
+  --kg-border-2:#bdb6a5;
+  --kg-text:#141210;
+  --kg-text-dim:#5f5b54;
+  --kg-shadow:rgba(0,0,0,.14);
+  /* the brand red is too light-on-light for small type; the deeper
+     one keeps the hue and stays readable */
+  --kg-red:#b00000;
+  --kg-gold-dim:#8a6f10;
+}
+html,body{background:var(--kg-bg);color:var(--kg-text)}
+
+  :root{
+    --ink:var(--kg-bg);
+    --panel:var(--kg-surface);
+    --panel-2:var(--kg-surface-2);
+    --fog:var(--kg-text);
+    --fog-dim:var(--kg-text-dim);
+    --gold:var(--kg-gold);
+    --gold-bright:var(--kg-gold);
+    --red:var(--kg-red);
+    --line:rgba(255,255,255,0.10);
+    --line-strong:rgba(255,255,255,0.18);
+    --ok:var(--kg-gold);
+    --bad:var(--kg-red);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--fog);
+    font-family:Arial, Helvetica, sans-serif;
+    line-height:1.55;
+    padding-bottom:60px;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:0 20px;}
+
+  header{
+    border-bottom:1px solid var(--line);
+    padding:22px 0;
+    position:sticky;top:0;
+    background:rgba(10,10,10,0.94);
+    backdrop-filter:blur(8px);
+    z-index:10;
+  }
+  header .wrap{display:flex;align-items:center;gap:14px;}
+  header img{height:42px;width:auto;}
+  header .htitle{font-size:17px;font-weight:700;color:var(--kg-text);letter-spacing:0.01em;}
+  header .hsub{font-size:11.5px;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;margin-top:2px;}
+  header .navlinks{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
+  header .navlinks a, header .navlinks button{
+    font-size:12.5px;color:var(--fog-dim);border:1px solid var(--line-strong);padding:9px 14px;border-radius:3px;background:transparent;cursor:pointer;
+  }
+  header .navlinks a:hover, header .navlinks button:hover{color:var(--gold-bright);border-color:var(--gold);}
+
+  h2{font-size:20px;color:var(--kg-text);margin-bottom:6px;letter-spacing:0.01em;}
+  h3{font-size:16px;color:var(--kg-text);margin-bottom:10px;}
+  .lead{font-size:14px;color:var(--fog-dim);margin-bottom:26px;max-width:600px;}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:26px;}
+
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:12px;font-weight:700;letter-spacing:0.04em;color:var(--gold);text-transform:uppercase;margin-bottom:7px;}
+  .field input, .field select{
+    width:100%;
+    background:var(--ink);
+    border:1px solid var(--line-strong);
+    color:var(--kg-text);
+    padding:11px 13px;
+    font-size:14.5px;
+    border-radius:3px;
+    font-family:inherit;
+  }
+  .field input:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
+
+  .btn{
+    font-weight:700;font-size:14px;padding:13px 22px;border-radius:3px;border:none;cursor:pointer;letter-spacing:0.02em;
+  }
+  .btn-primary{background:var(--gold);color:var(--kg-gold-dim);}
+  .btn-primary:hover{background:var(--gold-bright);}
+  .btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+  .btn-outline{background:transparent;border:1px solid var(--line-strong);color:var(--kg-text);}
+  .btn-outline:hover{border-color:var(--gold);color:var(--gold-bright);}
+  .btn-small{font-size:12px;padding:8px 14px;}
+
+  .status-msg{font-size:13px;margin-top:14px;padding:10px 12px;border-radius:3px;display:none;}
+  .status-msg.show{display:block;}
+  .status-msg.ok{background:rgba(47,168,79,0.12);color:var(--kg-gold);border:1px solid rgba(47,168,79,0.35);}
+  .status-msg.err{background:rgba(201,0,0,0.12);color:var(--kg-red);border:1px solid rgba(201,0,0,0.35);}
+
+  /* auth tabs */
+  .auth-tabs{display:flex;gap:2px;margin:30px 0 26px;border:1px solid var(--line);width:fit-content;border-radius:3px;overflow:hidden;}
+  .auth-tab-btn{padding:12px 22px;background:var(--panel);color:var(--fog-dim);font-weight:700;font-size:13.5px;border:none;cursor:pointer;letter-spacing:0.02em;}
+  .auth-tab-btn.active{background:var(--gold);color:var(--kg-gold-dim);}
+  .auth-panel{display:none;max-width:420px;}
+  .auth-panel.active{display:block;}
+
+  /* dashboard */
+  #dashboardSection{display:none;}
+  .welcome-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:8px;}
+  section.d-section{margin-top:44px;}
+
+  .course-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px;}
+  @media (max-width:700px){.course-grid{grid-template-columns:1fr;}}
+  .course-card{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:18px 20px;}
+  .course-card .ccode{font-family:'Courier New',monospace;font-size:11px;color:var(--gold);}
+  .course-card h4{font-size:15.5px;color:var(--kg-text);margin:8px 0 6px;}
+  .course-card p{font-size:13px;color:var(--fog-dim);margin-bottom:14px;}
+  .badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:0.05em;padding:5px 10px;border-radius:3px;text-transform:uppercase;}
+  .badge-enrolled{background:rgba(244,211,50,0.15);color:var(--gold-bright);}
+  .badge-progress{background:rgba(90,140,255,0.15);color:var(--kg-gold);}
+  .badge-completed{background:rgba(47,168,79,0.15);color:var(--kg-gold);}
+
+  .list-row{
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+    padding:16px 18px;border:1px solid var(--line);border-radius:3px;margin-bottom:10px;background:var(--panel);
+  }
+  .list-row .who{font-size:14.5px;color:var(--kg-text);}
+  .list-row .meta{font-size:12px;color:var(--fog-dim);margin-top:4px;font-family:'Courier New',monospace;}
+  .list-row .actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+
+  .empty-note{font-size:13.5px;color:var(--fog-dim);padding:20px;text-align:center;border:1px dashed var(--line-strong);border-radius:4px;margin-top:14px;}
+
+  footer{border-top:1px solid var(--line);margin-top:60px;padding:24px 0;text-align:center;font-size:11.5px;color:var(--fog-dim);}
+  /* ---------- Account type chooser ---------- */
+  .role-pick{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  @media (max-width:520px){ .role-pick{grid-template-columns:1fr;} }
+  .role-opt{
+    display:block;cursor:pointer;position:relative;
+    border:1px solid var(--line-strong);border-radius:var(--radius);
+    padding:12px 13px;transition:border-color .16s ease,background .16s ease;
+  }
+  .role-opt:hover{border-color:var(--signal);}
+  .role-opt input{position:absolute;opacity:0;pointer-events:none;}
+  .role-opt:has(input:checked){border-color:var(--signal);background:rgba(244,211,50,.07);}
+  .role-opt:has(input:focus-visible){outline:2px solid var(--signal);outline-offset:2px;}
+  .role-t{display:block;font-weight:700;font-size:14px;color:var(--kg-text);}
+  .role-opt:has(input:checked) .role-t{color:var(--signal);}
+  .role-d{display:block;margin-top:3px;font-size:12px;color:var(--fog-dim);line-height:1.4;}
+  .muted{color:var(--fog-dim)}
+  .dash-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin:26px 0 18px;flex-wrap:wrap}
+  .dash-head h2{margin:0}
+  .card h3{font-size:15px;letter-spacing:.04em;text-transform:uppercase;color:var(--gold);
+    margin:0 0 14px;padding-bottom:9px;border-bottom:1px solid var(--line)}
+  .card+.card{margin-top:18px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+  @media(max-width:640px){.row2,.row3{grid-template-columns:1fr}}
+  textarea{width:100%;padding:10px 12px;font-family:inherit;font-size:14px;line-height:1.5;
+    background:var(--panel-2);color:var(--fog);border:1px solid var(--line-strong);border-radius:3px;resize:vertical}
+  textarea:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold)}
+
+  .list{display:flex;flex-direction:column;gap:14px}
+  .rq{border:1px solid var(--line);border-radius:4px;padding:16px;background:var(--panel-2)}
+  .rq-top{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:flex-start}
+  .rq h4{margin:0 0 3px;font-size:15px;color:var(--kg-text)}
+  .rq .meta{font-size:12.5px;color:var(--fog-dim);line-height:1.55}
+  .ref{font-size:11px;letter-spacing:.1em;color:var(--gold);font-weight:bold}
+
+  /* pipeline tracker */
+  .track{display:flex;margin-top:16px;gap:0}
+  .stp{flex:1;text-align:center;position:relative;padding-top:20px}
+  .stp::before{content:'';position:absolute;top:6px;left:0;right:0;height:2px;background:var(--line-strong)}
+  .stp:first-child::before{left:50%}
+  .stp:last-child::before{right:50%}
+  .stp .dot{position:absolute;top:0;left:50%;transform:translateX(-50%);
+    width:14px;height:14px;border-radius:50%;background:var(--panel);
+    border:2px solid var(--line-strong);z-index:1}
+  .stp .lbl{font-size:10px;letter-spacing:.06em;color:var(--fog-dim);line-height:1.3;padding:0 3px}
+  .stp.done::before{background:var(--ok)}
+  .stp.done .dot{background:var(--ok);border-color:var(--ok)}
+  .stp.done .lbl{color:var(--fog)}
+  .stp.now::before{background:linear-gradient(90deg,var(--ok) 50%,var(--line-strong) 50%)}
+  .stp.now .dot{background:var(--gold);border-color:var(--gold);box-shadow:0 0 0 4px rgba(244,211,50,.18)}
+  .stp.now .lbl{color:var(--gold);font-weight:bold}
+  .stp.cancelled .dot{background:var(--bad);border-color:var(--bad)}
+  @media(max-width:640px){.stp .lbl{font-size:8.5px}}
+
+  .quote{margin-top:14px;border:1px solid var(--gold);border-radius:4px;padding:13px;background:rgba(244,211,50,.06)}
+  .quote .amt{font-size:20px;font-weight:bold;color:var(--gold);line-height:1}
+  .quote .qmeta{font-size:12px;color:var(--fog-dim);margin-top:5px;line-height:1.55}
+  .quote .qact{display:flex;gap:8px;margin-top:11px;flex-wrap:wrap}
+  .tag{font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:3px;
+    border:1px solid var(--line-strong);color:var(--fog-dim);white-space:nowrap}
+  .tag.ok{border-color:var(--ok);color:var(--ok)}
+  .tag.bad{border-color:var(--bad);color:var(--bad)}
+  .btn-mini{font-size:11.5px;padding:7px 14px}
+  .empty{font-size:13px;color:var(--fog-dim);font-style:italic;padding:14px 0}
+
+  @media (max-width:640px){
+    header .wrap{flex-wrap:wrap;row-gap:10px}
+    header .navlinks{width:100%;margin-left:0;justify-content:flex-start}
+    header .navlinks a, header .navlinks button{font-size:11.5px;padding:8px 10px}
+  }
+  /* the crest doubles as the way home, as on the public site */
+  .homelink{display:inline-flex;align-items:center;border-radius:4px;
+    transition:opacity .15s ease,transform .15s ease}
+  .homelink:hover{opacity:.85;transform:translateY(-1px)}
+  .homelink:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  .homelink img{display:block}
+  .btn-block{width:100%;display:flex;align-items:center;justify-content:center;gap:9px}
+  .pw-wrap{position:relative}
+  .pw-wrap input{width:100%;padding-right:44px}
+  .pw-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);
+    background:none;border:0;cursor:pointer;font-size:15px;line-height:1;
+    padding:7px 9px;border-radius:3px;color:var(--fog-dim);opacity:.7}
+  .pw-eye:hover{opacity:1;color:var(--gold)}
+  .pw-eye[aria-pressed="true"]{color:var(--gold);opacity:1}
+  .linkish{background:none;border:0;color:var(--fog-dim);font-size:13px;cursor:pointer;
+    padding:12px 0 0;text-decoration:underline;text-underline-offset:3px}
+  .linkish:hover{color:var(--gold)}
+  .linkish.inline{padding:0;color:var(--gold);font-weight:bold;text-decoration:none}
+  .linkish.inline:hover{text-decoration:underline}
+  .or{display:flex;align-items:center;gap:12px;margin:22px 0 18px;
+    font-size:10.5px;letter-spacing:.2em;color:var(--fog-dim)}
+  .or::before,.or::after{content:'';flex:1;height:1px;background:var(--line)}
+  .btn-google{background:var(--kg-text);color:var(--kg-border-2);border:1px solid var(--kg-text);font-weight:bold}
+  .btn-google:hover{background:var(--kg-text);border-color:var(--kg-text)}
+  .switch-line{margin-top:20px;padding-top:16px;border-top:1px solid var(--line);
+    font-size:13px;color:var(--fog-dim);text-align:center}
+  .pw-meter{margin-top:8px}
+  .pw-bar{height:6px;border-radius:3px;background:var(--panel-2);overflow:hidden}
+  .pw-bar i{display:block;height:100%;width:0;border-radius:3px;transition:width .25s ease,background .25s ease}
+  .pw-bar i.s0{background:var(--kg-text-dim)} .pw-bar i.s1{background:var(--bad)}
+  .pw-bar i.s2{background:var(--kg-gold)} .pw-bar i.s3{background:var(--gold)} .pw-bar i.s4{background:var(--ok)}
+  .pw-lbl{font-size:12px;color:var(--fog-dim);margin-top:5px;line-height:1.5}
+  .pw-lbl b{color:var(--fog)}
+  /* ---------- Brand palette ----------
+     var(--kg-red)  var(--kg-text)  var(--kg-gold)  var(--kg-bg)
+     Red now carries both the brand and "not valid", so status is never
+     signalled by colour alone: a mark is added in front of the label.
+  ------------------------------------------------------------------ */
+  .tag.ok::before, .badge.ok::before, .status-msg.ok::before{content:"\2713 "}
+  .tag.bad::before, .badge.bad::before, .status-msg.err::before{content:"\2715 "}
+  .tag.warn::before, .badge.warn::before{content:"\25CF "}
+  /* ---------- Brand ground ----------
+     The portals sat on var(--kg-bg) while the front page sat on var(--kg-bg).
+     Close is not the same: side by side the difference shows, and the
+     palette names one black. */
+  body{background:var(--kg-bg)}
+  header{background:var(--kg-bg)!important;border-bottom:2px solid var(--kg-red)}
+  .card,.pane .card{background:var(--kg-surface);border-color:var(--kg-border)}
+  .row,.list-row{background:var(--kg-surface);border-color:var(--kg-border)}
+
+  /* ---------- Theme switch ---------- */
+  .kg-theme{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:36px;height:34px;padding:0;cursor:pointer;
+    background:transparent;border:1px solid var(--kg-border-2);border-radius:3px;
+    color:var(--kg-text);font-size:15px;line-height:1;
+  }
+  .kg-theme:hover{border-color:var(--kg-gold);color:var(--kg-gold)}
+  .kg-theme:focus-visible{outline:2px solid var(--kg-gold);outline-offset:2px}
+  @media (prefers-reduced-motion:no-preference){
+    html{transition:background-color .18s ease}
+  }
+
+  /* ---------- Readability in both settings ----------
+     Gold on black is a brand mark, not a reading colour: at 1.6:1 the
+     button labels and the small caps were hard to read. Buttons take
+     black type on gold; small labels take the dimmed gold, which is
+     dark enough on white and bright enough on black. */
+  .btn-primary,.btn.btn-primary,button.btn-primary,.vb-row button{
+    background:var(--kg-gold);color:#000000;border-color:var(--kg-gold);
+  }
+  [data-theme="light"] .btn-primary,[data-theme="light"] .vb-row button{
+    background:var(--kg-gold);color:#000000;
+  }
+  .hsub,.brand-sub,header .hsub{color:var(--kg-gold-dim)}
+  [data-theme="light"] .hsub,[data-theme="light"] header .hsub{color:var(--kg-gold-dim)}
+  label,.field label,.fgrid label{color:var(--kg-text-dim)}
+  [data-theme="light"] label,[data-theme="light"] .field label{color:#4a463f}
+  [data-theme="light"] .hero-title .accent{color:var(--kg-gold-dim)}
+  [data-theme="light"] .verify-bar label{color:#3d3320}
+
+  /* the auth tabs and the verify label carried gold at small sizes;
+     the active tab reads as black on gold, the inactive one as plain type */
+  .auth-tab-btn{color:var(--kg-text-dim);background:transparent}
+  .auth-tab-btn.active{background:var(--kg-gold);color:#000000}
+  [data-theme="light"] .auth-tab-btn{color:#4a463f}
+  .verify-bar label{color:#3d3320}
+
+  /* the tab strip kept a fixed dark surface, so light mode put dim type
+     on it; and the verify-bar label colour was reaching form labels */
+  .auth-tabs{background:var(--kg-surface);border-color:var(--kg-border)}
+  .auth-tab-btn{color:var(--kg-text-dim);background:transparent}
+  .auth-tab-btn.active{background:var(--kg-gold);color:#000000}
+  form label,.contact-form label,.field > label{color:var(--kg-text-dim)}
+  .verify-bar > .wrap > label{color:#3d3320}
+  /* ---------- Social ---------- */
+  .social{display:flex;gap:10px;margin:22px 0 18px;flex-wrap:wrap}
+  .social a{display:flex;align-items:center;justify-content:center;
+    width:42px;height:42px;border:1px solid var(--kg-border-2);border-radius:5px;
+    color:var(--kg-text-dim);transition:.15s}
+  .social a svg{width:19px;height:19px;fill:currentColor;display:block}
+  .social a:hover{border-color:var(--kg-gold);color:var(--kg-gold);
+    background:rgba(244,211,50,.07)}
+  .social a:focus-visible{outline:2px solid var(--kg-gold);outline-offset:2px}
+  /* an account Kagoma does not have yet is dimmed, not pretended */
+  .social a[href="#"]{opacity:.4;cursor:default}
+  .social a[href="#"]:hover{border-color:var(--kg-border-2);color:var(--kg-text-dim);background:none}
+  .kg-foot{border-top:1px solid var(--kg-border);margin-top:48px;padding:26px 20px 34px}
+  .kg-foot-in{max-width:1180px;margin:0 auto}
+  .kg-foot-r{font-size:11.5px;color:var(--kg-text-dim);letter-spacing:.04em}
+
+  /* ---------- Phone ----------
+     Measured on a 390px screen, not guessed:
+
+     · a field under 16px makes iOS zoom the whole page the moment it
+       is focused, and the visitor then has to pinch back out
+     · a tap target under about 44px is missed as often as it is hit
+     · anything under 12px is unreadable outdoors, which is where a
+       security officer reads it
+  ------------------------------------------------------------------ */
+  @media (max-width: 900px){
+    input, select, textarea{
+      font-size:16px!important;
+      min-height:46px;
+      padding:12px 14px;
+    }
+    textarea{min-height:96px;line-height:1.55}
+
+    button, .btn, a.btn, .chips button, .pick button,
+    header .navlinks a, header .navlinks button,
+    .kg-theme, #langToggle, #langBtn{
+      min-height:44px;
+      display:inline-flex;align-items:center;justify-content:center;
+    }
+
+    /* links inside running text keep their size; standalone ones grow */
+    .nav a, .navlinks a, .flink, .hb-btn, .course-more, .social a{
+      min-height:44px;
+    }
+
+    /* nothing on a phone should be smaller than this */
+    .small, .muted.small, .meta, .rline, .note, .ftag, .rights,
+    .field label, .f label{font-size:13px!important;line-height:1.6}
+
+    /* room between things a finger has to choose between */
+    .chips{gap:10px}
+    .pick{gap:10px}
+    .actions, .hb-act{gap:10px}
+  }
+
+  @media (max-width: 900px){
+    /* A footer link and a portal link are things a thumb has to hit,
+       not words in a sentence. They were 22px and 36px tall. */
+    .fcontact a, .flink, footer a,
+    header .navlinks a, header .navlinks button,
+    .contact-direct .cd{
+      min-height:44px;
+      display:inline-flex;align-items:center;
+      font-size:13.5px!important;
+    }
+    .contact-direct .cd{display:block;padding:18px}
+    .fcontact{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center}
+
+    /* the eye that shows a password sits inside the field; give the
+       whole thing a finger's width */
+    .pw-eye{min-width:44px;min-height:44px;
+      display:inline-flex;align-items:center;justify-content:center;font-size:17px}
+
+    /* the theme and language buttons are square by design; make them
+       square at a size a thumb can find */
+    .kg-theme, #langToggle, #langBtn{min-width:44px}
+  }
+
+  @media (max-width: 900px){
+    /* the last few measured below the line: a nav built with a
+       different class name, a section label, and the logo link */
+    .toollinks a, .tool-nav a, header a[href$=".html"]{
+      min-height:44px;display:inline-flex;align-items:center;
+      font-size:13.5px!important;
+    }
+    .homelink{min-width:44px;min-height:44px;
+      display:inline-flex;align-items:center;justify-content:center}
+    #l_roles, .field > label[id]{font-size:13px!important}
+  }
+
+  /* ---------- Kagoma type ----------
+     Bricolage Grotesque, one variable file, weights 200–800.
+     It replaces Archivo, EB Garamond and the Arial fallbacks the
+     portal pages were using, so every page reads as one company. */
+  :root{
+    --display:'Bricolage Grotesque', system-ui, sans-serif;
+    --body:'Bricolage Grotesque', system-ui, sans-serif;
+    --mono:'Bricolage Grotesque', system-ui, sans-serif;
+  }
+  html, body, button, input, select, textarea, .btn{
+    font-family:'Bricolage Grotesque', system-ui, -apple-system, sans-serif;
+  }
+  body{font-variation-settings:'wght' 400,'wdth' 100,'opsz' 14;
+       -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+  h1,.hero h1{font-variation-settings:'wght' 800,'wdth' 100,'opsz' 96;letter-spacing:-.025em}
+  h2,.sec-title{font-variation-settings:'wght' 700,'wdth' 100,'opsz' 48;letter-spacing:-.015em}
+  h3{font-variation-settings:'wght' 600,'opsz' 24}
+  h4{font-variation-settings:'wght' 600,'opsz' 24}
+  strong,b{font-variation-settings:'wght' 700}
+
+  /* anything that is a number lines up in a column */
+  .ref,.rf,.num,.n,.money,.cnum,code,
+  input[inputmode="numeric"],input[type="number"],input[type="tel"]{
+    font-variant-numeric:tabular-nums}
+  /* the staff door: present for people who work here, not offered to
+     visitors. It does not compete with anything a client came for. */
+  .staff-link{opacity:.45}
+  .staff-link:hover{opacity:1}
+  /* the footer links took the browser default blue on pages whose own
+     stylesheet never defined .flink */
+  .kg-foot a, .flink{color:var(--kg-text-dim,#9c9c9c);text-decoration:none}
+  .kg-foot a:hover, .flink:hover{color:var(--kg-gold,#f4d332)}
+  .kg-foot .sep{color:var(--kg-border-2,#3a3a3a)}
+  .staff-link{opacity:.45}
+  .staff-link:hover{opacity:1}
+  [data-theme="light"] .kg-foot a,[data-theme="light"] .flink{color:#5f5b54}
+</style>
+<script>
+  /* set the ground before the first paint, so the page never flashes
+     the wrong colour on the way in */
+  try{ document.documentElement.setAttribute('data-theme',
+       localStorage.getItem('kg-theme') || 'dark'); }catch(e){}
+</script>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a href="index.html" class="homelink" title="Kagoma Protection Services" aria-label="Back to the Kagoma home page"><img src="img/crest-60e57097.webp" alt="Kagoma Protection Services"></a>
+    <div>
+      <div class="htitle">KAGOMA PROTECTION SERVICES</div>
+      <div class="hsub" data-i18n="hsub">Client Portal</div>
+    </div>
+    <div class="navlinks">
+      <button class="kg-theme" onclick="kgToggleTheme()" aria-pressed="false" title="Switch to light">☀</button>
+      <button id="langToggle" onclick="toggleLang()">EN</button>
+      <a href="index.html#request" data-i18n="nav_request">Request Service</a>
+      <a href="index.html">← <span data-i18n="backlink">Kagoma</span></a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ AUTH ============ -->
+  <div id="authSection">
+    <h2 data-i18n="auth_title">Client Portal</h2>
+    <p class="lead" data-i18n="auth_lead">Sign in to follow your security service requests from first enquiry to final report.</p>
+    <div class="card auth-card">
+      <div class="auth-tabs">
+        <button class="auth-tab-btn active" id="tabLoginBtn" onclick="switchAuthTab('login')" data-i18n="tab_login">Sign In</button>
+        <button class="auth-tab-btn" id="tabSignupBtn" onclick="switchAuthTab('signup')" data-i18n="tab_signup">Create Account</button>
+      </div>
+      <div id="panelLogin" class="auth-panel active">
+        <div class="field"><label data-i18n="lbl_email">Email</label><input type="email" id="liEmail" name="email" autocomplete="email"></div>
+        <div class="field"><label data-i18n="lbl_password">Password</label>
+          <div class="pw-wrap"><input type="password" id="liPw" name="password" autocomplete="current-password">
+            <button type="button" class="pw-eye" id="pwEye" onclick="togglePw()" aria-label="Show password" aria-pressed="false">&#128065;</button>
+          </div></div>
+        <button class="btn btn-primary btn-block" id="loginBtn" onclick="doLogin()" data-i18n="btn_login">Sign In</button>
+        <div class="status-msg" id="loginStatus"></div>
+        <button type="button" class="linkish" onclick="doReset()" data-i18n="forgot">Wibagiwe ijambobanga?</button>
+        <div class="or"><span data-i18n="or">CYANGWA</span></div>
+        <button type="button" class="btn btn-google btn-block" onclick="doGoogle()">
+          <svg viewBox="0 0 18 18" width="17" height="17" aria-hidden="true"><path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.72v2.26h2.92c1.7-1.57 2.68-3.88 2.68-6.62z"/><path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.18l-2.92-2.26c-.8.54-1.83.86-3.04.86-2.34 0-4.32-1.58-5.03-3.7H.96v2.33A9 9 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.97 10.72a5.4 5.4 0 0 1 0-3.44V4.95H.96a9 9 0 0 0 0 8.1l3.01-2.33z"/><path fill="#EA4335" d="M9 3.58c1.32 0 2.5.45 3.44 1.35l2.58-2.58C13.46.9 11.43 0 9 0A9 9 0 0 0 .96 4.95l3.01 2.33C4.68 5.16 6.66 3.58 9 3.58z"/></svg><span data-i18n="google_btn">Komeza na Google</span>
+        </button>
+        <p class="switch-line">
+          <span data-i18n="no_account">Nta konti ufite?</span>
+          <button type="button" class="linkish inline" onclick="switchAuthTab('signup')" data-i18n="tab_signup">Iyandikishe</button>
+        </p>
+      </div>
+      <div id="panelSignup" class="auth-panel">
+        <div class="field"><label data-i18n="lbl_org">Organisation or your name</label><input type="text" id="suName" name="full_name" autocomplete="name"></div>
+        <div class="field"><label data-i18n="lbl_email">Email</label><input type="email" id="suEmail" name="email" autocomplete="email"></div>
+        <div class="field"><label data-i18n="lbl_password">Password</label><div class="pw-wrap"><input type="password" id="suPw" oninput="pwPaint('suPw','pwMeter')" name="password" autocomplete="new-password"><button type="button" class="pw-eye" onclick="togglePwFor('suPw',this)" aria-label="Show password" aria-pressed="false">&#128065;</button></div>
+            <div class="pw-meter" id="pwMeter"><div class="pw-bar"><i class="s0"></i></div><div class="pw-lbl"></div></div></div>
+        <div class="field"><label data-i18n="lbl_confirm">Confirm password</label><div class="pw-wrap"><input type="password" id="suPw2" name="new_password" autocomplete="new-password"><button type="button" class="pw-eye" onclick="togglePwFor('suPw2',this)" aria-label="Show password" aria-pressed="false">&#128065;</button></div></div>
+        <button class="btn btn-primary" id="signupBtn" onclick="doSignup()" data-i18n="btn_signup">Create Account</button>
+        <div class="status-msg" id="signupStatus"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ DASHBOARD ============ -->
+  <div id="dash" style="display:none">
+    <div class="dash-head">
+      <div><h2 id="greet">—</h2><div class="muted" data-i18n="dash_sub">Your security service requests</div></div>
+      <button class="btn btn-ghost" onclick="doLogout()" data-i18n="btn_logout">Sign Out</button>
+    </div>
+
+    <!-- new request -->
+    <div class="card">
+      <h3 data-i18n="sec_new">Request a security service</h3>
+      <div class="row2">
+        <div class="field"><label data-i18n="lbl_type">Service type</label>
+          <select id="qType">
+            <option value="event" data-i18n="t_event">Event security</option>
+            <option value="crowd" data-i18n="t_crowd">Crowd safety and guest management</option>
+            <option value="staffing" data-i18n="t_staff">Event staffing: reception, ushering, accreditation</option>
+            <option value="assessment" data-i18n="t_assess">Security risk assessment</option>
+            <option value="consultancy" data-i18n="t_cons">Security consulting</option>
+            <option value="emergency" data-i18n="t_emerg">Emergency and evacuation planning</option>
+            <option value="training" data-i18n="t_train">Professional security training</option>
+          </select>
+        </div>
+        <div class="field"><label data-i18n="lbl_name">Event or site name</label><input type="text" id="qName" name="full_name" autocomplete="name"></div>
+      </div>
+      <div class="row3">
+        <div class="field"><label data-i18n="lbl_loc">Location</label><input type="text" id="qLoc" placeholder="Kigali" name="qLoc"></div>
+        <div class="field"><label data-i18n="lbl_date">Date</label><input type="date" id="qDate" name="qDate"></div>
+        <div class="field"><label data-i18n="lbl_att">Expected attendance</label><input type="number" id="qAtt" min="0" name="qAtt"></div>
+      </div>
+      <div class="field"><label data-i18n="lbl_req">Security requirements</label><textarea id="qDet" rows="3"></textarea></div>
+      <button class="btn btn-primary" id="subBtn" onclick="submitRequest()" data-i18n="btn_submit">Submit Request</button>
+      <div class="status-msg" id="subStatus"></div>
+    </div>
+
+    <!-- my requests -->
+    <div class="card">
+      <h3 data-i18n="sec_mine">My requests</h3>
+      <div id="reqList" class="list"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<footer class="kg-foot">
+  <div class="kg-foot-in">
+    <div class="social" aria-label="Kagoma Protection Services on social media">
+      <a href="#" data-net="linkedin" aria-label="LinkedIn" title="LinkedIn" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.63-1.85 3.36-1.85 3.59 0 4.26 2.36 4.26 5.44v6.3zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
+      </a>
+      <a href="#" data-net="instagram" aria-label="Instagram" title="Instagram" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.3-1.46.72-2.13 1.38C1.35 2.68.93 3.35.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.38 2.13.67.66 1.34 1.08 2.13 1.38.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.3 1.46-.72 2.13-1.38.66-.67 1.08-1.34 1.38-2.13.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.3-.79-.72-1.46-1.38-2.13C21.32 1.35 20.65.93 19.86.63 19.1.33 18.22.13 16.95.07 15.67.01 15.26 0 12 0zm0 5.84a6.16 6.16 0 1 0 0 12.32 6.16 6.16 0 0 0 0-12.32zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm7.85-10.4a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z"/></svg>
+      </a>
+      <a href="#" data-net="youtube" aria-label="YouTube" title="YouTube" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19C0 8.08 0 12 0 12s0 3.92.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14C24 15.92 24 12 24 12s0-3.92-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg>
+      </a>
+      <a href="#" data-net="facebook" aria-label="Facebook" title="Facebook" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07z"/></svg>
+      </a>
+      <a href="#" data-net="x" aria-label="X" title="X" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.41l-5.8-7.58-6.64 7.58H.46l8.6-9.83L0 1.15h7.59l5.24 6.93 6.07-6.93zm-1.29 19.5h2.04L6.49 3.24H4.3l13.31 17.41z"/></svg>
+      </a>
+    </div>
+    <div style="margin:14px 0 10px;font-size:12.5px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <a href="privacy.html" class="flink">Privacy Notice</a>
+      <span class="sep">&middot;</span>
+      <a href="terms.html" class="flink">Terms &amp; Conditions</a>
+      <span class="sep">&middot;</span>
+      <a href="faq.html" class="flink">FAQ</a>
+      <span class="sep">&middot;</span>
+      <a href="certificates.html" class="flink">Certificate Verification</a>
+      <span class="sep">&middot;</span>
+      <a href="index.html#contact" class="flink">Contact</a>
+      <span class="sep">&middot;</span>
+      <a href="admin.html" class="flink staff-link" rel="nofollow">Staff</a>
+      </div>
+      <div class="kg-foot-r">&copy; 2026 KAGOMA PROTECTIONS SERVICES LTD</div>
+  </div>
+</footer>
+<script>
+const SUPABASE_URL='https://hmpwmligwlfmdoomzudz.supabase.co';
+const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcHdtbGlnd2xmbWRvb216dWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxNjY5NjcsImV4cCI6MjEwMjc0Mjk2N30.f57yWBQ8vusMdb-r4WRuiyfK7ktlKPo4XKSiKF597Y0';
+const sb=(typeof supabase!=='undefined'&&supabase.createClient)
+  ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,       // keep the session across pages
+        autoRefreshToken: true,     // don't drop the learner mid-lesson
+        detectSessionInUrl: true    // needed for e-mail confirmation links
+      }
+    }) : null;
+
+const TT={
+  forgot:{rw:'Wibagiwe ijambobanga?',en:'Forgot password?'},
+  or:{rw:'CYANGWA',en:'OR'},
+  google_btn:{rw:'Komeza na Google',en:'Continue with Google'},
+  no_account:{rw:'Nta konti ufite?',en:'No account yet?'},
+  reset_need_email:{rw:'Banza wandike email yawe hejuru.',en:'Please enter your email address above first.'},
+  reset_sent:{rw:'Twakoherereje email yo kwisubiza ijambobanga.',en:'We have sent you a password reset link.'},
+  reset_fail:{rw:'Ntibishoboye kohereza. Ongera ugerageze.',en:'Could not send the reset link. Please try again.'},
+  google_off:{rw:"Kwinjira na Google ntiraboneka. Koresha email n'ijambobanga.",en:'Google sign-in is not enabled yet. Please use email and password.'},
+  hsub:{rw:"Ikaye y'Umukiriya",en:"Client Portal"},
+  nav_request:{rw:"Saba Serivisi",en:"Request Service"},
+  backlink:{rw:"Kagoma",en:"Kagoma"},
+  auth_title:{rw:"Ikaye y'Umukiriya",en:"Client Portal"},
+  auth_lead:{rw:"Injira ukurikirane ibyifuzo byawe bya serivisi z'umutekano uhereye ku cyifuzo ukageza kuri raporo ya nyuma.",
+             en:"Sign in to follow your security service requests from first enquiry to final report."},
+  tab_login:{rw:"Injira",en:"Sign In"}, tab_signup:{rw:"Kora Konti",en:"Create Account"},
+  pw_hint: {rw:"Koresha nibura inyuguti 12. Interuro ngufi iribukwa kandi ikomeye kurusha ijambo rimwe rigoye.",
+            en:"Use at least 12 characters. A short sentence is easier to remember and stronger than one awkward word."},
+  pw_short: {rw:"<b>Rigufi cyane.</b> Ongeraho inyuguti kugeza kuri 12.", en:"<b>Too short.</b> Keep going until you reach 12 characters."},
+  pw_common: {rw:"<b>Rizwi cyane.</b> Iri jambobanga rikoreshwa na benshi \u2014 hitamo irindi.", en:"<b>Too common.</b> This password is widely used \u2014 choose another."},
+  pw_personal: {rw:"<b>Rikubiyemo amakuru yawe.</b> Ntukoreshe izina cyangwa email yawe.", en:"<b>Contains your own details.</b> Do not use your name or e-mail."},
+  pw_repeat: {rw:"<b>Inyuguti zisubiramo.</b> Hitamo irindi.", en:"<b>Just one character repeated.</b> Choose another."},
+  pw_sequence: {rw:"<b>Urutonde ruzwi.</b> Hitamo irindi.", en:"<b>A well-known sequence.</b> Choose another."},
+  pw_fair: {rw:"<b>Rirakwiye.</b> Ongeraho inyuguti rikomere kurushaho.", en:"<b>Acceptable.</b> A few more characters would make it stronger."},
+  pw_good: {rw:"<b>Ryiza.</b>", en:"<b>Good.</b>"},
+  pw_strong: {rw:"<b>Rikomeye.</b>", en:"<b>Strong.</b>"},
+  err_pw_weak: {rw:"Ijambobanga ntirikwiye. Reba ubutumwa buri munsi yaryo.", en:"That password is not acceptable yet. See the note below it."},
+  wrong_role_t: {rw:"Iyi si ikaye yawe", en:"This is not your portal"},
+  wrong_role_d: {rw:"Konti yawe ntabwo ari iy'iyi kaye. Kanda hepfo ujye aho ukwiye.",
+                 en:"Your account is not of this kind. Use the button below to go where you belong."},
+  wrong_role_b: {rw:"Jya mu ikaye yanjye", en:"Go to my portal"},
+  lbl_email:{rw:"Email",en:"Email"}, lbl_password:{rw:"Ijambobanga",en:"Password"},
+  lbl_confirm:{rw:"Ongera wandike",en:"Confirm password"},
+  lbl_org:{rw:"Ikigo cyangwa amazina yawe",en:"Organisation or your name"},
+  btn_login:{rw:"Injira",en:"Sign In"}, btn_signup:{rw:"Kora Konti",en:"Create Account"},
+  btn_logout:{rw:"Sohoka",en:"Sign Out"}, btn_submit:{rw:"Ohereza Icyifuzo",en:"Submit Request"},
+  btn_working:{rw:"Turimo kohereza...",en:"Sending..."},
+  dash_sub:{rw:"Ibyifuzo byawe bya serivisi",en:"Your security service requests"},
+  sec_new:{rw:"Saba serivisi y'umutekano",en:"Request a security service"},
+  sec_mine:{rw:"Ibyifuzo byanjye",en:"My requests"},
+  lbl_type:{rw:"Ubwoko bwa serivisi",en:"Service type"},
+  lbl_name:{rw:"Izina ry'ibirori cyangwa ahantu",en:"Event or site name"},
+  lbl_loc:{rw:"Ahantu",en:"Location"}, lbl_date:{rw:"Itariki",en:"Date"},
+  lbl_att:{rw:"Abateganyijwe",en:"Expected attendance"},
+  lbl_req:{rw:"Ibisabwa mu mutekano",en:"Security requirements"},
+  t_event:{rw:"Umutekano w'ibirori",en:"Event security"},
+  t_crowd:{rw:"Umutekano w'imbaga no kwakira abashyitsi",en:"Crowd safety and guest management"},
+  t_staff:{rw:"Abakozi b'ibirori: kwakira, kuyobora, kugenzura ibyangombwa",
+           en:"Event staffing: reception, ushering, accreditation"},
+  t_assess:{rw:"Isuzuma ry'ibyago by'umutekano",en:"Security risk assessment"},
+  t_emerg:{rw:"Igenamigambi ry'ibyihutirwa no kuvamo",en:"Emergency and evacuation planning"},
+  t_train:{rw:"Amahugurwa y'umwuga w'umutekano",en:"Professional security training"},
+  t_exec:{rw:"Kurinda abakomeye",en:"Executive protection"},
+  t_cons:{rw:"Ubujyanama ku mutekano",en:"Security consulting"},
+  s_requested:{rw:"Icyifuzo",en:"Request"}, s_assessment:{rw:"Isuzuma ry'ibyago",en:"Risk assessment"},
+  s_quotation:{rw:"Igiciro",en:"Quotation"}, s_approved:{rw:"Kwemeza",en:"Approval"},
+  s_deployment:{rw:"Ku murimo",en:"Deployment"}, s_reported:{rw:"Raporo",en:"Report"},
+  cancelled:{rw:"Cyahagaritswe",en:"Cancelled"},
+  quote_h:{rw:"Igiciro cyatanzwe",en:"Quotation received"},
+  q_officers:{rw:"abakozi",en:"officers"}, q_days:{rw:"iminsi",en:"days"},
+  q_valid:{rw:"Kigeza",en:"Valid until"},
+  q_accept:{rw:"Emera",en:"Accept"}, q_decline:{rw:"Anga",en:"Decline"},
+  q_accepted:{rw:"Cyemewe",en:"Accepted"}, q_declined:{rw:"Cyanzwe",en:"Declined"},
+  no_reqs:{rw:"Ntabwo urasaba serivisi. Koresha ifishi iri hejuru.",
+           en:"You have not requested a service yet. Use the form above."},
+  ok_sent:{rw:"Icyifuzo cyoherejwe. Nimero yacyo:",en:"Request sent. Your reference:"},
+  err_fill:{rw:"Uzuza nibura ubwoko bwa serivisi n'ahantu.",en:"Please give at least the service type and location."},
+  err:{rw:"Habaye ikibazo. Ongera ugerageze.",en:"Something went wrong. Please try again."},
+  err_login:{rw:"Email cyangwa ijambobanga si byo.",en:"Incorrect email or password."},
+  err_pw:{rw:"Ijambobanga rigomba kugira nibura inyuguti 12.",en:"Password must be at least 12 characters."},
+  err_pw2:{rw:"Amagambobanga ntahura.",en:"Passwords do not match."},
+  err_offline:{rw:"Ntibishoboye guhuza na seriveri.",en:"Could not reach the server."}
+};
+let lang='en';
+const T=k=>(TT[k]||{})[lang]||k;
+function renderLang(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n'); if(TT[k]) el.textContent=TT[k][lang];
+  });
+  document.getElementById('langToggle').textContent = lang==='rw'?'EN':'RW';
+  if(user) renderReqs();
+}
+function toggleLang(){ lang=lang==='rw'?'en':'rw'; renderLang(); }
+
+const $=id=>document.getElementById(id);
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function msg(id,t,ok){const e=$(id); e.textContent=t; e.className='status-msg show '+(ok?'ok':'err');}
+function switchAuthTab(t){
+  $('panelLogin').classList.toggle('active',t==='login');
+  $('panelSignup').classList.toggle('active',t==='signup');
+  $('tabLoginBtn').classList.toggle('active',t==='login');
+  $('tabSignupBtn').classList.toggle('active',t==='signup');
+}
+
+let user=null, reqs=[];
+
+async function doSignup(){
+  const name=suName.value.trim(), email=suEmail.value.trim(), pw=suPw.value, pw2=suPw2.value;
+  if(!name||!email||!pw) return msg('signupStatus',T('err_fill'),false);
+  const pwR = pwAssess(pw);
+  if(!pwR.ok){
+    /* say which rule was broken: "too short" is unhelpful when the real
+       problem is that the password is a common one */
+    const key = 'pw_' + pwR.msg;
+    /* the pages do not agree on what the language variable is called,
+       so resolve it rather than assuming */
+    const L = (typeof toolLang!=='undefined') ? toolLang
+            : (typeof lang!=='undefined') ? lang : 'rw';
+    const why = ((TT[key] && TT[key][L]) || '').replace(/<[^>]+>/g,'');
+    msg('signupStatus', why, false);
+    return;
+  }if(pw!==pw2) return msg('signupStatus',T('err_pw2'),false);
+  const b=signupBtn; b.disabled=true; b.textContent=T('btn_working');
+  const release=()=>{ b.disabled=false; b.textContent=T('btn_signup'); };
+  if(!sb){ release(); return msg('signupStatus',T('err_offline'),false); }
+  const {error}=await sb.auth.signUp({email,password:pw,
+    options:{data:{full_name:name, role:'client'}}});
+  b.disabled=false; b.textContent=T('btn_signup');
+  if(error) return msg('signupStatus',T('err'),false);
+  await sb.auth.signInWithPassword({email,password:pw});
+  await boot();
+}
+
+/* ---------------------------------------------------------------
+   Password guidance.
+
+   Deliberately no "one capital, one number, one symbol" rule.
+   NIST dropped composition rules in 2025 because they push people
+   to predictable shapes like Kagoma2026! — which satisfies every
+   rule and is trivial to guess. What actually helps is length,
+   and refusing the passwords that are genuinely predictable:
+   the person's own name, the company name, and the usual list.
+---------------------------------------------------------------- */
+const PW_MIN = 12;
+const PW_COMMON = ['password','passw0rd','123456','12345678','123456789','1234567890',
+  'qwerty','qwertyuiop','abc123','111111','000000','iloveyou','admin','welcome',
+  'letmein','monkey','dragon','football','azerty','motdepasse','kagoma','kagoma123',
+  'security','umutekano','rwanda','kigali','protection'];
+
+function pwPersonalBits(){
+  const ids=['suFirst','suLast','suName','suEmail','suPhone','liEmail'];
+  const out=[];
+  ids.forEach(id=>{
+    const e=document.getElementById(id);
+    if(e && e.value){
+      String(e.value).toLowerCase().split(/[^a-z0-9]+/i).forEach(w=>{ if(w.length>=4) out.push(w); });
+    }
+  });
+  return out;
+}
+
+function pwAssess(pw){
+  const p=String(pw||''); const low=p.toLowerCase();
+  if(!p) return {score:0, ok:false, msg:''};
+
+  // things that make a password predictable no matter how it is composed
+  const base=low.replace(/[^a-z0-9]/g,'');
+  if(PW_COMMON.some(c=>base===c || base.startsWith(c) && base.length<=c.length+4))
+    return {score:1, ok:false, msg:'common'};
+  if(pwPersonalBits().some(w=>low.includes(w)))
+    return {score:1, ok:false, msg:'personal'};
+  if(/^(.)\1+$/.test(p)) return {score:1, ok:false, msg:'repeat'};
+  if(/^(0123|1234|2345|3456|4567|5678|6789|abcd|qwer)/.test(low))
+    return {score:1, ok:false, msg:'sequence'};
+
+  if(p.length < PW_MIN) return {score:1, ok:false, msg:'short'};
+
+  // beyond the minimum, length is what carries the strength
+  let s=2;
+  if(p.length>=14) s=3;
+  if(p.length>=18 || (p.length>=14 && /\s/.test(p))) s=4;
+  return {score:s, ok:true, msg: s>=4?'strong' : s===3?'good' : 'fair'};
+}
+
+function pwLang(){
+  return (typeof toolLang!=='undefined') ? toolLang
+       : (typeof lang!=='undefined') ? lang : 'rw';
+}
+function pwPaint(inputId, meterId){
+  const i=document.getElementById(inputId), m=document.getElementById(meterId);
+  if(!i||!m) return;
+  const r=pwAssess(i.value);
+  const bar=m.querySelector('i'), lbl=m.querySelector('.pw-lbl');
+  bar.className='s'+r.score;
+  bar.style.width=(r.score*25)+'%';
+  const L=pwLang();
+  lbl.innerHTML = i.value ? ((TT['pw_'+r.msg]&&TT['pw_'+r.msg][L])||'') : (TT.pw_hint&&TT.pw_hint[L])||'';
+}
+
+function showStatus(id, text, ok){
+  const el=document.getElementById(id); if(!el) return;
+  el.textContent=text; el.className='status-msg show '+(ok?'ok':'err');
+}
+
+/* Each password field gets its own eye, keyed by the field id, so the
+   sign-up form can carry two of them without one flipping the other. */
+function togglePwFor(inputId, btn){
+  const i=document.getElementById(inputId); if(!i) return;
+  const show = i.type==='password';
+  i.type = show ? 'text' : 'password';
+  btn.setAttribute('aria-pressed', show ? 'true' : 'false');
+  btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+  i.focus();
+}
+
+function togglePw(){
+  const i=document.getElementById('liPw'), b=document.getElementById('pwEye');
+  const show=i.type==='password';
+  i.type=show?'text':'password';
+  b.setAttribute('aria-pressed', show?'true':'false');
+  b.setAttribute('aria-label', show?'Hide password':'Show password');
+  i.focus();
+}
+async function doReset(){
+  /* Opened from a file on this computer, the reset link has nowhere
+     to point back to. Say so plainly rather than blaming the server. */
+  if(location.protocol === 'file:' || !location.origin || location.origin === 'null'){
+    const e=document.getElementById('loginStatus');
+    if(e){ e.textContent='Open the site from your Kagoma web address first — a reset link cannot point at a file on this computer.';
+           e.className='status-msg show err'; }
+    return;
+  }
+  if(!sb) return showStatus('loginStatus', ((k)=>(TT[k]||{})[(typeof toolLang!=='undefined'?toolLang:(typeof lang!=='undefined'?lang:'en'))]||k)('reset_fail'), false);
+  const email=document.getElementById('liEmail').value.trim();
+  if(!email) return showStatus('loginStatus', ((k)=>(TT[k]||{})[(typeof toolLang!=='undefined'?toolLang:(typeof lang!=='undefined'?lang:'en'))]||k)('reset_need_email'), false);
+  const __rs = (msg)=>{ showStatus('loginStatus', msg, false); };
+  /* A password reset can fail for reasons the person can act on
+     (rate limit, bad address) and reasons only Kagoma can fix
+     (redirect URL not whitelisted). Showing the real message means
+     nobody has to guess which. */
+  const origin = (location.origin && location.origin !== 'null')
+    ? location.origin + location.pathname
+    : null;                       // opened from a file:// path, not a site
+  if(!origin){
+    return __rs('The reset link needs the site to be online. Open it from your Kagoma web address, not from a file on this computer.');
+  }
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: origin });
+  if(error){
+    console.error('reset failed:', error);
+    const m = (error.message || '').toLowerCase();
+    if(m.includes('rate') || m.includes('limit') || error.status === 429){
+      return __rs('Too many reset e-mails have been sent from this project in the last hour. Please wait and try again.');
+    }
+    if(m.includes('redirect')){
+      return __rs('This address is not on the allowed list in Supabase (Authentication -> URL Configuration).');
+    }
+    return __rs(error.message || 'Could not send the reset link.');
+  }
+  showStatus('loginStatus', error?((k)=>(TT[k]||{})[(typeof toolLang!=='undefined'?toolLang:(typeof lang!=='undefined'?lang:'en'))]||k)('reset_fail'):((k)=>(TT[k]||{})[(typeof toolLang!=='undefined'?toolLang:(typeof lang!=='undefined'?lang:'en'))]||k)('reset_sent'), !error);
+}
+async function doGoogle(){
+  if(!sb) return showStatus('loginStatus', ((k)=>(TT[k]||{})[(typeof toolLang!=='undefined'?toolLang:(typeof lang!=='undefined'?lang:'en'))]||k)('google_off'), false);
+  const {error}=await sb.auth.signInWithOAuth({provider:'google',
+    options:{redirectTo: location.origin+location.pathname}});
+  /* Google must be switched on in Supabase -> Authentication -> Providers;
+     until it is, say so plainly rather than failing silently. */
+  if(error) showStatus('loginStatus', ((k)=>(TT[k]||{})[(typeof toolLang!=='undefined'?toolLang:(typeof lang!=='undefined'?lang:'en'))]||k)('google_off'), false);
+}
+
+async function doLogin(){
+  if(!sb) return msg('loginStatus',T('err_offline'),false);
+  const email=liEmail.value.trim(), pw=liPw.value;
+  if(!email||!pw) return msg('loginStatus',T('err_fill'),false);
+  const b=loginBtn; b.disabled=true; b.textContent=T('btn_working');
+  const {error}=await sb.auth.signInWithPassword({email,password:pw});
+  b.disabled=false; b.textContent=T('btn_login');
+  if(error) return msg('loginStatus',T('err_login'),false);
+  await boot();
+}
+async function doLogout(){ if(sb) await sb.auth.signOut(); location.reload(); }
+
+
+/* ---------------------------------------------------------------
+   A signed-in account is not the same as the right kind of account.
+   The database refuses the wrong role anyway, but a page that lets
+   someone fill in a whole form before the server says no is a page
+   that wastes their time. Check first, and say where they belong.
+---------------------------------------------------------------- */
+/* the decision, separated from the network call so it can be checked */
+function roleAllowed(cap, allowed){
+  if(!cap || !cap.signed_in) return true;   // the auth panel handles this
+  /* the database has called this is_admin and may_admin at different
+     times; either one means the same person, and a rename should never
+     be what locks the administrator out of a desk */
+  if(cap.is_admin || cap.may_admin || cap.role === 'admin') return true;
+  return allowed.indexOf(cap.role) !== -1;
+}
+async function requireRole(allowed, whereInstead){
+  if(!sb) return true;                      // offline: nothing loads anyway
+  const {data:cap}=await sb.rpc('my_capabilities');
+  if(roleAllowed(cap, allowed)) return true;
+
+  const box=document.getElementById('authSection') || document.body;
+  box.innerHTML = '<div class="card" style="margin-top:26px">'
+    + '<h2>' + WRONG_ROLE_T() + '</h2>'
+    + '<p class="lead">' + WRONG_ROLE_D() + '</p>'
+    + '<a class="btn btn-primary" href="' + whereInstead + '">' + WRONG_ROLE_B() + '</a></div>';
+  const d=document.getElementById('dash') || document.getElementById('dashboardSection');
+  if(d) d.style.display='none';
+  return false;
+}
+function __L(){ return (typeof toolLang!=='undefined')?toolLang:(typeof lang!=='undefined')?lang:'rw'; }
+function WRONG_ROLE_T(){ return (TT.wrong_role_t||{})[__L()] || 'Wrong portal'; }
+function WRONG_ROLE_D(){ return (TT.wrong_role_d||{})[__L()] || ''; }
+function WRONG_ROLE_B(){ return (TT.wrong_role_b||{})[__L()] || 'Go'; }
+
+async function boot(){
+  if(!sb) return;
+  const {data:{user:u}}=await sb.auth.getUser();
+  if(!u) return;
+  if(!(await requireRole(['client','employer','student','professional'], 'index.html'))) return;
+  user=u;
+  $('authSection').style.display='none'; $('dash').style.display='block';
+  const {data:p}=await sb.from('profiles').select('full_name').eq('id',u.id).maybeSingle();
+  $('greet').textContent=(p&&p.full_name)||u.email;
+  await loadReqs();
+}
+
+async function submitRequest(){
+  const loc=$('qLoc').value.trim();
+  if(!loc) return msg('subStatus',T('err_fill'),false);
+  const b=$('subBtn'); b.disabled=true; b.textContent=T('btn_working');
+  const {data:p}=await sb.from('profiles').select('full_name').eq('id',user.id).maybeSingle();
+  const {data,error}=await sb.from('service_requests').insert({
+    client_name:(p&&p.full_name)||user.email,
+    email:user.email,
+    event_type:$('qType').value,
+    event_name:$('qName').value.trim()||null,
+    location:loc,
+    event_date:$('qDate').value||null,
+    expected_attendees:$('qAtt').value?parseInt($('qAtt').value):null,
+    details:$('qDet').value.trim()||null,
+    requested_by:user.id
+  }).select('reference').maybeSingle();
+  b.disabled=false; b.textContent=T('btn_submit');
+  if(error) return msg('subStatus',T('err'),false);
+  msg('subStatus', T('ok_sent')+' '+((data&&data.reference)||''), true);
+  $('qName').value=''; $('qLoc').value=''; $('qDate').value=''; $('qAtt').value=''; $('qDet').value='';
+  await loadReqs();
+}
+
+async function loadReqs(){
+  const {data,error}=await sb.rpc('my_service_requests');
+  reqs=(error||!data)?[]:data;
+  renderReqs();
+}
+
+const FLOW=['requested','assessment','quotation','approved','deployment','reported'];
+function tracker(status, stages){
+  if(status==='cancelled'){
+    return `<div class="track">${FLOW.map((s,i)=>
+      `<div class="stp${i===0?' cancelled':''}"><span class="dot"></span><span class="lbl">${T('s_'+s)}</span></div>`).join('')}</div>
+      <div style="margin-top:8px"><span class="tag bad">${T('cancelled')}</span></div>`;
+  }
+  const reached=new Set((stages||[]).map(s=>s.stage));
+  const idx=FLOW.indexOf(status);
+  return `<div class="track">${FLOW.map((s,i)=>{
+    let cls = i<idx ? 'done' : (i===idx ? 'now' : '');
+    if(!cls && reached.has(s)) cls='done';
+    return `<div class="stp ${cls}"><span class="dot"></span><span class="lbl">${T('s_'+s)}</span></div>`;
+  }).join('')}</div>`;
+}
+function renderReqs(){
+  $('reqList').innerHTML = reqs.length ? reqs.map(r=>{
+    const q=(r.quotations||[])[0];
+    return `
+    <div class="rq">
+      <div class="rq-top">
+        <div>
+          <h4>${esc(r.event_name||T('t_'+({event:'event',crowd:'crowd',staffing:'staff',consultancy:'cons'}[r.event_type]||'event')))}</h4>
+          <div class="meta">${esc(r.location||'')}${r.event_date?' &middot; '+r.event_date:''}${r.expected_attendees?' &middot; '+r.expected_attendees:''}</div>
+        </div>
+        <div class="ref">${esc(r.reference||'')}</div>
+      </div>
+      ${tracker(r.status, r.stages)}
+      ${q?`
+        <div class="quote">
+          <div class="amt">${esc(q.currency||'RWF')} ${q.amount!=null?Number(q.amount).toLocaleString():'—'}</div>
+          <div class="qmeta">
+            ${q.officers?q.officers+' '+T('q_officers'):''}${q.officers&&q.days?' &middot; ':''}${q.days?q.days+' '+T('q_days'):''}
+            ${q.valid_until?'<br>'+T('q_valid')+': '+q.valid_until:''}
+            ${q.notes?'<br>'+esc(q.notes):''}
+          </div>
+          <div class="qact">
+            ${q.status==='sent'
+              ? `<button class="btn btn-primary btn-mini" onclick="answerQuote('${q.id}','accepted')">${T('q_accept')}</button>
+                 <button class="btn btn-ghost btn-mini" onclick="answerQuote('${q.id}','declined')">${T('q_decline')}</button>`
+              : `<span class="tag ${q.status==='accepted'?'ok':'bad'}">${q.status==='accepted'?T('q_accepted'):T('q_declined')}</span>`}
+          </div>
+        </div>`:''}
+    </div>`;
+  }).join('') : `<div class="empty">${T('no_reqs')}</div>`;
+}
+async function answerQuote(id,status){
+  const {error}=await sb.from('quotations').update({status}).eq('id',id);
+  if(!error) await loadReqs();
+}
+
+renderLang();
+boot();
+
+
+/* ---------------------------------------------------------------
+   Light and dark.
+
+   The setting follows the reader, not the page: it is stored once
+   and read on every page, so a choice made in the course player is
+   still in force on the certificate register.
+
+   It is applied before first paint (see the inline script in <head>)
+   so nobody sees a flash of the wrong ground.
+---------------------------------------------------------------- */
+function kgTheme(){ try{ return localStorage.getItem('kg-theme') || 'dark'; }catch(e){ return 'dark'; } }
+function kgApplyTheme(t){
+  document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+  document.querySelectorAll('.kg-theme').forEach(b=>{
+    const light = t === 'light';
+    b.textContent = light ? '\u263D' : '\u2600';          /* moon when light, sun when dark */
+    b.setAttribute('aria-pressed', light ? 'true' : 'false');
+    b.setAttribute('title', light ? 'Switch to dark' : 'Switch to light');
+    b.setAttribute('aria-label', light ? 'Switch to dark' : 'Switch to light');
+  });
+}
+function kgToggleTheme(){
+  const next = kgTheme() === 'light' ? 'dark' : 'light';
+  try{ localStorage.setItem('kg-theme', next); }catch(e){}
+  kgApplyTheme(next);
+}
+kgApplyTheme(kgTheme());
+
+</script>
+</body>
+</html>

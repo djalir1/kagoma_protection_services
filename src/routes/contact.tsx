@@ -2,12 +2,17 @@ import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHero } from "@/components/page-hero";
 import { Mail, MapPin, Phone, Send, CheckCircle2, Clock } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
       { title: "Contact — KAGOMA Protection Services" },
-      { name: "description", content: "Get in touch with Kagoma Protection Services for event security, consultancy, and training." },
+      {
+        name: "description",
+        content:
+          "Get in touch with Kagoma Protection Services for event security, consultancy, and training.",
+      },
       { property: "og:title", content: "Contact Kagoma Protection Services" },
       { property: "og:description", content: "Book a consultation or request a proposal." },
     ],
@@ -17,12 +22,18 @@ export const Route = createFileRoute("/contact")({
 
 function ContactPage() {
   const [sent, setSent] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
 
   return (
     <>
       <PageHero
         eyebrow="Contact"
-        title={<>Let's plan your <span className="text-gradient-gold">operation.</span></>}
+        title={
+          <>
+            Let's plan your <span className="text-gradient-gold">operation.</span>
+          </>
+        }
         subtitle="Tell us about your event or requirement. Our team will respond within 24 hours with next steps."
       />
 
@@ -40,24 +51,47 @@ function ContactPage() {
                   <Icon className="h-5 w-5" />
                 </div>
                 <div>
-                  <div className="text-xs uppercase tracking-widest text-muted-foreground">{title}</div>
+                  <div className="text-xs uppercase tracking-widest text-muted-foreground">
+                    {title}
+                  </div>
                   <div className="mt-1 font-semibold">{value}</div>
                 </div>
               </>
             );
-            const cls = "flex items-center gap-4 rounded-2xl border border-border bg-card p-5 transition hover:border-primary/60";
+            const cls =
+              "flex items-center gap-4 rounded-2xl border border-border bg-card p-5 transition hover:border-primary/60";
             return href ? (
-              <a key={title} href={href} className={cls}>{content}</a>
+              <a key={title} href={href} className={cls}>
+                {content}
+              </a>
             ) : (
-              <div key={title} className={cls}>{content}</div>
+              <div key={title} className={cls}>
+                {content}
+              </div>
             );
           })}
         </div>
 
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            setSent(true);
+            const f = new FormData(e.currentTarget);
+            const v = (k: string) => String(f.get(k) ?? "").trim() || null;
+            setBusy(true);
+            setError("");
+            const { error } = await supabase.from("service_requests").insert({
+              client_name: v("name"),
+              email: v("email"),
+              phone: v("phone"),
+              event_type: v("type"),
+              event_date: v("date"),
+              details: [v("org") && `Organization: ${v("org")}`, v("message")]
+                .filter(Boolean)
+                .join("\n\n"),
+            });
+            setBusy(false);
+            if (error) setError("We could not send your request. Please call or email us instead.");
+            else setSent(true);
           }}
           className="rounded-2xl border border-border bg-card p-8"
         >
@@ -83,7 +117,11 @@ function ContactPage() {
                 <Field label="Organization" name="org" />
                 <Field label="Email" type="email" name="email" required />
                 <Field label="Phone" name="phone" />
-                <Field label="Event / Engagement type" name="type" placeholder="Concert, corporate, private, consultancy..." />
+                <Field
+                  label="Event / Engagement type"
+                  name="type"
+                  placeholder="Concert, corporate, private, consultancy..."
+                />
                 <Field label="Preferred date" type="date" name="date" />
               </div>
 
@@ -100,8 +138,11 @@ function ContactPage() {
                 />
               </div>
 
+              {error && <p className="mt-4 text-sm text-destructive">{error}</p>}
+
               <button
                 type="submit"
+                disabled={busy}
                 className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-accent to-accent/80 px-7 py-3.5 text-sm font-bold uppercase tracking-widest text-accent-foreground shadow-lg shadow-accent/30 hover:brightness-110 transition sm:w-auto"
               >
                 Send request <Send className="h-4 w-4" />
@@ -115,14 +156,23 @@ function ContactPage() {
 }
 
 function Field({
-  label, name, type = "text", required, placeholder,
+  label,
+  name,
+  type = "text",
+  required,
+  placeholder,
 }: {
-  label: string; name: string; type?: string; required?: boolean; placeholder?: string;
+  label: string;
+  name: string;
+  type?: string;
+  required?: boolean;
+  placeholder?: string;
 }) {
   return (
     <label className="block">
       <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-        {label}{required && <span className="text-accent"> *</span>}
+        {label}
+        {required && <span className="text-accent"> *</span>}
       </span>
       <input
         type={type}

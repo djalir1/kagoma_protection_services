@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Saba Akazi — Kagoma Protection Services</title>
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#000000">
+<style>
+@font-face{
+  font-family:'Bricolage Grotesque';
+  src:url('fonts/BricolageGrotesque.woff2') format('woff2-variations');
+  font-weight:200 800;
+  font-stretch:75% 100%;
+  font-display:swap;
+}
+
+/* ============================================================
+   KAGOMA — theme tokens
+
+   One scale, two settings. Gold and red never move: a brand that
+   changes colour is not a brand. What flips is the ground and the
+   type on it.
+
+   Dark is the default. Light exists because an officer reading
+   forty lessons in Kigali daylight cannot see a dark screen.
+   ============================================================ */
+:root{
+  --kg-gold:#f4d332;
+  --kg-gold-dim:#c9a227;
+  --kg-red:#c90000;
+  --kg-red-dim:#8e0000;
+
+  --kg-bg:#000000;
+  --kg-surface:#0d0d0d;
+  --kg-surface-2:#151515;
+  --kg-border:#262626;
+  --kg-border-2:#3a3a3a;
+  --kg-text:#ffffff;
+  --kg-text-dim:#9c9c9c;
+  --kg-shadow:rgba(0,0,0,.55);
+}
+[data-theme="light"]{
+  --kg-bg:#ffffff;
+  --kg-surface:#f6f4ef;
+  --kg-surface-2:#ece9e1;
+  --kg-border:#ddd8cc;
+  --kg-border-2:#bdb6a5;
+  --kg-text:#141210;
+  --kg-text-dim:#5f5b54;
+  --kg-shadow:rgba(0,0,0,.14);
+  /* the brand red is too light-on-light for small type; the deeper
+     one keeps the hue and stays readable */
+  --kg-red:#b00000;
+  --kg-gold-dim:#8a6f10;
+}
+html,body{background:var(--kg-bg);color:var(--kg-text)}
+
+  :root{
+    --ink:var(--kg-bg);
+    --panel:var(--kg-surface);
+    --panel-2:var(--kg-surface-2);
+    --fog:var(--kg-text);
+    --fog-dim:var(--kg-text-dim);
+    --gold:var(--kg-gold);
+    --gold-bright:var(--kg-gold);
+    --red:var(--kg-red);
+    --line:rgba(255,255,255,0.10);
+    --line-strong:rgba(255,255,255,0.18);
+    --ok:var(--kg-gold);
+    --bad:var(--kg-red);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--fog);
+    font-family:Arial, Helvetica, sans-serif;
+    line-height:1.55;
+    padding-bottom:60px;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:0 20px;}
+
+  header{
+    border-bottom:1px solid var(--line);
+    padding:22px 0;
+    position:sticky;top:0;
+    background:rgba(10,10,10,0.94);
+    backdrop-filter:blur(8px);
+    z-index:10;
+  }
+  header .wrap{display:flex;align-items:center;gap:14px;}
+  header img{height:42px;width:auto;}
+  header .htitle{font-size:17px;font-weight:700;color:var(--kg-text);letter-spacing:0.01em;}
+  header .hsub{font-size:11.5px;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;margin-top:2px;}
+  header .navlinks{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
+  header .navlinks a, header .navlinks button{
+    font-size:12.5px;color:var(--fog-dim);border:1px solid var(--line-strong);padding:9px 14px;border-radius:3px;background:transparent;cursor:pointer;
+  }
+  header .navlinks a:hover, header .navlinks button:hover{color:var(--gold-bright);border-color:var(--gold);}
+
+  h2{font-size:20px;color:var(--kg-text);margin-bottom:6px;letter-spacing:0.01em;}
+  h3{font-size:16px;color:var(--kg-text);margin-bottom:10px;}
+  .lead{font-size:14px;color:var(--fog-dim);margin-bottom:26px;max-width:600px;}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:26px;}
+
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:12px;font-weight:700;letter-spacing:0.04em;color:var(--gold);text-transform:uppercase;margin-bottom:7px;}
+  .field input, .field select{
+    width:100%;
+    background:var(--ink);
+    border:1px solid var(--line-strong);
+    color:var(--kg-text);
+    padding:11px 13px;
+    font-size:14.5px;
+    border-radius:3px;
+    font-family:inherit;
+  }
+  .field input:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
+
+  .btn{
+    font-weight:700;font-size:14px;padding:13px 22px;border-radius:3px;border:none;cursor:pointer;letter-spacing:0.02em;
+  }
+  .btn-primary{background:var(--gold);color:var(--kg-gold-dim);}
+  .btn-primary:hover{background:var(--gold-bright);}
+  .btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+  .btn-outline{background:transparent;border:1px solid var(--line-strong);color:var(--kg-text);}
+  .btn-outline:hover{border-color:var(--gold);color:var(--gold-bright);}
+  .btn-small{font-size:12px;padding:8px 14px;}
+
+  .status-msg{font-size:13px;margin-top:14px;padding:10px 12px;border-radius:3px;display:none;}
+  .status-msg.show{display:block;}
+  .status-msg.ok{background:rgba(47,168,79,0.12);color:var(--kg-gold);border:1px solid rgba(47,168,79,0.35);}
+  .status-msg.err{background:rgba(201,0,0,0.12);color:var(--kg-red);border:1px solid rgba(201,0,0,0.35);}
+
+  /* auth tabs */
+  .auth-tabs{display:flex;gap:2px;margin:30px 0 26px;border:1px solid var(--line);width:fit-content;border-radius:3px;overflow:hidden;}
+  .auth-tab-btn{padding:12px 22px;background:var(--panel);color:var(--fog-dim);font-weight:700;font-size:13.5px;border:none;cursor:pointer;letter-spacing:0.02em;}
+  .auth-tab-btn.active{background:var(--gold);color:var(--kg-gold-dim);}
+  .auth-panel{display:none;max-width:420px;}
+  .auth-panel.active{display:block;}
+
+  /* dashboard */
+  #dashboardSection{display:none;}
+  .welcome-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:8px;}
+  section.d-section{margin-top:44px;}
+
+  .course-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px;}
+  @media (max-width:700px){.course-grid{grid-template-columns:1fr;}}
+  .course-card{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:18px 20px;}
+  .course-card .ccode{font-family:'Courier New',monospace;font-size:11px;color:var(--gold);}
+  .course-card h4{font-size:15.5px;color:var(--kg-text);margin:8px 0 6px;}
+  .course-card p{font-size:13px;color:var(--fog-dim);margin-bottom:14px;}
+  .badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:0.05em;padding:5px 10px;border-radius:3px;text-transform:uppercase;}
+  .badge-enrolled{background:rgba(244,211,50,0.15);color:var(--gold-bright);}
+  .badge-progress{background:rgba(90,140,255,0.15);color:var(--kg-gold);}
+  .badge-completed{background:rgba(47,168,79,0.15);color:var(--kg-gold);}
+
+  .list-row{
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+    padding:16px 18px;border:1px solid var(--line);border-radius:3px;margin-bottom:10px;background:var(--panel);
+  }
+  .list-row .who{font-size:14.5px;color:var(--kg-text);}
+  .list-row .meta{font-size:12px;color:var(--fog-dim);margin-top:4px;font-family:'Courier New',monospace;}
+  .list-row .actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+
+  .empty-note{font-size:13.5px;color:var(--fog-dim);padding:20px;text-align:center;border:1px dashed var(--line-strong);border-radius:4px;margin-top:14px;}
+
+  footer{border-top:1px solid var(--line);margin-top:60px;padding:24px 0;text-align:center;font-size:11.5px;color:var(--fog-dim);}
+  /* ---------- Account type chooser ---------- */
+  .role-pick{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  @media (max-width:520px){ .role-pick{grid-template-columns:1fr;} }
+  .role-opt{
+    display:block;cursor:pointer;position:relative;
+    border:1px solid var(--line-strong);border-radius:var(--radius);
+    padding:12px 13px;transition:border-color .16s ease,background .16s ease;
+  }
+  .role-opt:hover{border-color:var(--signal);}
+  .role-opt input{position:absolute;opacity:0;pointer-events:none;}
+  .role-opt:has(input:checked){border-color:var(--signal);background:rgba(244,211,50,.07);}
+  .role-opt:has(input:focus-visible){outline:2px solid var(--signal);outline-offset:2px;}
+  .role-t{display:block;font-weight:700;font-size:14px;color:var(--kg-text);}
+  .role-opt:has(input:checked) .role-t{color:var(--signal);}
+  .role-d{display:block;margin-top:3px;font-size:12px;color:var(--fog-dim);line-height:1.4;}
+  .auto-badge{display:inline-block;margin-left:8px;font-size:9.5px;font-weight:bold;
+    letter-spacing:.14em;padding:2px 7px;border-radius:2px;
+    border:1px solid var(--ok);color:var(--ok);vertical-align:middle}
+  .btn-block{width:100%;display:flex;align-items:center;justify-content:center;gap:9px}
+  .pw-wrap{position:relative}
+  .pw-wrap input{width:100%;padding-right:44px}
+  .pw-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);
+    background:none;border:0;cursor:pointer;font-size:15px;line-height:1;
+    padding:7px 9px;border-radius:3px;color:var(--fog-dim);opacity:.7}
+  .pw-eye:hover{opacity:1;color:var(--gold)}
+  .pw-eye[aria-pressed="true"]{color:var(--gold);opacity:1}
+  .linkish{background:none;border:0;color:var(--fog-dim);font-size:13px;cursor:pointer;
+    padding:12px 0 0;text-decoration:underline;text-underline-offset:3px}
+  .linkish:hover{color:var(--gold)}
+  .linkish.inline{padding:0;color:var(--gold);font-weight:bold;text-decoration:none}
+  .linkish.inline:hover{text-decoration:underline}
+  .or{display:flex;align-items:center;gap:12px;margin:22px 0 18px;
+    font-size:10.5px;letter-spacing:.2em;color:var(--fog-dim)}
+  .or::before,.or::after{content:'';flex:1;height:1px;background:var(--line)}
+  .btn-google{background:var(--kg-text);color:var(--kg-border-2);border:1px solid var(--kg-text);font-weight:bold}
+  .btn-google:hover{background:var(--kg-text);border-color:var(--kg-text)}
+  .switch-line{margin-top:20px;padding-top:16px;border-top:1px solid var(--line);
+    font-size:13px;color:var(--fog-dim);text-align:center}
+  @media (max-width:640px){
+    header .wrap{flex-wrap:wrap;row-gap:10px}
+    header .navlinks{width:100%;margin-left:0;justify-content:flex-start}
+    header .navlinks a, header .navlinks button{font-size:11.5px;padding:8px 10px}
+  }
+  /* the crest doubles as the way home, as on the public site */
+  .homelink{display:inline-flex;align-items:center;border-radius:4px;
+    transition:opacity .15s ease,transform .15s ease}
+  .homelink:hover{opacity:.85;transform:translateY(-1px)}
+  .homelink:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  .homelink img{display:block}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:520px){.row2{grid-template-columns:1fr}}
+  .vet{border-radius:4px;padding:16px 18px;margin:0 0 22px;border:1px solid}
+  .vet.pending{border-color:var(--gold);background:rgba(244,211,50,.07)}
+  .vet.bad{border-color:var(--bad);background:rgba(201,0,0,.07)}
+  .vet b{display:block;font-size:14px;margin-bottom:5px}
+  .vet.pending b{color:var(--gold)} .vet.bad b{color:var(--bad)}
+  .vet span{font-size:13px;color:var(--fog-dim);line-height:1.55}
+  .pw-meter{margin-top:8px}
+  .pw-bar{height:6px;border-radius:3px;background:var(--panel-2);overflow:hidden}
+  .pw-bar i{display:block;height:100%;width:0;border-radius:3px;transition:width .25s ease,background .25s ease}
+  .pw-bar i.s0{background:var(--kg-text-dim)} .pw-bar i.s1{background:var(--bad)}
+  .pw-bar i.s2{background:var(--kg-gold)} .pw-bar i.s3{background:var(--gold)} .pw-bar i.s4{background:var(--ok)}
+  .pw-lbl{font-size:12px;color:var(--fog-dim);margin-top:5px;line-height:1.5}
+  .pw-lbl b{color:var(--fog)}
+  .paybox{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.72);
+    display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto}
+  .paybox-inner{background:var(--panel);border:1px solid var(--line-strong);border-radius:6px;
+    padding:24px;max-width:460px;width:100%}
+  .paybox-inner h3{color:var(--gold);font-size:16px;margin:0 0 8px}
+  .payrow{display:flex;justify-content:space-between;gap:12px;padding:9px 0;
+    border-bottom:1px solid var(--line);font-size:13.5px;color:var(--fog-dim)}
+  .payrow b{color:var(--kg-text)}
+  .paybox-inner .field{margin-top:14px}
+  .pay-pending{font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    border:1px solid var(--gold);color:var(--gold);padding:2px 7px;border-radius:2px;margin-left:8px}
+  .paymethods{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:16px 0 4px}
+  @media(max-width:420px){.paymethods{grid-template-columns:1fr}}
+  .paym{background:var(--panel-2);border:1px solid var(--line-strong);border-radius:4px;
+    padding:12px 13px;cursor:pointer;text-align:left;transition:.15s}
+  .paym:hover{border-color:var(--gold)}
+  .paym.on{border-color:var(--gold);background:rgba(244,211,50,.08)}
+  .paym b{display:block;font-size:13px;color:var(--kg-text);margin-bottom:3px}
+  .paym span{font-size:11.5px;color:var(--fog-dim);line-height:1.45}
+  /* ---------- Brand palette ----------
+     var(--kg-red)  var(--kg-text)  var(--kg-gold)  var(--kg-bg)
+     Red now carries both the brand and "not valid", so status is never
+     signalled by colour alone: a mark is added in front of the label.
+  ------------------------------------------------------------------ */
+  .tag.ok::before, .badge.ok::before, .status-msg.ok::before{content:"\2713 "}
+  .tag.bad::before, .badge.bad::before, .status-msg.err::before{content:"\2715 "}
+  .tag.warn::before, .badge.warn::before{content:"\25CF "}
+  /* ---------- Brand ground ----------
+     The portals sat on var(--kg-bg) while the front page sat on var(--kg-bg).
+     Close is not the same: side by side the difference shows, and the
+     palette names one black. */
+  body{background:var(--kg-bg)}
+  header{background:var(--kg-bg)!important;border-bottom:2px solid var(--kg-red)}
+  .card,.pane .card{background:var(--kg-surface);border-color:var(--kg-border)}
+  .row,.list-row{background:var(--kg-surface);border-color:var(--kg-border)}
+  .wanted{border-left:3px solid var(--gold);background:rgba(244,211,50,.07);
+    border-radius:0 4px 4px 0;padding:14px 16px;margin:24px 0 4px}
+  .wanted b{display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:5px}
+  .wanted span{font-size:14px;color:var(--fog);line-height:1.55}
+
+  /* ---------- Theme switch ---------- */
+  .kg-theme{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:36px;height:34px;padding:0;cursor:pointer;
+    background:transparent;border:1px solid var(--kg-border-2);border-radius:3px;
+    color:var(--kg-text);font-size:15px;line-height:1;
+  }
+  .kg-theme:hover{border-color:var(--kg-gold);color:var(--kg-gold)}
+  .kg-theme:focus-visible{outline:2px solid var(--kg-gold);outline-offset:2px}
+  @media (prefers-reduced-motion:no-preference){
+    html{transition:background-color .18s ease}
+  }
+
+  /* ---------- Readability in both settings ----------
+     Gold on black is a brand mark, not a reading colour: at 1.6:1 the
+     button labels and the small caps were hard to read. Buttons take
+     black type on gold; small labels take the dimmed gold, which is
+     dark enough on white and bright enough on black. */
+  .btn-primary,.btn.btn-primary,button.btn-primary,.vb-row button{
+    background:var(--kg-gold);color:#000000;border-color:var(--kg-gold);
+  }
+  [data-theme="light"] .btn-primary,[data-theme="light"] .vb-row button{
+    background:var(--kg-gold);color:#000000;
+  }
+  .hsub,.brand-sub,header .hsub{color:var(--kg-gold-dim)}
+  [data-theme="light"] .hsub,[data-theme="light"] header .hsub{color:var(--kg-gold-dim)}
+  label,.field label,.fgrid label{color:var(--kg-text-dim)}
+  [data-theme="light"] label,[data-theme="light"] .field label{color:#4a463f}
+  [data-theme="light"] .hero-title .accent{color:var(--kg-gold-dim)}
+  [data-theme="light"] .verify-bar label{color:#3d3320}
+
+  /* the auth tabs and the verify label carried gold at small sizes;
+     the active tab reads as black on gold, the inactive one as plain type */
+  .auth-tab-btn{color:var(--kg-text-dim);background:transparent}
+  .auth-tab-btn.active{background:var(--kg-gold);color:#000000}
+  [data-theme="light"] .auth-tab-btn{color:#4a463f}
+  .verify-bar label{color:#3d3320}
+
+  /* the tab strip kept a fixed dark surface, so light mode put dim type
+     on it; and the verify-bar label colour was reaching form labels */
+  .auth-tabs{background:var(--kg-surface);border-color:var(--kg-border)}
+  .auth-tab-btn{color:var(--kg-text-dim);background:transparent}
+  .auth-tab-btn.active{background:var(--kg-gold);color:#000000}
+  form label,.contact-form label,.field > label{color:var(--kg-text-dim)}
+  .verify-bar > .wrap > label{color:#3d3320}
+  .ussd{margin:16px 0 4px;padding:14px 16px;border-radius:4px;
+    border:1px solid var(--kg-gold);background:rgba(244,211,50,.08);text-align:center}
+  .ussd > span{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--kg-gold);margin-bottom:8px}
+  .ussd b{display:block;font-size:21px;font-weight:700;letter-spacing:.02em;
+    color:var(--kg-text);word-break:break-all;line-height:1.3}
+  .ussd-copy{margin-top:10px;font-size:12px;font-weight:700;padding:7px 16px;cursor:pointer;
+    background:var(--kg-gold);color:#000;border:0;border-radius:3px}
+  .ussd-copy:hover{background:#ffe14d}
+  .wrap{max-width:600px;margin:0 auto;padding:0 20px}
+  .top{text-align:center;padding:34px 0 24px}
+  .top img{width:70px;height:auto;margin-bottom:16px}
+  .top h1{font-size:24px;letter-spacing:-.01em;margin:0 0 10px;color:var(--kg-text);line-height:1.25}
+  .top p{font-size:14.5px;color:var(--kg-text-dim);line-height:1.7;margin:0}
+  .card{background:var(--kg-surface);border:1px solid var(--kg-border);border-radius:6px;
+    padding:24px;margin-bottom:16px}
+  .card h3{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--kg-gold);
+    margin:0 0 16px;padding-bottom:9px;border-bottom:1px solid var(--kg-border)}
+  .field{margin-bottom:15px}
+  .field label{display:block;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--kg-text-dim);margin-bottom:6px;font-weight:bold}
+  .field input,.field select,.field textarea{width:100%;padding:13px 14px;font-size:16px;
+    font-family:inherit;background:var(--kg-surface-2);color:var(--kg-text);
+    border:1px solid var(--kg-border-2);border-radius:4px}
+  .field textarea{resize:vertical;line-height:1.55;font-size:15px}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--kg-gold);outline-offset:1px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:460px){.two{grid-template-columns:1fr}}
+  .pick{display:flex;flex-wrap:wrap;gap:8px}
+  .pick button{font-family:inherit;font-size:13px;padding:9px 14px;border-radius:20px;
+    border:1px solid var(--kg-border-2);background:transparent;color:var(--kg-text-dim);cursor:pointer}
+  .pick button.on{border-color:var(--kg-gold);background:rgba(244,211,50,.12);color:var(--kg-gold);font-weight:bold}
+  .yn{display:flex;align-items:center;gap:10px;padding:11px 0;font-size:14px;color:var(--kg-text)}
+  .yn input{width:19px;height:19px;accent-color:var(--kg-gold);flex:none}
+  .btn-go{width:100%;padding:16px;font-size:15px;font-weight:bold;font-family:inherit;
+    background:var(--kg-gold);color:#000;border:0;border-radius:4px;cursor:pointer}
+  .btn-go:disabled{opacity:.55}
+  .msg{margin-top:12px;font-size:13.5px;line-height:1.6;display:none}
+  .msg.show{display:block} .msg.err{color:#ff6b6b} .msg.ok{color:var(--kg-gold)}
+  .note{font-size:12.5px;color:var(--kg-text-dim);line-height:1.65;margin-top:16px;
+    padding-top:14px;border-top:1px solid var(--kg-border)}
+  .done{text-align:center;padding:38px 20px}
+  .done .tick{width:64px;height:64px;border-radius:50%;background:var(--kg-gold);
+    color:#000;font-size:34px;line-height:64px;margin:0 auto 18px}
+  .done h2{font-size:20px;margin:0 0 10px;color:var(--kg-text)}
+  .done p{font-size:14px;color:var(--kg-text-dim);line-height:1.7;margin:0 0 8px}
+  .back{display:inline-block;margin-top:18px;font-size:13px;color:var(--kg-text-dim);
+    text-decoration:none;border-bottom:1px solid var(--kg-border-2)}
+  .back:hover{color:var(--kg-gold);border-color:var(--kg-gold)}
+  .shift{border:1px solid var(--kg-border);border-radius:5px;padding:15px;
+    background:var(--kg-surface-2);margin-bottom:10px}
+  .shift h4{margin:0 0 5px;font-size:15px;color:#fff}
+  .shift .when{font-size:13px;color:var(--kg-gold);font-weight:bold;margin-bottom:4px}
+  .shift .meta{font-size:12.5px;color:var(--kg-text-dim);line-height:1.6}
+  .shift .roles{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+  .shift .roles span{font-size:11.5px;padding:4px 10px;border-radius:14px;
+    border:1px solid var(--kg-border-2);color:var(--kg-text-dim)}
+  .shift .act{margin-top:12px}
+  .shift button{font-family:inherit;font-size:13.5px;font-weight:bold;padding:11px 18px;
+    border-radius:4px;border:0;background:var(--kg-gold);color:#000;cursor:pointer;width:100%}
+  .shift button:disabled{opacity:.55}
+  .shift .said{margin-top:10px;font-size:12.5px;color:var(--kg-gold)}
+  /* ---------- Social ---------- */
+  .social{display:flex;gap:10px;margin:22px 0 18px;flex-wrap:wrap}
+  .social a{display:flex;align-items:center;justify-content:center;
+    width:42px;height:42px;border:1px solid var(--kg-border-2);border-radius:5px;
+    color:var(--kg-text-dim);transition:.15s}
+  .social a svg{width:19px;height:19px;fill:currentColor;display:block}
+  .social a:hover{border-color:var(--kg-gold);color:var(--kg-gold);
+    background:rgba(244,211,50,.07)}
+  .social a:focus-visible{outline:2px solid var(--kg-gold);outline-offset:2px}
+  /* an account Kagoma does not have yet is dimmed, not pretended */
+  .social a[href="#"]{opacity:.4;cursor:default}
+  .social a[href="#"]:hover{border-color:var(--kg-border-2);color:var(--kg-text-dim);background:none}
+  .kg-theme{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:36px;height:34px;padding:0;cursor:pointer;
+    background:transparent;border:1px solid var(--kg-border-2);border-radius:3px;
+    color:var(--kg-text);font-size:15px;line-height:1;
+  }
+  /* Gold on paper is a highlighter, not a heading. On the light ground
+     the card titles take the ink colour and keep a red rule to mark a
+     new section. */
+  [data-theme="light"] .card h3,
+  [data-theme="light"] #shiftsCard h3{
+    color:#141210;
+    border-bottom-color:#e2ded3;
+  }
+  [data-theme="light"] .card h3::before{
+    content:'';display:inline-block;width:16px;height:2px;
+    background:var(--kg-red);vertical-align:middle;margin-right:9px
+  }
+
+  /* ---------- Phone ----------
+     Measured on a 390px screen, not guessed:
+
+     · a field under 16px makes iOS zoom the whole page the moment it
+       is focused, and the visitor then has to pinch back out
+     · a tap target under about 44px is missed as often as it is hit
+     · anything under 12px is unreadable outdoors, which is where a
+       security officer reads it
+  ------------------------------------------------------------------ */
+  @media (max-width: 900px){
+    input, select, textarea{
+      font-size:16px!important;
+      min-height:46px;
+      padding:12px 14px;
+    }
+    textarea{min-height:96px;line-height:1.55}
+
+    button, .btn, a.btn, .chips button, .pick button,
+    header .navlinks a, header .navlinks button,
+    .kg-theme, #langToggle, #langBtn{
+      min-height:44px;
+      display:inline-flex;align-items:center;justify-content:center;
+    }
+
+    /* links inside running text keep their size; standalone ones grow */
+    .nav a, .navlinks a, .flink, .hb-btn, .course-more, .social a{
+      min-height:44px;
+    }
+
+    /* nothing on a phone should be smaller than this */
+    .small, .muted.small, .meta, .rline, .note, .ftag, .rights,
+    .field label, .f label{font-size:13px!important;line-height:1.6}
+
+    /* room between things a finger has to choose between */
+    .chips{gap:10px}
+    .pick{gap:10px}
+    .actions, .hb-act{gap:10px}
+  }
+
+  @media (max-width: 900px){
+    /* A footer link and a portal link are things a thumb has to hit,
+       not words in a sentence. They were 22px and 36px tall. */
+    .fcontact a, .flink, footer a,
+    header .navlinks a, header .navlinks button,
+    .contact-direct .cd{
+      min-height:44px;
+      display:inline-flex;align-items:center;
+      font-size:13.5px!important;
+    }
+    .contact-direct .cd{display:block;padding:18px}
+    .fcontact{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center}
+
+    /* the eye that shows a password sits inside the field; give the
+       whole thing a finger's width */
+    .pw-eye{min-width:44px;min-height:44px;
+      display:inline-flex;align-items:center;justify-content:center;font-size:17px}
+
+    /* the theme and language buttons are square by design; make them
+       square at a size a thumb can find */
+    .kg-theme, #langToggle, #langBtn{min-width:44px}
+  }
+
+  @media (max-width: 900px){
+    /* the last few measured below the line: a nav built with a
+       different class name, a section label, and the logo link */
+    .toollinks a, .tool-nav a, header a[href$=".html"]{
+      min-height:44px;display:inline-flex;align-items:center;
+      font-size:13.5px!important;
+    }
+    .homelink{min-width:44px;min-height:44px;
+      display:inline-flex;align-items:center;justify-content:center}
+    #l_roles, .field > label[id]{font-size:13px!important}
+  }
+
+  /* ---------- Kagoma type ----------
+     Bricolage Grotesque, one variable file, weights 200–800.
+     It replaces Archivo, EB Garamond and the Arial fallbacks the
+     portal pages were using, so every page reads as one company. */
+  :root{
+    --display:'Bricolage Grotesque', system-ui, sans-serif;
+    --body:'Bricolage Grotesque', system-ui, sans-serif;
+    --mono:'Bricolage Grotesque', system-ui, sans-serif;
+  }
+  html, body, button, input, select, textarea, .btn{
+    font-family:'Bricolage Grotesque', system-ui, -apple-system, sans-serif;
+  }
+  body{font-variation-settings:'wght' 400,'wdth' 100,'opsz' 14;
+       -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+  h1,.hero h1{font-variation-settings:'wght' 800,'wdth' 100,'opsz' 96;letter-spacing:-.025em}
+  h2,.sec-title{font-variation-settings:'wght' 700,'wdth' 100,'opsz' 48;letter-spacing:-.015em}
+  h3{font-variation-settings:'wght' 600,'opsz' 24}
+  h4{font-variation-settings:'wght' 600,'opsz' 24}
+  strong,b{font-variation-settings:'wght' 700}
+
+  /* anything that is a number lines up in a column */
+  .ref,.rf,.num,.n,.money,.cnum,code,
+  input[inputmode="numeric"],input[type="number"],input[type="tel"]{
+    font-variant-numeric:tabular-nums}
+  /* the staff door: present for people who work here, not offered to
+     visitors. It does not compete with anything a client came for. */
+  .staff-link{opacity:.45}
+  .staff-link:hover{opacity:1}
+  /* the footer links took the browser default blue on pages whose own
+     stylesheet never defined .flink */
+  .kg-foot a, .flink{color:var(--kg-text-dim,#9c9c9c);text-decoration:none}
+  .kg-foot a:hover, .flink:hover{color:var(--kg-gold,#f4d332)}
+  .kg-foot .sep{color:var(--kg-border-2,#3a3a3a)}
+  .staff-link{opacity:.45}
+  .staff-link:hover{opacity:1}
+  [data-theme="light"] .kg-foot a,[data-theme="light"] .flink{color:#5f5b54}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <a href="/" class="homelink" aria-label="Back to the Kagoma home page"><img src="img/crest-60e57097.webp" alt="Kagoma Protection Services"></a>
+    <h1 id="h1">Saba Akazi kuri Kagoma</h1>
+    <p id="lead">Kagoma ihamagara abakozi ku birori: gucunga imbaga, kwakira abashyitsi, no kugenzura ibyangombwa. Wiyandikishe hano, tuzaguhamagara igihe ibirori bibaye.</p>
+  </div>
+
+  <form id="mainForm" onsubmit="return false" autocomplete="on">
+  <div class="card" id="shiftsCard" style="display:none">
+    <h3 id="s_shifts">Akazi kahari</h3>
+    <p class="muted small" id="shifts_lead" style="margin:-6px 0 14px;font-size:12.5px;color:var(--kg-text-dim);line-height:1.6"></p>
+    <div id="shiftList"></div>
+  </div>
+
+  <div id="formArea">
+    <div class="card">
+      <h3 id="s1">Amakuru yawe</h3>
+      <div class="field"><label id="l_name">Amazina yombi</label>
+        <input type="text" id="wName" autocomplete="name" autocapitalize="words" name="full_name"></div>
+      <div class="two">
+        <div class="field"><label id="l_nid">Indangamuntu</label>
+          <input type="text" id="wNid" inputmode="numeric" maxlength="16" name="national_id" autocomplete="off"></div>
+        <div class="field"><label id="l_phone">Telefoni</label>
+          <input type="tel" id="wPhone" inputmode="tel" autocomplete="tel" placeholder="078..." name="phone"></div>
+      </div>
+      <div class="two">
+        <div class="field"><label id="l_dob">Itariki y'amavuko</label>
+          <input type="date" id="wDob" name="birthdate" autocomplete="bday"></div>
+        <div class="field"><label id="l_gender">Igitsina</label>
+          <select id="wGender">
+            <option value="">&mdash;</option>
+            <option value="male" id="g_m">Gabo</option>
+            <option value="female" id="g_f">Gore</option>
+            <option value="undisclosed" id="g_n">Sinshaka kuvuga</option>
+          </select></div>
+      </div>
+      <div class="field"><label id="l_email">Email</label>
+        <input type="email" id="wEmail" autocomplete="email" name="email"></div>
+    </div>
+
+    <div class="card">
+      <h3 id="s_addr">Aho utuye</h3>
+      <div class="two">
+        <div class="field"><label id="l_prov">Intara</label>
+          <select id="wProvince" onchange="fillDistricts()"><option value="">&mdash;</option></select></div>
+        <div class="field"><label id="l_dist">Akarere</label>
+          <select id="wDistrict"><option value="">&mdash;</option></select></div>
+      </div>
+      <div class="two">
+        <div class="field"><label id="l_sect">Umurenge</label>
+          <input type="text" id="wSector" autocapitalize="words" name="sector" autocomplete="address-level3"></div>
+        <div class="field"><label id="l_cell">Akagari</label>
+          <input type="text" id="wCell" autocapitalize="words" name="cell" autocomplete="off"></div>
+      </div>
+      <div class="field"><label id="l_vill">Umudugudu</label>
+        <input type="text" id="wVillage" autocapitalize="words" name="village" autocomplete="off"></div>
+    </div>
+
+    <div class="card">
+      <h3 id="s2">Uburambe n'akazi ushobora gukora</h3>
+      <div class="field"><label id="l_years">Uburambe (imyaka)</label>
+        <input type="number" id="wYears" min="0" max="50" step="0.5" name="wYears"></div>
+      <div class="field"><label id="l_note">Uburambe ufite</label>
+        <textarea id="wNote" rows="4" placeholder="Ibirori wakoze, ibigo wakoreye, amahugurwa ufite, imyaka wamaze..."></textarea></div>
+      <label id="l_roles" style="display:block;font-size:10.5px;letter-spacing:.13em;
+        text-transform:uppercase;color:var(--kg-text-dim);margin:4px 0 10px;font-weight:bold">Akazi ushobora gukora</label>
+      <div class="pick" id="rolePick"></div>
+    </div>
+
+    <div class="card">
+      <h3 id="s3">Igihe ushobora</h3>
+      <label class="yn"><input type="checkbox" id="wWeekdays" checked><span id="l_wd">Ku munsi w'akazi</span></label>
+      <label class="yn"><input type="checkbox" id="wWeekends" checked><span id="l_we">Ku wa gatandatu n'Icyumweru</span></label>
+      <label class="yn"><input type="checkbox" id="wNights"><span id="l_ni">Nijoro</span></label>
+      <label class="yn"><input type="checkbox" id="wTransport"><span id="l_tr">Mfite uburyo bwo kugenda</span></label>
+      <button class="btn-go" id="goBtn" onclick="submitPool()" style="margin-top:18px">Ohereza icyifuzo</button>
+      <div class="msg" id="msg"></div>
+      <div class="note" id="note">Amakuru yawe abikwa na Kagoma gusa, akoreshwa mu guhamagara abakozi ku birori. Ntabwo ahabwa abandi.</div>
+    </div>
+  </form>
+  </div>
+
+  <div class="card" id="doneCard" style="display:none">
+    <div class="done">
+      <div class="tick">&#10003;</div>
+      <h2 id="doneT">Wanditswe</h2>
+      <p id="doneP"></p>
+      <p id="doneQ"></p>
+      <a class="back" href="/" id="backLink">&larr; Subira ku Kagoma</a>
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:10px 0 50px">
+<button class="kg-theme" onclick="kgToggleTheme()" aria-pressed="false"
+            title="Switch to light" aria-label="Switch to light">☀</button>
+        <button onclick="toggleLang()" style="background:none;border:1px solid var(--kg-border-2);
+      color:var(--kg-text-dim);font-family:inherit;font-size:12px;padding:8px 16px;
+      border-radius:3px;cursor:pointer" id="langBtn">EN</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+
+const SUPABASE_URL='https://gebydcdxxuysrhlxehwf.supabase.co';
+const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdlYnlkY2R4eHV5c3JobHhlaHdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxNDkwNzYsImV4cCI6MjEwNzcyNTA3Nn0.HPSRhB0j6Rh-tJn9Woc-Y_pb9slkK6XmF5YB2Jl6VWI';
+const sb=(typeof supabase!=='undefined'&&supabase.createClient)
+  ? supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,
+      {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}) : null;
+
+const $=id=>document.getElementById(id);
+let lang='en';
+
+const ROLES=[
+  {k:'Steward',      rw:'Umukozi w\u2019ibirori',   en:'Steward'},
+  {k:'Usher',        rw:'Kwakira abashyitsi',        en:'Usher'},
+  {k:'Accreditation',rw:'Kugenzura ibyangombwa',     en:'Accreditation'},
+  {k:'Access Control',rw:'Kugenzura abinjira',       en:'Access control'},
+  {k:'Crowd Safety', rw:'Umutekano w\u2019imbaga',  en:'Crowd safety'},
+  {k:'Supervisor',   rw:'Ubugenzuzi',                en:'Supervisor'},
+  {k:'Driver',       rw:'Gutwara',                   en:'Driver'},
+  {k:'First Aid',    rw:'Ubufasha bwa mbere',        en:'First aid'}
+];
+let picked=new Set();
+
+/* Rwanda's five provinces and thirty districts. Sector, cell and
+   village are typed: there are 416, 2,148 and roughly 14,800 of them,
+   which is a list nobody scrolls on a phone. */
+const RWANDA={
+  'Umujyi wa Kigali': ['Gasabo','Kicukiro','Nyarugenge'],
+  'Amajyaruguru':     ['Burera','Gakenke','Gicumbi','Musanze','Rulindo'],
+  'Amajyepfo':        ['Gisagara','Huye','Kamonyi','Muhanga','Nyamagabe','Nyanza','Nyaruguru','Ruhango'],
+  'Iburasirazuba':    ['Bugesera','Gatsibo','Kayonza','Kirehe','Ngoma','Nyagatare','Rwamagana'],
+  'Iburengerazuba':   ['Karongi','Ngororero','Nyabihu','Nyamasheke','Rubavu','Rusizi','Rutsiro']
+};
+const PROV_EN={'Umujyi wa Kigali':'Kigali City','Amajyaruguru':'Northern','Amajyepfo':'Southern',
+               'Iburasirazuba':'Eastern','Iburengerazuba':'Western'};
+
+function fillProvinces(){
+  const s=document.getElementById('wProvince');
+  const keep=s.value;
+  s.innerHTML='<option value="">\u2014</option>'+Object.keys(RWANDA).map(p=>
+    `<option value="${p}">${lang==='rw'? p : PROV_EN[p]}</option>`).join('');
+  if(keep) s.value=keep;
+}
+function fillDistricts(){
+  const p=document.getElementById('wProvince').value;
+  const d=document.getElementById('wDistrict');
+  const keep=d.value;
+  d.innerHTML='<option value="">\u2014</option>'+
+    (RWANDA[p]||[]).map(x=>`<option value="${x}">${x}</option>`).join('');
+  if(keep && (RWANDA[p]||[]).includes(keep)) d.value=keep;
+}
+
+
+const T={
+  h1:{rw:'Saba Akazi kuri Kagoma',en:'Apply to work with Kagoma'},
+  lead:{rw:'Kagoma ihamagara abakozi ku birori: gucunga imbaga, kwakira abashyitsi, no kugenzura ibyangombwa. Saba akazi hano, tuzaguhamagara igihe ibirori bibaye.',en:'Kagoma calls staff for events: crowd safety, guest reception and accreditation. Apply here and we will call you when an event comes up.'},
+  s1:{rw:'Amakuru yawe',en:'About you'},
+  s2:{rw:"Uburambe n'akazi ushobora gukora",en:'Experience and what you can do'},
+  s3:{rw:'Igihe ushobora',en:'When you are available'},
+  l_name:{rw:'Amazina yombi',en:'Full name'}, l_phone:{rw:'Telefoni',en:'Phone'},
+  l_email:{rw:'Email',en:'Email'}, l_nid:{rw:'Indangamuntu',en:'National ID'},
+  l_dob:{rw:"Itariki y'amavuko",en:'Date of birth'}, l_district:{rw:'Akarere',en:'District'},
+  l_gender:{rw:'Igitsina',en:'Gender'},
+  l_phone:{rw:'Telefoni',en:'Phone'},
+  l_nid:{rw:'Indangamuntu',en:'National ID'},
+  s_addr:{rw:'Aho utuye',en:'Where you live'},
+  l_prov:{rw:'Intara',en:'Province'},
+  l_dist:{rw:'Akarere',en:'District'},
+  l_sect:{rw:'Umurenge',en:'Sector'},
+  l_cell:{rw:'Akagari',en:'Cell'},
+  l_vill:{rw:'Umudugudu',en:'Village'},
+  l_years:{rw:'Uburambe (imyaka)',en:'Experience (years)'},
+  l_roles:{rw:'Akazi ushobora gukora',en:'What you can do'}, l_years:{rw:'Uburambe (imyaka)',en:'Experience (years)'},
+  l_note:{rw:'Uburambe ufite',en:'Your experience'},
+  l_wd:{rw:"Ku munsi w'akazi",en:'Weekdays'},
+  l_we:{rw:"Ku wa gatandatu n'Icyumweru",en:'Weekends'},
+  l_ni:{rw:'Nijoro',en:'Nights'},
+  l_tr:{rw:'Mfite uburyo bwo kugenda',en:'I have my own transport'},
+  g_m:{rw:'Gabo',en:'Male'}, g_f:{rw:'Gore',en:'Female'}, g_n:{rw:'Sinshaka kuvuga',en:'Prefer not to say'},
+  goBtn:{rw:'Ohereza icyifuzo',en:'Submit application'},
+  s_shifts:{rw:'Akazi kahari',en:'Work available now'},
+  shifts_lead:{rw:"Ibi birori Kagoma irimo gushakira abakozi. Kanda \u2018Ndahari\u2019 kuri ibyo ushobora \u2014 tuzaguhamagara.",
+               en:"Kagoma is looking for staff for these. Tap \u2018I am available\u2019 on the ones you can do \u2014 we will call you."},
+  needed:{rw:'abakozi bakenewe',en:'staff needed'},
+  im_free:{rw:'Ndahari',en:'I am available'},
+  offer_ok:{rw:'Twakiriye. Tuzaguhamagara.',en:'Noted. We will call you.'},
+  offer_not_reg:{rw:'Iyi telefoni ntiri ku rutonde. Uzuza ifishi hepfo mbere.',
+                 en:'That phone is not on our list. Fill in the form below first.'},
+  offer_closed:{rw:'Ibi birori ntibigishakisha abakozi.',en:'This one is no longer taking staff.'},
+  need_phone_first:{rw:'Andika telefoni yawe hepfo mbere.',en:'Enter your phone below first.'},
+  note:{rw:'Amakuru yawe abikwa na Kagoma gusa, akoreshwa mu guhamagara abakozi ku birori. Ntabwo ahabwa abandi.',
+        en:'Your details are held by Kagoma only, and used to call staff for events. They are not shared.'},
+  backLink:{rw:'\u2190 Subira ku Kagoma',en:'\u2190 Back to Kagoma'},
+  need:{rw:'Uzuza amazina na telefoni.',en:'Please give your name and phone.'},
+  under:{rw:'Ugomba kuba ufite nibura imyaka 18.',en:'You must be at least 18.'},
+  fail:{rw:'Ntibishoboye. Ongera ugerageze.',en:'That did not work. Please try again.'},
+  dup:{rw:'Iyi telefoni yari isanzwe yanditse \u2014 amakuru yawe yavuguruwe.',
+       en:'That phone was already registered \u2014 your details have been updated.'},
+  doneT:{rw:'Icyifuzo cyawe cyoherejwe',en:'Your application is in'},
+  doneT2:{rw:'Icyifuzo cyawe cyavuguruwe',en:'Your application is updated'},
+  doneP:{rw:'Kagoma izasuzuma icyifuzo cyawe, hanyuma ube uri ku rutonde rw’abahamagarwa.',en:'Kagoma will review your application, and you will be on the list of people we call.'},
+  doneQ:{rw:'Uzahamagarwa kuri telefoni watanze. Ntugategereze email.',
+         en:'You will be called on the number you gave. Do not wait for an e-mail.'}
+};
+
+
+/* ---------------- work that is open now ---------------- */
+let shifts=[];
+
+async function loadShifts(){
+  if(!sb) return;
+  const {data,error}=await sb.rpc('open_shifts');
+  shifts = (error||!data) ? [] : data;
+  paintShifts();
+}
+
+function fmtDay(d){
+  if(!d) return '';
+  const x=new Date(d+'T00:00:00');
+  const days=lang==='rw'
+    ? ['Ku cyumweru','Ku wa mbere','Ku wa kabiri','Ku wa gatatu','Ku wa kane','Ku wa gatanu','Ku wa gatandatu']
+    : ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const mo=lang==='rw'
+    ? ['Mutarama','Gashyantare','Werurwe','Mata','Gicurasi','Kamena','Nyakanga','Kanama','Nzeri','Ukwakira','Ugushyingo','Ukuboza']
+    : ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  return days[x.getDay()]+', '+x.getDate()+' '+mo[x.getMonth()];
+}
+
+function paintShifts(){
+  const card=document.getElementById('shiftsCard');
+  const box=document.getElementById('shiftList');
+  if(!card||!box) return;
+  if(!shifts.length){ card.style.display='none'; return; }
+  card.style.display='block';
+  document.getElementById('s_shifts').textContent=T.s_shifts[lang];
+  document.getElementById('shifts_lead').textContent=T.shifts_lead[lang];
+
+  box.innerHTML=shifts.map(function(s){
+    const roles=(s.roles||[]).map(function(r){
+      const m=ROLES.filter(function(x){return x.k===r;})[0];
+      return '<span>'+(m? m[lang] : r)+'</span>';
+    }).join('');
+    return '<div class="shift">'
+      + '<div class="when">'+fmtDay(s.starts_on)
+      + (s.call_time? ' &middot; '+String(s.call_time).slice(0,5) : '')+'</div>'
+      + '<h4>'+esc(s.name)+'</h4>'
+      + '<div class="meta">'+(s.venue? esc(s.venue) : '')
+      + (s.needed? '<br>'+s.needed+' '+T.needed[lang] : '')
+      + (s.note? '<br>'+esc(s.note) : '')+'</div>'
+      + (roles? '<div class="roles">'+roles+'</div>' : '')
+      + '<div class="act"><button type="button" onclick="offerFor(\''+s.id+'\')">'
+      + T.im_free[lang]+'</button><div class="said" id="said_'+s.id+'"></div></div>'
+      + '</div>';
+  }).join('');
+}
+
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+
+/* Raising a hand is not a booking: Kagoma still decides who is called.
+   The phone must already be in the pool, so this cannot become a second
+   way onto an event for someone nobody has screened. */
+async function offerFor(eventId){
+  const said=document.getElementById('said_'+eventId);
+  let phone=(document.getElementById('wPhone').value||'').trim();
+  if(!phone){
+    try{ const w=JSON.parse(localStorage.getItem('kps_worker')||'{}'); phone=w.p||''; }catch(e){}
+  }
+  if(!phone){
+    said.textContent=T.need_phone_first[lang];
+    document.getElementById('wPhone').focus();
+    document.getElementById('wPhone').scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+
+  const {data,error}=await sb.rpc('offer_availability',
+    {p_event:eventId, p_phone:phone, p_name:(document.getElementById('wName').value||'').trim()||null, p_note:null});
+  if(error){ said.textContent=T.fail[lang]; return; }
+  if(data && data.ok===false){
+    said.textContent = data.reason==='not_registered' ? T.offer_not_reg[lang]
+                     : data.reason==='not_open'       ? T.offer_closed[lang]
+                     : T.fail[lang];
+    return;
+  }
+  said.textContent = T.offer_ok[lang];
+}
+
+function paint(){
+  paintShifts();
+  Object.keys(T).forEach(k=>{ const e=$(k); if(e && T[k][lang]) e.textContent=T[k][lang]; });
+  $('langBtn').textContent = lang==='rw' ? 'EN' : 'RW';
+  fillProvinces();
+  $('rolePick').innerHTML = ROLES.map(r=>
+    `<button type="button" class="${picked.has(r.k)?'on':''}" onclick="pick('${r.k}')">${r[lang]}</button>`).join('');
+}
+function pick(k){ picked.has(k)? picked.delete(k) : picked.add(k); paint(); }
+function toggleLang(){ lang = lang==='rw'?'en':'rw'; paint(); }
+
+async function submitPool(){
+  const name=$('wName').value.trim(), phone=$('wPhone').value.trim();
+  const m=$('msg');
+  const say=(t,ok)=>{ m.textContent=t; m.className='msg show '+(ok?'ok':'err'); };
+  if(!name || !phone) return say(T.need[lang], false);
+
+  /* the same age gate as the rest of the system: this is adult work */
+  const dob=$('wDob').value;
+  if(dob){
+    const age=Math.floor((Date.now()-new Date(dob))/31557600000);
+    if(age<18) return say(T.under[lang], false);
+  }
+  if(!sb) return say(T.fail[lang], false);
+
+  const b=$('goBtn'); b.disabled=true;
+  const {data,error}=await sb.rpc('join_work_pool',{
+    p_name:name, p_phone:phone,
+    p_email:$('wEmail').value.trim()||null,
+    p_nid:$('wNid').value.trim()||null,
+    p_dob:dob||null,
+    p_gender:$('wGender').value||null,
+    p_district:$('wDistrict').value.trim()||null,
+    p_province:$('wProvince').value.trim()||null,
+    p_sector:$('wSector').value.trim()||null,
+    p_cell:$('wCell').value.trim()||null,
+    p_village:$('wVillage').value.trim()||null,
+    p_roles:[...picked],
+    p_years:$('wYears').value?parseFloat($('wYears').value):null,
+    p_note:$('wNote').value.trim()||null,
+    p_languages:[],
+    p_weekdays:$('wWeekdays').checked, p_weekends:$('wWeekends').checked,
+    p_nights:$('wNights').checked, p_transport:$('wTransport').checked
+  });
+  b.disabled=false;
+
+  if(error) return say(T.fail[lang], false);
+  if(data && data.ok===false){
+    return say(data.reason==='underage' ? T.under[lang]
+             : data.reason==='need_name_and_phone' ? T.need[lang] : T.fail[lang], false);
+  }
+
+  $('doneT').textContent = data.already ? T.doneT2[lang] : T.doneT[lang];
+  $('doneP').textContent = T.doneP[lang];
+  $('doneQ').textContent = T.doneQ[lang];
+  $('formArea').style.display='none';
+  $('doneCard').style.display='block';
+  window.scrollTo(0,0);
+}
+
+paint();
+loadShifts();
+
+
+function kgTheme(){ try{ return localStorage.getItem('kg-theme') || 'dark'; }catch(e){ return 'dark'; } }
+function kgApplyTheme(t){
+  document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+  document.querySelectorAll('.kg-theme').forEach(b=>{
+    const light = t === 'light';
+    b.textContent = light ? '\u263D' : '\u2600';          /* moon when light, sun when dark */
+    b.setAttribute('aria-pressed', light ? 'true' : 'false');
+    b.setAttribute('title', light ? 'Switch to dark' : 'Switch to light');
+    b.setAttribute('aria-label', light ? 'Switch to dark' : 'Switch to light');
+  });
+}
+function kgToggleTheme(){
+  const next = kgTheme() === 'light' ? 'dark' : 'light';
+  try{ localStorage.setItem('kg-theme', next); }catch(e){}
+  kgApplyTheme(next);
+}
+kgApplyTheme(kgTheme());
+</script>
+<footer style="border-top:1px solid var(--kg-border);margin-top:40px;padding:26px 20px">
+  <div style="max-width:1180px;margin:0 auto">
+    <div style="margin:14px 0 10px;font-size:12.5px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <a href="privacy.html" class="flink">Privacy Notice</a>
+      <span class="sep">&middot;</span>
+      <a href="terms.html" class="flink">Terms &amp; Conditions</a>
+      <span class="sep">&middot;</span>
+      <a href="faq.html" class="flink">FAQ</a>
+      <span class="sep">&middot;</span>
+      <a href="certificates.html" class="flink">Certificate Verification</a>
+      <span class="sep">&middot;</span>
+      <a href="/contact" class="flink">Contact</a>
+      <span class="sep">&middot;</span>
+      <a href="admin.html" class="flink staff-link" rel="nofollow">Staff</a>
+    </div>
+
+    <div class="social" aria-label="Kagoma Protection Services on social media">
+      <a href="#" data-net="linkedin" aria-label="LinkedIn" title="LinkedIn" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.63-1.85 3.36-1.85 3.59 0 4.26 2.36 4.26 5.44v6.3zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
+      </a>
+      <a href="#" data-net="instagram" aria-label="Instagram" title="Instagram" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.3-1.46.72-2.13 1.38C1.35 2.68.93 3.35.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.38 2.13.67.66 1.34 1.08 2.13 1.38.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.3 1.46-.72 2.13-1.38.66-.67 1.08-1.34 1.38-2.13.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.3-.79-.72-1.46-1.38-2.13C21.32 1.35 20.65.93 19.86.63 19.1.33 18.22.13 16.95.07 15.67.01 15.26 0 12 0zm0 5.84a6.16 6.16 0 1 0 0 12.32 6.16 6.16 0 0 0 0-12.32zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm7.85-10.4a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z"/></svg>
+      </a>
+      <a href="#" data-net="youtube" aria-label="YouTube" title="YouTube" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19C0 8.08 0 12 0 12s0 3.92.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14C24 15.92 24 12 24 12s0-3.92-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg>
+      </a>
+      <a href="#" data-net="facebook" aria-label="Facebook" title="Facebook" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07z"/></svg>
+      </a>
+      <a href="#" data-net="x" aria-label="X" title="X" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.41l-5.8-7.58-6.64 7.58H.46l8.6-9.83L0 1.15h7.59l5.24 6.93 6.07-6.93zm-1.29 19.5h2.04L6.49 3.24H4.3l13.31 17.41z"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

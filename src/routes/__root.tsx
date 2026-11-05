@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -80,10 +81,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "KAGOMA Protection Services — Event Security & Consultancy in Rwanda" },
-      { name: "description", content: "Professional event security, crowd management, and security consultancy across Rwanda and East Africa. Trusted by leading organizations." },
+      {
+        name: "description",
+        content:
+          "Professional event security, crowd management, and security consultancy across Rwanda and East Africa. Trusted by leading organizations.",
+      },
       { name: "author", content: "KAGOMA Protection Services" },
       { property: "og:title", content: "KAGOMA Protection Services" },
-      { property: "og:description", content: "Integrity. Professionalism. Vigilance. Event security and consultancy trusted across Rwanda and East Africa." },
+      {
+        property: "og:description",
+        content:
+          "Integrity. Professionalism. Vigilance. Event security and consultancy trusted across Rwanda and East Africa.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "theme-color", content: "#0a0a0a" },
@@ -124,6 +133,15 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  if (pathname.startsWith("/admin")) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <Outlet />
+      </QueryClientProvider>
+    );
+  }
 
   return (
     <QueryClientProvider client={queryClient}>

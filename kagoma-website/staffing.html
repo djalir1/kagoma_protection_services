@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Event Staffing — Kagoma Protection Services</title>
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#000000">
+<style>
+@font-face{
+  font-family:'Bricolage Grotesque';
+  src:url('fonts/BricolageGrotesque.woff2') format('woff2-variations');
+  font-weight:200 800;
+  font-stretch:75% 100%;
+  font-display:swap;
+}
+
+/* ============================================================
+   KAGOMA — theme tokens
+
+   One scale, two settings. Gold and red never move: a brand that
+   changes colour is not a brand. What flips is the ground and the
+   type on it.
+
+   Dark is the default. Light exists because an officer reading
+   forty lessons in Kigali daylight cannot see a dark screen.
+   ============================================================ */
+:root{
+  --kg-gold:#f4d332;
+  --kg-gold-dim:#c9a227;
+  --kg-red:#c90000;
+  --kg-red-dim:#8e0000;
+
+  --kg-bg:#000000;
+  --kg-surface:#0d0d0d;
+  --kg-surface-2:#151515;
+  --kg-border:#262626;
+  --kg-border-2:#3a3a3a;
+  --kg-text:#ffffff;
+  --kg-text-dim:#9c9c9c;
+  --kg-shadow:rgba(0,0,0,.55);
+}
+[data-theme="light"]{
+  --kg-bg:#ffffff;
+  --kg-surface:#f6f4ef;
+  --kg-surface-2:#ece9e1;
+  --kg-border:#ddd8cc;
+  --kg-border-2:#bdb6a5;
+  --kg-text:#141210;
+  --kg-text-dim:#5f5b54;
+  --kg-shadow:rgba(0,0,0,.14);
+  /* the brand red is too light-on-light for small type; the deeper
+     one keeps the hue and stays readable */
+  --kg-red:#b00000;
+  --kg-gold-dim:#8a6f10;
+}
+html,body{background:var(--kg-bg);color:var(--kg-text)}
+
+  :root{
+    --ink:var(--kg-bg);
+    --panel:var(--kg-surface);
+    --panel-2:var(--kg-surface-2);
+    --fog:var(--kg-text);
+    --fog-dim:var(--kg-text-dim);
+    --gold:var(--kg-gold);
+    --gold-bright:var(--kg-gold);
+    --red:var(--kg-red);
+    --line:rgba(255,255,255,0.10);
+    --line-strong:rgba(255,255,255,0.18);
+    --ok:var(--kg-gold);
+    --bad:var(--kg-red);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--fog);
+    font-family:Arial, Helvetica, sans-serif;
+    line-height:1.55;
+    padding-bottom:60px;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:0 20px;}
+
+  header{
+    border-bottom:1px solid var(--line);
+    padding:22px 0;
+    position:sticky;top:0;
+    background:rgba(10,10,10,0.94);
+    backdrop-filter:blur(8px);
+    z-index:10;
+  }
+  header .wrap{display:flex;align-items:center;gap:14px;}
+  header img{height:42px;width:auto;}
+  header .htitle{font-size:17px;font-weight:700;color:var(--kg-text);letter-spacing:0.01em;}
+  header .hsub{font-size:11.5px;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;margin-top:2px;}
+  header .navlinks{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
+  header .navlinks a, header .navlinks button{
+    font-size:12.5px;color:var(--fog-dim);border:1px solid var(--line-strong);padding:9px 14px;border-radius:3px;background:transparent;cursor:pointer;
+  }
+  header .navlinks a:hover, header .navlinks button:hover{color:var(--gold-bright);border-color:var(--gold);}
+
+  h2{font-size:20px;color:var(--kg-text);margin-bottom:6px;letter-spacing:0.01em;}
+  h3{font-size:16px;color:var(--kg-text);margin-bottom:10px;}
+  .lead{font-size:14px;color:var(--fog-dim);margin-bottom:26px;max-width:600px;}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:26px;}
+
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:12px;font-weight:700;letter-spacing:0.04em;color:var(--gold);text-transform:uppercase;margin-bottom:7px;}
+  .field input, .field select{
+    width:100%;
+    background:var(--ink);
+    border:1px solid var(--line-strong);
+    color:var(--kg-text);
+    padding:11px 13px;
+    font-size:14.5px;
+    border-radius:3px;
+    font-family:inherit;
+  }
+  .field input:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
+
+  .btn{
+    font-weight:700;font-size:14px;padding:13px 22px;border-radius:3px;border:none;cursor:pointer;letter-spacing:0.02em;
+  }
+  .btn-primary{background:var(--gold);color:var(--kg-gold-dim);}
+  .btn-primary:hover{background:var(--gold-bright);}
+  .btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+  .btn-outline{background:transparent;border:1px solid var(--line-strong);color:var(--kg-text);}
+  .btn-outline:hover{border-color:var(--gold);color:var(--gold-bright);}
+  .btn-small{font-size:12px;padding:8px 14px;}
+
+  .status-msg{font-size:13px;margin-top:14px;padding:10px 12px;border-radius:3px;display:none;}
+  .status-msg.show{display:block;}
+  .status-msg.ok{background:rgba(47,168,79,0.12);color:var(--kg-gold);border:1px solid rgba(47,168,79,0.35);}
+  .status-msg.err{background:rgba(201,0,0,0.12);color:var(--kg-red);border:1px solid rgba(201,0,0,0.35);}
+
+  /* auth tabs */
+  .auth-tabs{display:flex;gap:2px;margin:30px 0 26px;border:1px solid var(--line);width:fit-content;border-radius:3px;overflow:hidden;}
+  .auth-tab-btn{padding:12px 22px;background:var(--panel);color:var(--fog-dim);font-weight:700;font-size:13.5px;border:none;cursor:pointer;letter-spacing:0.02em;}
+  .auth-tab-btn.active{background:var(--gold);color:var(--kg-gold-dim);}
+  .auth-panel{display:none;max-width:420px;}
+  .auth-panel.active{display:block;}
+
+  /* dashboard */
+  #dashboardSection{display:none;}
+  .welcome-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:8px;}
+  section.d-section{margin-top:44px;}
+
+  .course-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px;}
+  @media (max-width:700px){.course-grid{grid-template-columns:1fr;}}
+  .course-card{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:18px 20px;}
+  .course-card .ccode{font-family:'Courier New',monospace;font-size:11px;color:var(--gold);}
+  .course-card h4{font-size:15.5px;color:var(--kg-text);margin:8px 0 6px;}
+  .course-card p{font-size:13px;color:var(--fog-dim);margin-bottom:14px;}
+  .badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:0.05em;padding:5px 10px;border-radius:3px;text-transform:uppercase;}
+  .badge-enrolled{background:rgba(244,211,50,0.15);color:var(--gold-bright);}
+  .badge-progress{background:rgba(90,140,255,0.15);color:var(--kg-gold);}
+  .badge-completed{background:rgba(47,168,79,0.15);color:var(--kg-gold);}
+
+  .list-row{
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+    padding:16px 18px;border:1px solid var(--line);border-radius:3px;margin-bottom:10px;background:var(--panel);
+  }
+  .list-row .who{font-size:14.5px;color:var(--kg-text);}
+  .list-row .meta{font-size:12px;color:var(--fog-dim);margin-top:4px;font-family:'Courier New',monospace;}
+  .list-row .actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+
+  .empty-note{font-size:13.5px;color:var(--fog-dim);padding:20px;text-align:center;border:1px dashed var(--line-strong);border-radius:4px;margin-top:14px;}
+
+  footer{border-top:1px solid var(--line);margin-top:60px;padding:24px 0;text-align:center;font-size:11.5px;color:var(--fog-dim);}
+  /* ---------- Account type chooser ---------- */
+  .role-pick{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  @media (max-width:520px){ .role-pick{grid-template-columns:1fr;} }
+  .role-opt{
+    display:block;cursor:pointer;position:relative;
+    border:1px solid var(--line-strong);border-radius:var(--radius);
+    padding:12px 13px;transition:border-color .16s ease,background .16s ease;
+  }
+  .role-opt:hover{border-color:var(--signal);}
+  .role-opt input{position:absolute;opacity:0;pointer-events:none;}
+  .role-opt:has(input:checked){border-color:var(--signal);background:rgba(244,211,50,.07);}
+  .role-opt:has(input:focus-visible){outline:2px solid var(--signal);outline-offset:2px;}
+  .role-t{display:block;font-weight:700;font-size:14px;color:var(--kg-text);}
+  .role-opt:has(input:checked) .role-t{color:var(--signal);}
+  .role-d{display:block;margin-top:3px;font-size:12px;color:var(--fog-dim);line-height:1.4;}
+  .auto-badge{display:inline-block;margin-left:8px;font-size:9.5px;font-weight:bold;
+    letter-spacing:.14em;padding:2px 7px;border-radius:2px;
+    border:1px solid var(--ok);color:var(--ok);vertical-align:middle}
+  .btn-block{width:100%;display:flex;align-items:center;justify-content:center;gap:9px}
+  .pw-wrap{position:relative}
+  .pw-wrap input{width:100%;padding-right:44px}
+  .pw-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);
+    background:none;border:0;cursor:pointer;font-size:15px;line-height:1;
+    padding:7px 9px;border-radius:3px;color:var(--fog-dim);opacity:.7}
+  .pw-eye:hover{opacity:1;color:var(--gold)}
+  .pw-eye[aria-pressed="true"]{color:var(--gold);opacity:1}
+  .linkish{background:none;border:0;color:var(--fog-dim);font-size:13px;cursor:pointer;
+    padding:12px 0 0;text-decoration:underline;text-underline-offset:3px}
+  .linkish:hover{color:var(--gold)}
+  .linkish.inline{padding:0;color:var(--gold);font-weight:bold;text-decoration:none}
+  .linkish.inline:hover{text-decoration:underline}
+  .or{display:flex;align-items:center;gap:12px;margin:22px 0 18px;
+    font-size:10.5px;letter-spacing:.2em;color:var(--fog-dim)}
+  .or::before,.or::after{content:'';flex:1;height:1px;background:var(--line)}
+  .btn-google{background:var(--kg-text);color:var(--kg-border-2);border:1px solid var(--kg-text);font-weight:bold}
+  .btn-google:hover{background:var(--kg-text);border-color:var(--kg-text)}
+  .switch-line{margin-top:20px;padding-top:16px;border-top:1px solid var(--line);
+    font-size:13px;color:var(--fog-dim);text-align:center}
+  @media (max-width:640px){
+    header .wrap{flex-wrap:wrap;row-gap:10px}
+    header .navlinks{width:100%;margin-left:0;justify-content:flex-start}
+    header .navlinks a, header .navlinks button{font-size:11.5px;padding:8px 10px}
+  }
+  /* the crest doubles as the way home, as on the public site */
+  .homelink{display:inline-flex;align-items:center;border-radius:4px;
+    transition:opacity .15s ease,transform .15s ease}
+  .homelink:hover{opacity:.85;transform:translateY(-1px)}
+  .homelink:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  .homelink img{display:block}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:520px){.row2{grid-template-columns:1fr}}
+  .vet{border-radius:4px;padding:16px 18px;margin:0 0 22px;border:1px solid}
+  .vet.pending{border-color:var(--gold);background:rgba(244,211,50,.07)}
+  .vet.bad{border-color:var(--bad);background:rgba(201,0,0,.07)}
+  .vet b{display:block;font-size:14px;margin-bottom:5px}
+  .vet.pending b{color:var(--gold)} .vet.bad b{color:var(--bad)}
+  .vet span{font-size:13px;color:var(--fog-dim);line-height:1.55}
+  .pw-meter{margin-top:8px}
+  .pw-bar{height:6px;border-radius:3px;background:var(--panel-2);overflow:hidden}
+  .pw-bar i{display:block;height:100%;width:0;border-radius:3px;transition:width .25s ease,background .25s ease}
+  .pw-bar i.s0{background:var(--kg-text-dim)} .pw-bar i.s1{background:var(--bad)}
+  .pw-bar i.s2{background:var(--kg-gold)} .pw-bar i.s3{background:var(--gold)} .pw-bar i.s4{background:var(--ok)}
+  .pw-lbl{font-size:12px;color:var(--fog-dim);margin-top:5px;line-height:1.5}
+  .pw-lbl b{color:var(--fog)}
+  .paybox{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.72);
+    display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto}
+  .paybox-inner{background:var(--panel);border:1px solid var(--line-strong);border-radius:6px;
+    padding:24px;max-width:460px;width:100%}
+  .paybox-inner h3{color:var(--gold);font-size:16px;margin:0 0 8px}
+  .payrow{display:flex;justify-content:space-between;gap:12px;padding:9px 0;
+    border-bottom:1px solid var(--line);font-size:13.5px;color:var(--fog-dim)}
+  .payrow b{color:var(--kg-text)}
+  .paybox-inner .field{margin-top:14px}
+  .pay-pending{font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    border:1px solid var(--gold);color:var(--gold);padding:2px 7px;border-radius:2px;margin-left:8px}
+  .paymethods{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:16px 0 4px}
+  @media(max-width:420px){.paymethods{grid-template-columns:1fr}}
+  .paym{background:var(--panel-2);border:1px solid var(--line-strong);border-radius:4px;
+    padding:12px 13px;cursor:pointer;text-align:left;transition:.15s}
+  .paym:hover{border-color:var(--gold)}
+  .paym.on{border-color:var(--gold);background:rgba(244,211,50,.08)}
+  .paym b{display:block;font-size:13px;color:var(--kg-text);margin-bottom:3px}
+  .paym span{font-size:11.5px;color:var(--fog-dim);line-height:1.45}
+  /* ---------- Brand palette ----------
+     var(--kg-red)  var(--kg-text)  var(--kg-gold)  var(--kg-bg)
+     Red now carries both the brand and "not valid", so status is never
+     signalled by colour alone: a mark is added in front of the label.
+  ------------------------------------------------------------------ */
+  .tag.ok::before, .badge.ok::before, .status-msg.ok::before{content:"\2713 "}
+  .tag.bad::before, .badge.bad::before, .status-msg.err::before{content:"\2715 "}
+  .tag.warn::before, .badge.warn::before{content:"\25CF "}
+  /* ---------- Brand ground ----------
+     The portals sat on var(--kg-bg) while the front page sat on var(--kg-bg).
+     Close is not the same: side by side the difference shows, and the
+     palette names one black. */
+  body{background:var(--kg-bg)}
+  header{background:var(--kg-bg)!important;border-bottom:2px solid var(--kg-red)}
+  .card,.pane .card{background:var(--kg-surface);border-color:var(--kg-border)}
+  .row,.list-row{background:var(--kg-surface);border-color:var(--kg-border)}
+  .wanted{border-left:3px solid var(--gold);background:rgba(244,211,50,.07);
+    border-radius:0 4px 4px 0;padding:14px 16px;margin:24px 0 4px}
+  .wanted b{display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:5px}
+  .wanted span{font-size:14px;color:var(--fog);line-height:1.55}
+
+  /* ---------- Theme switch ---------- */
+  .kg-theme{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:36px;height:34px;padding:0;cursor:pointer;
+    background:transparent;border:1px solid var(--kg-border-2);border-radius:3px;
+    color:var(--kg-text);font-size:15px;line-height:1;
+  }
+  .kg-theme:hover{border-color:var(--kg-gold);color:var(--kg-gold)}
+  .kg-theme:focus-visible{outline:2px solid var(--kg-gold);outline-offset:2px}
+  @media (prefers-reduced-motion:no-preference){
+    html{transition:background-color .18s ease}
+  }
+
+  /* ---------- Readability in both settings ----------
+     Gold on black is a brand mark, not a reading colour: at 1.6:1 the
+     button labels and the small caps were hard to read. Buttons take
+     black type on gold; small labels take the dimmed gold, which is
+     dark enough on white and bright enough on black. */
+  .btn-primary,.btn.btn-primary,button.btn-primary,.vb-row button{
+    background:var(--kg-gold);color:#000000;border-color:var(--kg-gold);
+  }
+  [data-theme="light"] .btn-primary,[data-theme="light"] .vb-row button{
+    background:var(--kg-gold);color:#000000;
+  }
+  .hsub,.brand-sub,header .hsub{color:var(--kg-gold-dim)}
+  [data-theme="light"] .hsub,[data-theme="light"] header .hsub{color:var(--kg-gold-dim)}
+  label,.field label,.fgrid label{color:var(--kg-text-dim)}
+  [data-theme="light"] label,[data-theme="light"] .field label{color:#4a463f}
+  [data-theme="light"] .hero-title .accent{color:var(--kg-gold-dim)}
+  [data-theme="light"] .verify-bar label{color:#3d3320}
+
+  /* the auth tabs and the verify label carried gold at small sizes;
+     the active tab reads as black on gold, the inactive one as plain type */
+  .auth-tab-btn{color:var(--kg-text-dim);background:transparent}
+  .auth-tab-btn.active{background:var(--kg-gold);color:#000000}
+  [data-theme="light"] .auth-tab-btn{color:#4a463f}
+  .verify-bar label{color:#3d3320}
+
+  /* the tab strip kept a fixed dark surface, so light mode put dim type
+     on it; and the verify-bar label colour was reaching form labels */
+  .auth-tabs{background:var(--kg-surface);border-color:var(--kg-border)}
+  .auth-tab-btn{color:var(--kg-text-dim);background:transparent}
+  .auth-tab-btn.active{background:var(--kg-gold);color:#000000}
+  form label,.contact-form label,.field > label{color:var(--kg-text-dim)}
+  .verify-bar > .wrap > label{color:#3d3320}
+  .ussd{margin:16px 0 4px;padding:14px 16px;border-radius:4px;
+    border:1px solid var(--kg-gold);background:rgba(244,211,50,.08);text-align:center}
+  .ussd > span{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--kg-gold);margin-bottom:8px}
+  .ussd b{display:block;font-size:21px;font-weight:700;letter-spacing:.02em;
+    color:var(--kg-text);word-break:break-all;line-height:1.3}
+  .ussd-copy{margin-top:10px;font-size:12px;font-weight:700;padding:7px 16px;cursor:pointer;
+    background:var(--kg-gold);color:#000;border:0;border-radius:3px}
+  .ussd-copy:hover{background:#ffe14d}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+  header{background:#000!important;border-bottom:2px solid #c90000;position:sticky;top:0;z-index:40}
+  header .wrap{display:flex;align-items:center;gap:14px;padding:12px 20px}
+  header img{width:38px;height:auto}
+  header .htitle{font-size:14px;font-weight:bold;letter-spacing:.06em;color:#fff;line-height:1.2}
+  header .hsub{font-size:9.5px;letter-spacing:.2em;color:var(--kg-gold);text-transform:uppercase}
+  header .nav{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+  header .nav a,header .nav button{font-size:11.5px;padding:8px 12px;border:1px solid #3a3a3a;
+    border-radius:3px;background:transparent;color:#d6d1c6;text-decoration:none;cursor:pointer}
+  header .nav a:hover,header .nav button:hover{border-color:var(--kg-gold);color:var(--kg-gold)}
+
+  .card{background:var(--kg-surface);border:1px solid var(--kg-border);border-radius:6px;padding:22px;margin-bottom:16px}
+  .card h3{font-size:14px;letter-spacing:.05em;text-transform:uppercase;color:var(--kg-gold);
+    margin:0 0 12px;padding-bottom:9px;border-bottom:1px solid var(--kg-border)}
+  .muted{color:var(--kg-text-dim)} .small{font-size:12.5px;line-height:1.55}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+  .field label{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--kg-text-dim);margin-bottom:5px;font-weight:bold}
+  .field input,.field select,.field textarea{width:100%;padding:10px 12px;font-size:14px;
+    font-family:inherit;background:var(--kg-surface-2);color:var(--kg-text);
+    border:1px solid var(--kg-border-2);border-radius:4px}
+  .field input:focus,.field select:focus{outline:2px solid var(--kg-gold);outline-offset:1px}
+  .btn{font-family:inherit;font-weight:bold;border-radius:4px;cursor:pointer;border:1px solid transparent}
+  .btn-gold{background:var(--kg-gold);color:#000;border-color:var(--kg-gold)}
+  .btn-ghost{background:transparent;color:var(--kg-text);border-color:var(--kg-border-2)}
+  .btn-ghost:hover{border-color:var(--kg-gold);color:var(--kg-gold)}
+  .btn-mini{font-size:12px;padding:8px 14px}
+  .btn-tap{font-size:14px;padding:12px 18px;min-width:104px}
+  .row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+    border:1px solid var(--kg-border);border-radius:5px;padding:13px;background:var(--kg-surface-2);margin-bottom:9px}
+  .row.on{border-color:var(--kg-gold);background:rgba(244,211,50,.06)}
+  .row h4{margin:0 0 3px;font-size:15px;color:#fff}
+  .row .meta{font-size:12.5px;color:var(--kg-text-dim);line-height:1.55}
+  .tag{font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;
+    border-radius:3px;border:1px solid var(--kg-border-2);color:var(--kg-text-dim)}
+  .tag.on{border-color:var(--kg-gold);color:var(--kg-gold)}
+  .tag.done{border-color:#5a8a5a;color:#8fc98f}
+  .sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:16px}
+  .sum div{background:var(--kg-surface-2);border:1px solid var(--kg-border);border-radius:5px;padding:14px}
+  .sum .n{font-size:22px;font-weight:bold;color:var(--kg-gold);line-height:1}
+  .sum .k{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--kg-text-dim);margin-top:6px}
+  .qrbox{text-align:center;padding:20px;background:#fff;border-radius:6px;display:inline-block}
+  .qrbox canvas{display:block;margin:0 auto}
+  .qrbox .lbl{font-size:11px;color:#333;margin-top:10px;font-family:monospace;word-break:break-all;max-width:240px}
+  .empty{font-size:13.5px;color:var(--kg-text-dim);font-style:italic;padding:16px 0}
+  .msg{margin-top:10px;font-size:13px;display:none} .msg.show{display:block}
+  .msg.err{color:#ff6b6b} .msg.ok{color:var(--kg-gold)}
+  @media(max-width:560px){
+    .row{flex-direction:column;align-items:stretch}
+    .row .act{display:flex;gap:8px}
+    .btn-tap{flex:1}
+  }
+  .homelink{display:inline-block;border-radius:4px;transition:opacity .15s ease}
+  .homelink:hover{opacity:.85}
+  .homelink:focus-visible{outline:2px solid var(--kg-gold);outline-offset:3px}
+  .grp{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--kg-gold);
+    margin:20px 0 10px;padding-bottom:7px;border-bottom:1px solid var(--kg-border);
+    display:flex;justify-content:space-between}
+  .grp:first-child{margin-top:0}
+  .grp span{color:var(--kg-text-dim);letter-spacing:0}
+  .kg-theme{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:36px;height:34px;padding:0;cursor:pointer;
+    background:transparent;border:1px solid var(--kg-border-2);border-radius:3px;
+    color:var(--kg-text);font-size:15px;line-height:1;
+  }
+  /* Gold on paper is a highlighter, not a heading. On the light ground
+     the card titles take the ink colour and keep a red rule to mark a
+     new section. */
+  [data-theme="light"] .card h3,
+  [data-theme="light"] #shiftsCard h3{
+    color:#141210;
+    border-bottom-color:#e2ded3;
+  }
+  [data-theme="light"] .card h3::before{
+    content:'';display:inline-block;width:16px;height:2px;
+    background:var(--kg-red);vertical-align:middle;margin-right:9px
+  }
+
+  /* ---------- Phone ----------
+     Measured on a 390px screen, not guessed:
+
+     · a field under 16px makes iOS zoom the whole page the moment it
+       is focused, and the visitor then has to pinch back out
+     · a tap target under about 44px is missed as often as it is hit
+     · anything under 12px is unreadable outdoors, which is where a
+       security officer reads it
+  ------------------------------------------------------------------ */
+  @media (max-width: 900px){
+    input, select, textarea{
+      font-size:16px!important;
+      min-height:46px;
+      padding:12px 14px;
+    }
+    textarea{min-height:96px;line-height:1.55}
+
+    button, .btn, a.btn, .chips button, .pick button,
+    header .navlinks a, header .navlinks button,
+    .kg-theme, #langToggle, #langBtn{
+      min-height:44px;
+      display:inline-flex;align-items:center;justify-content:center;
+    }
+
+    /* links inside running text keep their size; standalone ones grow */
+    .nav a, .navlinks a, .flink, .hb-btn, .course-more, .social a{
+      min-height:44px;
+    }
+
+    /* nothing on a phone should be smaller than this */
+    .small, .muted.small, .meta, .rline, .note, .ftag, .rights,
+    .field label, .f label{font-size:13px!important;line-height:1.6}
+
+    /* room between things a finger has to choose between */
+    .chips{gap:10px}
+    .pick{gap:10px}
+    .actions, .hb-act{gap:10px}
+  }
+
+  @media (max-width: 900px){
+    /* A footer link and a portal link are things a thumb has to hit,
+       not words in a sentence. They were 22px and 36px tall. */
+    .fcontact a, .flink, footer a,
+    header .navlinks a, header .navlinks button,
+    .contact-direct .cd{
+      min-height:44px;
+      display:inline-flex;align-items:center;
+      font-size:13.5px!important;
+    }
+    .contact-direct .cd{display:block;padding:18px}
+    .fcontact{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center}
+
+    /* the eye that shows a password sits inside the field; give the
+       whole thing a finger's width */
+    .pw-eye{min-width:44px;min-height:44px;
+      display:inline-flex;align-items:center;justify-content:center;font-size:17px}
+
+    /* the theme and language buttons are square by design; make them
+       square at a size a thumb can find */
+    .kg-theme, #langToggle, #langBtn{min-width:44px}
+  }
+
+  @media (max-width: 900px){
+    /* the last few measured below the line: a nav built with a
+       different class name, a section label, and the logo link */
+    .toollinks a, .tool-nav a, header a[href$=".html"]{
+      min-height:44px;display:inline-flex;align-items:center;
+      font-size:13.5px!important;
+    }
+    .homelink{min-width:44px;min-height:44px;
+      display:inline-flex;align-items:center;justify-content:center}
+    #l_roles, .field > label[id]{font-size:13px!important}
+  }
+  .kg-foot{border-top:1px solid var(--kg-border);margin-top:48px;padding:26px 20px 34px}
+  .kg-foot-in{max-width:1180px;margin:0 auto}
+  .kg-foot-r{font-size:11.5px;color:var(--kg-text-dim);letter-spacing:.04em}
+  .flink{color:var(--kg-text-dim);text-decoration:none}
+  .flink:hover{color:var(--kg-gold)}
+  .sep{color:var(--kg-border-2)}
+
+  /* ---------- Kagoma type ----------
+     Bricolage Grotesque, one variable file, weights 200–800.
+     It replaces Archivo, EB Garamond and the Arial fallbacks the
+     portal pages were using, so every page reads as one company. */
+  :root{
+    --display:'Bricolage Grotesque', system-ui, sans-serif;
+    --body:'Bricolage Grotesque', system-ui, sans-serif;
+    --mono:'Bricolage Grotesque', system-ui, sans-serif;
+  }
+  html, body, button, input, select, textarea, .btn{
+    font-family:'Bricolage Grotesque', system-ui, -apple-system, sans-serif;
+  }
+  body{font-variation-settings:'wght' 400,'wdth' 100,'opsz' 14;
+       -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+  h1,.hero h1{font-variation-settings:'wght' 800,'wdth' 100,'opsz' 96;letter-spacing:-.025em}
+  h2,.sec-title{font-variation-settings:'wght' 700,'wdth' 100,'opsz' 48;letter-spacing:-.015em}
+  h3{font-variation-settings:'wght' 600,'opsz' 24}
+  h4{font-variation-settings:'wght' 600,'opsz' 24}
+  strong,b{font-variation-settings:'wght' 700}
+
+  /* anything that is a number lines up in a column */
+  .ref,.rf,.num,.n,.money,.cnum,code,
+  input[inputmode="numeric"],input[type="number"],input[type="tel"]{
+    font-variant-numeric:tabular-nums}
+  /* the footer links took the browser default blue on pages whose own
+     stylesheet never defined .flink */
+  .kg-foot a, .flink{color:var(--kg-text-dim,#9c9c9c);text-decoration:none}
+  .kg-foot a:hover, .flink:hover{color:var(--kg-gold,#f4d332)}
+  .kg-foot .sep{color:var(--kg-border-2,#3a3a3a)}
+  .staff-link{opacity:.45}
+  .staff-link:hover{opacity:1}
+  [data-theme="light"] .kg-foot a,[data-theme="light"] .flink{color:#5f5b54}
+  /* Ingingo 4, 13 and 28: a job runs on a signed agreement, an approved
+     order and the deposit agreed. This says so where it is acted on. */
+  .clear-bar{display:flex;align-items:flex-start;gap:13px;padding:15px 17px;
+    border-radius:6px;margin-bottom:16px;font-size:13.5px;line-height:1.65}
+  .clear-bar.ok{background:rgba(29,166,92,.07);border:1px solid rgba(29,166,92,.42);
+    border-left:4px solid #1DA65C;color:#9c9c9c}
+  .clear-bar.hold{background:rgba(201,0,0,.07);border:1px solid rgba(201,0,0,.42);
+    border-left:4px solid var(--kg-red);color:#9c9c9c}
+  .clear-bar b{color:var(--kg-text);display:block;margin-bottom:4px;font-size:14px}
+  .clear-bar ul{margin:6px 0 0;padding-left:18px}
+  .clear-bar li{margin-bottom:3px}
+  .clear-money{margin-top:8px;font-size:12.5px;color:var(--kg-text-dim)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a href="index.html" class="homelink" aria-label="Back to the Kagoma home page"><img src="img/crest-60e57097.webp" alt="Kagoma Protection Services"></a>
+    <div>
+      <div class="htitle">KAGOMA PROTECTION SERVICES</div>
+      <div class="hsub">Event Staffing</div>
+    </div>
+    <div class="nav">
+      <a href="admin.html">Admin</a>
+      <a href="office.html">Office</a>
+<button class="kg-theme" onclick="kgToggleTheme()" aria-pressed="false"
+            title="Switch to light" aria-label="Switch to light">☀</button>
+          <a href="index.html">&larr; Kagoma</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap" style="padding-top:22px;padding-bottom:60px">
+
+  <div id="gate" class="card">
+    <h3>Staff sign-in</h3>
+    <p class="muted small" id="gateMsg">Sign in on the admin desk first, then come back here.</p>
+    <a class="btn btn-gold btn-mini" href="admin.html" style="display:inline-block;text-decoration:none;margin-top:10px">Open the Admin Desk</a>
+  </div>
+
+  <div id="app" style="display:none">
+
+    <!-- ---------- event list ---------- -->
+    <div id="listView">
+      <div class="card">
+        <h3>New event</h3>
+        <div class="grid">
+          <div class="field"><label>Event name</label><input type="text" id="nName" name="full_name" autocomplete="name"></div>
+          <div class="field"><label>Client</label><input type="text" id="nClient" name="nClient"></div>
+          <div class="field"><label>Venue</label><input type="text" id="nVenue" name="nVenue"></div>
+          <div class="field"><label>Date</label><input type="date" id="nDate" name="nDate"></div>
+          <div class="field"><label>Call time</label><input type="time" id="nCall" name="nCall"></div>
+          <div class="field"><label>Hourly rate (RWF)</label><input type="number" id="nRate" step="100" name="nRate"></div>
+          <div class="field"><label>Staff needed</label><input type="number" id="nNeed" name="nNeed"></div>
+        </div>
+        <button class="btn btn-gold btn-mini" onclick="saveNewEvent()" style="margin-top:12px">Create event</button>
+        <div class="msg" id="newMsg"></div>
+      </div>
+
+      <div class="card">
+        <h3>Events</h3>
+        <div id="eventList"></div>
+      </div>
+    </div>
+
+    <!-- ---------- one event ---------- -->
+    <div id="eventView" style="display:none">
+      <button class="btn btn-ghost btn-mini" onclick="backToList()" style="margin-bottom:14px">&larr; All events</button>
+
+      <div class="card">
+        <h3 id="evTitle">—</h3>
+        <div class="muted small" id="evMeta"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
+          <button class="btn btn-gold btn-mini" id="openBtn" onclick="setStatus('open')">Open registration</button>
+          <button class="btn btn-ghost btn-mini" onclick="setStatus('closed')">Close event</button>
+          <button class="btn btn-ghost btn-mini" onclick="toggleQr()">Show QR code</button>
+          <button class="btn btn-ghost btn-mini" id="pubBtn" onclick="togglePublish()">Publish to workers</button>
+          <button class="btn btn-ghost btn-mini" onclick="exportManifest()">Staff list for the venue</button>
+          <button class="btn btn-ghost btn-mini" onclick="exportPayroll()">Export to Excel</button>
+        </div>
+        <div id="qrWrap" style="display:none;margin-top:18px">
+          <div class="qrbox">
+            <canvas id="qrCanvas"></canvas>
+            <div class="lbl" id="qrUrl"></div>
+          </div>
+          <p class="muted small" style="margin-top:10px">Print this, or show it on a phone at the gate. Workers scan it and register themselves.</p>
+        </div>
+        <div class="msg" id="evMsg"></div>
+      </div>
+
+      <div id="clearBar" style="display:none"></div>
+      <div class="sum" id="payroll"></div>
+
+      <div class="card" id="offersCard" style="display:none">
+        <h3>Put their hand up</h3>
+        <p class="muted small">People from the work pool who said they are free for this one. Tap Add to put them on the roster.</p>
+        <div id="offerList" style="margin-top:14px"></div>
+        <div class="msg" id="offerMsg"></div>
+      </div>
+
+      <div class="card">
+        <h3>Roster</h3>
+        <p class="muted small">Tap a name in when the shift starts, and out when it ends. Hours and pay follow.</p>
+        <div id="roster" style="margin-top:14px"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+
+<footer class="kg-foot">
+  <div class="kg-foot-in">
+    <div style="margin:14px 0 10px;font-size:12.5px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <a href="privacy.html" class="flink">Privacy Notice</a>
+      <span class="sep">&middot;</span>
+      <a href="terms.html" class="flink">Terms &amp; Conditions</a>
+      <span class="sep">&middot;</span>
+      <a href="faq.html" class="flink">FAQ</a>
+      <span class="sep">&middot;</span>
+      <a href="certificates.html" class="flink">Certificate Verification</a>
+      <span class="sep">&middot;</span>
+      <a href="index.html#contact" class="flink">Contact</a>
+    </div>
+    <div class="kg-foot-r">&copy; 2026 KAGOMA PROTECTIONS SERVICES LTD</div>
+  </div>
+</footer>
+<script>
+
+const SUPABASE_URL='https://hmpwmligwlfmdoomzudz.supabase.co';
+const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcHdtbGlnd2xmbWRvb216dWR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxNjY5NjcsImV4cCI6MjEwMjc0Mjk2N30.f57yWBQ8vusMdb-r4WRuiyfK7ktlKPo4XKSiKF597Y0';
+const sb=(typeof supabase!=='undefined'&&supabase.createClient)
+  ? supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,
+      {auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}}) : null;
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>Number(n||0).toLocaleString('en-US',{maximumFractionDigits:0});
+const hhmm=t=>t? new Date(t).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : '—';
+function msg(id,t,ok){const e=$(id); if(!e) return; e.textContent=t; e.className='msg show '+(ok?'ok':'err');}
+
+let user=null, events=[], current=null, roster=[], payroll=null, tick=null, offers=[];
+
+async function boot(){
+  if(!sb) return;
+  const {data:{user:u}}=await sb.auth.getUser();
+  if(!u) return;
+  const {data:ov,error}=await sb.rpc('admin_overview');
+  if(error||!ov){ $('gateMsg').textContent='This account does not have access to event staffing.'; return; }
+  user=u;
+  $('gate').style.display='none'; $('app').style.display='block';
+  $('nDate').value=new Date().toISOString().slice(0,10);
+  await loadEvents();
+}
+
+/* ---------------- events ---------------- */
+let listProblem=null;
+
+async function loadEvents(){
+  const {data,error}=await sb.from('events').select('*')
+    .order('starts_on',{ascending:false}).limit(60);
+  if(error){
+    console.error('load events', error);
+    listProblem = /does not exist|schema cache/i.test(error.message||'')
+      ? 'The events table is not there yet. Run 32_event_staffing.sql in Supabase.'
+      : 'Could not read events: ' + (error.message||'unknown error');
+    events=[];
+  }else{
+    listProblem=null; events=data||[];
+  }
+  renderEvents();
+}
+
+/* An event is in one of three places, and a supervisor needs to see
+   which at a glance: happening now, coming up, or finished. One flat
+   list buried today's event among last month's. */
+const GROUPS = [
+  {key:'running',  label:'Happening now', match:e=>e.status==='running'},
+  {key:'upcoming', label:'Coming up',     match:e=>['planned','open'].includes(e.status)},
+  {key:'done',     label:'Finished',      match:e=>['closed','cancelled'].includes(e.status)}
+];
+
+function eventCard(e){
+  const today=new Date().toISOString().slice(0,10);
+  const soon = e.starts_on===today;
+  return `
+    <div class="row ${e.status==='running'?'on':''}">
+      <div>
+        <h4>${esc(e.name)} ${soon?'<span class="tag on">today</span>':''}</h4>
+        <div class="meta">${esc(e.client_name||'')}${e.venue?' \u00b7 '+esc(e.venue):''}<br>
+          ${e.starts_on}${e.call_time?' \u00b7 '+String(e.call_time).slice(0,5):''}
+          ${e.hourly_rate_rwf?' \u00b7 '+money(e.hourly_rate_rwf)+' RWF/hr':''}
+          ${e.staff_needed?' \u00b7 '+e.staff_needed+' needed':''}
+          ${e.publish?' \u00b7 published':''}</div>
+      </div>
+      <div class="act" style="display:flex;gap:8px;align-items:center">
+        <span class="tag ${e.status==='running'?'on':e.status==='closed'?'done':''}">${esc(e.status)}</span>
+        <button class="btn btn-gold btn-mini" onclick="openEvent('${e.id}')">Open</button>
+      </div>
+    </div>`;
+}
+
+function renderEvents(){
+  const box=$('eventList');
+
+  if(listProblem){
+    box.innerHTML = `<div class="empty" style="color:#ff6b6b">${esc(listProblem)}</div>`;
+    return;
+  }
+  if(!events.length){
+    box.innerHTML = '<div class="empty">No events yet. Fill in the form above and press Create event \u2014 it will appear here and open straight away.</div>';
+    return;
+  }
+
+  let html='';
+  GROUPS.forEach(g=>{
+    const list=events.filter(g.match);
+    if(!list.length) return;
+    html += `<div class="grp">${g.label} <span>${list.length}</span></div>`
+          + list.map(eventCard).join('');
+  });
+  box.innerHTML = html;
+}
+
+async function saveNewEvent(){
+  const btn=document.querySelector('[onclick="saveNewEvent()"]');
+  const restore=()=>{ if(btn){ btn.disabled=false; btn.textContent='Create event'; } };
+  if(btn){ btn.disabled=true; btn.textContent='Creating\u2026'; }
+
+  try{
+    return await insertNewEvent(restore);
+  }catch(e){
+    console.error('save new event threw', e);
+    msg('newMsg','Something went wrong: ' + (e.message||e), false);
+    restore();
+  }
+}
+
+async function insertNewEvent(restore){
+  const name=$('nName').value.trim();
+  if(!name){ restore(); return msg('newMsg','Give the event a name.',false); }
+
+  /* Opened straight from a zip, the page has no proper origin and the
+     browser blocks the calls Supabase needs. It is worth saying so
+     rather than letting the button do nothing. */
+  if(location.protocol === 'file:'){
+    restore();
+    return msg('newMsg','This page is open as a file. Extract the folder and put it online '
+      + '(or run a local server) \u2014 saving to the database does not work from file://.', false);
+  }
+  if(!sb){ restore(); return msg('newMsg','No connection to the database.', false); }
+  if(!user){ restore(); return msg('newMsg','Not signed in as Kagoma staff.', false); }
+
+  const {data,error}=await sb.from('events').insert({
+    name, client_name:$('nClient').value.trim()||null,
+    venue:$('nVenue').value.trim()||null,
+    starts_on:$('nDate').value||new Date().toISOString().slice(0,10),
+    call_time:$('nCall').value||null,
+    hourly_rate_rwf:$('nRate').value?parseFloat($('nRate').value):null,
+    staff_needed:$('nNeed').value?parseInt($('nNeed').value):null,
+    status:'open', created_by:user.id
+  }).select();
+
+  if(error){
+    /* the generic sentence hid which of three different problems it
+       was: table missing, policy refusing, or a bad value */
+    console.error('create event', error);
+    const m = /does not exist|schema cache/i.test(error.message||'')
+      ? 'The events table is not there yet. Run 32_event_staffing.sql in Supabase.'
+      : /row-level security|policy/i.test(error.message||'')
+      ? 'The database refused this. Check you are signed in as Kagoma staff.'
+      : 'Could not create the event: ' + (error.message || 'unknown error');
+    restore(); return msg('newMsg', m, false);
+  }
+
+  /* an insert that returns nothing is an insert that did not land */
+  if(!data || !data.length){
+    restore(); return msg('newMsg','Sent, but the event does not read back. Check your admin role.', false);
+  }
+
+  restore();
+  msg('newMsg','\u2713 Created: ' + name, true);
+  ['nName','nClient','nVenue','nCall','nRate','nNeed'].forEach(i=>$(i).value='');
+  await loadEvents();
+  /* open it straight away: the next thing anyone does is publish it
+     or show the QR, and both live inside the event */
+  const made = events.find(e=>e.id===data[0].id);
+  if(made) openEvent(made.id);
+}
+
+/* ---------------- one event ---------------- */
+async function openEvent(id){
+  current=events.find(e=>e.id===id);
+  if(!current) return;
+  $('listView').style.display='none'; $('eventView').style.display='block';
+  $('evTitle').textContent=current.name;
+  $('evMeta').innerHTML=[current.client_name, current.venue, current.starts_on,
+    current.call_time?'Call '+String(current.call_time).slice(0,5):null,
+    current.hourly_rate_rwf?money(current.hourly_rate_rwf)+' RWF per hour':null]
+    .filter(Boolean).map(esc).join(' \u00b7 ');
+  $('qrWrap').style.display='none';
+  paintPublish();
+  await refresh();
+  /* an event in progress moves: refresh while the page is open so a
+     supervisor is not looking at a roster from ten minutes ago */
+  clearInterval(tick); tick=setInterval(refresh, 30000);
+  window.scrollTo(0,0);
+}
+
+function backToList(){
+  clearInterval(tick); tick=null; current=null;
+  $('eventView').style.display='none'; $('listView').style.display='block';
+  loadEvents();
+}
+
+async function refresh(){
+  if(!current) return;
+  const [r,p]=await Promise.all([
+    sb.rpc('event_roster',{p_event:current.id}),
+    sb.rpc('event_payroll',{p_event:current.id})
+  ]);
+  await loadOffers();
+  await loadClearance();
+  roster = r.error? [] : (r.data||[]);
+  payroll = p.error? null : p.data;
+  renderRoster(); renderPayroll();
+}
+
+function renderPayroll(){
+  const p=payroll||{people:0,shifts:0,hours:0,total:0};
+  $('payroll').innerHTML=`
+    <div><div class="n">${p.people||0}</div><div class="k">Registered</div></div>
+    <div><div class="n">${roster.filter(x=>x.on_duty).length}</div><div class="k">On duty</div></div>
+    <div><div class="n">${Number(p.hours||0).toFixed(1)}</div><div class="k">Hours</div></div>
+    <div><div class="n">${money(p.total)}</div><div class="k">RWF payable</div></div>`;
+}
+
+function renderRoster(){
+  $('roster').innerHTML = roster.length ? roster.map(s=>`
+    <div class="row ${s.on_duty?'on':''}">
+      <div>
+        <h4>${esc(s.name)} ${s.on_duty?'<span class="tag on">on duty</span>':''}${s.edited?'<span class="tag">edited</span>':''}</h4>
+        <div class="meta">${esc(s.role||'')}${s.phone?' \u00b7 '+esc(s.phone):''}<br>
+          ${s.in?'In '+hhmm(s.in):'not started'}${s.out?' \u00b7 Out '+hhmm(s.out):''}
+          ${s.hours?' \u00b7 '+Number(s.hours).toFixed(2)+' hrs':''}
+          ${s.amount?' \u00b7 '+money(s.amount)+' RWF':''}</div>
+      </div>
+      <div class="act" style="display:flex;gap:8px">
+        ${s.on_duty
+          ? `<button class="btn btn-ghost btn-tap" onclick="tapOut('${s.staff_id}')">Tap out</button>`
+          : `<button class="btn btn-gold btn-tap" onclick="tapIn('${s.staff_id}')">Tap in</button>`}
+        ${s.shift_id?`<button class="btn btn-ghost btn-mini" onclick="fixShift('${s.shift_id}','${esc(s.name)}')">Fix</button>`:''}
+      </div>
+    </div>`).join('') : '<div class="empty">Nobody has registered yet. Show the QR code at the gate.</div>';
+}
+
+async function tapIn(id){
+  const {data,error}=await sb.rpc('clock_in',{p_staff:id});
+  if(error) return msg('evMsg','Could not start the shift.',false);
+  if(data && data.ok===false) return msg('evMsg','That person is already on duty.',false);
+  msg('evMsg','Shift started.',true); await refresh();
+}
+async function tapOut(id){
+  const {data,error}=await sb.rpc('clock_out',{p_staff:id});
+  if(error) return msg('evMsg','Could not end the shift.',false);
+  if(data && data.ok===false) return msg('evMsg','That person is not on duty.',false);
+  msg('evMsg',`Shift ended \u2014 ${Number(data.hours).toFixed(2)} hrs, ${money(data.amount)} RWF.`,true);
+  await refresh();
+}
+
+/* A missed tap is common: someone starts before the supervisor reaches
+   them. Rather than edit the clock, the correction is stored beside it. */
+async function fixShift(shiftId, name){
+  const h=prompt('Hours for '+name+' (leave empty to use the clock):');
+  if(h===null) return;
+  const a=prompt('Amount in RWF (leave empty to calculate from hours):');
+  if(a===null) return;
+  const note=prompt('Why was this changed?') || null;
+  const {error}=await sb.rpc('adjust_shift',{
+    p_shift:shiftId,
+    p_hours: h.trim()===''? null : parseFloat(h),
+    p_amount: a.trim()===''? null : parseFloat(a),
+    p_note: note});
+  if(error) return msg('evMsg','Could not save the correction.',false);
+  msg('evMsg','Correction saved.',true); await refresh();
+}
+
+async function setStatus(st){
+  const {error}=await sb.from('events').update({status:st}).eq('id',current.id);
+  if(error) return msg('evMsg','Could not change the status.',false);
+  current.status=st; msg('evMsg','Event is now '+st+'.',true);
+  await loadEvents();
+}
+
+
+/* ---------------- is this job cleared to run? ----------------
+   The Master Service Agreement makes three things conditions of
+   starting: a signed agreement, an order the client approved, and the
+   deposit. A supervisor should see that on the event, not find out at
+   the gate. */
+async function loadClearance(){
+  const bar = document.getElementById('clearBar');
+  if(!bar || !current) return;
+
+  if(!current.service_order_id){ bar.style.display='none'; return; }
+
+  const {data, error} = await sb.rpc('so_clearance', {p_order: current.service_order_id});
+  if(error || !data || !data.found){ bar.style.display='none'; return; }
+
+  const b = data.balance || {};
+  const m = n => Number(n||0).toLocaleString('en-US',{maximumFractionDigits:0});
+
+  bar.style.display='';
+  bar.className = 'clear-bar ' + (data.clear ? 'ok' : 'hold');
+  bar.innerHTML =
+    '<div>' +
+    '<b>' + (data.clear ? 'Cleared to run' : 'Not cleared to run') + '</b>' +
+    (data.clear
+      ? 'Signed agreement, approved order, deposit received.'
+      : '<ul>' + (data.reasons||[]).map(r=>'<li>'+esc(r)+'</li>').join('') + '</ul>') +
+    '<div class="clear-money">' +
+      'Order ' + m(b.order_total) + ' RWF' +
+      (Number(b.agreed_extras) ? ' + ' + m(b.agreed_extras) + ' agreed extras' : '') +
+      ' &middot; paid ' + m(b.paid) + ' RWF' +
+      ' &middot; <b style="display:inline">balance ' + m(b.balance) + ' RWF</b>' +
+      (Number(b.pending_extras)
+        ? '<br>' + m(b.pending_extras) + ' RWF in charges the client has not yet confirmed'
+        : '') +
+    '</div></div>';
+}
+
+/* ---------------- publishing, and who answered ---------------- */
+/* An event is not advertised by default: a client's event is their
+   business, not a notice board. Publishing is a decision. */
+async function togglePublish(){
+  const on = !current.publish;
+  const {error}=await sb.from('events').update({publish:on}).eq('id',current.id);
+  if(error) return msg('evMsg','Could not change that.',false);
+  current.publish=on;
+  paintPublish();
+  msg('evMsg', on? 'Published \u2014 workers can now see it and offer.'
+                 : 'Taken down. Workers can no longer see it.', true);
+}
+function paintPublish(){
+  const b=document.getElementById('pubBtn'); if(!b) return;
+  b.textContent = current && current.publish ? 'Unpublish' : 'Publish to workers';
+  b.className = 'btn btn-mini ' + (current && current.publish ? 'btn-gold' : 'btn-ghost');
+}
+
+async function loadOffers(){
+  const {data,error}=await sb.rpc('event_offers',{p_event:current.id});
+  offers=(error||!data)?[]:data;
+  renderOffers();
+}
+function renderOffers(){
+  const card=document.getElementById('offersCard');
+  const box=document.getElementById('offerList');
+  if(!card||!box) return;
+  if(!offers.length){ card.style.display='none'; return; }
+  card.style.display='block';
+  box.innerHTML=offers.map(o=>`
+    <div class="row">
+      <div>
+        <h4>${esc(o.name)} ${o.pool_status==='approved'?'<span class="tag done">screened</span>':`<span class="tag">${esc(o.pool_status||'new')}</span>`}</h4>
+        <div class="meta">${esc(o.phone)}${o.address?' \u00b7 '+esc(o.address):''}<br>
+          ${(o.roles||[]).join(', ')}${o.events_worked?' \u00b7 '+o.events_worked+' events worked':''}
+          ${o.note?'<br>'+esc(o.note):''}</div>
+      </div>
+      <div class="act">
+        ${o.on_roster
+          ? '<span class="tag on">on roster</span>'
+          : `<button class="btn btn-gold btn-mini" onclick="addOffer('${o.pool_id}')">Add</button>`}
+      </div>
+    </div>`).join('');
+}
+async function addOffer(poolId){
+  const {data,error}=await sb.rpc('call_to_event',{p_event:current.id, p_pool_id:poolId, p_role:null});
+  if(error) return msg('offerMsg','Could not add them.',false);
+  if(data && data.ok===false){
+    return msg('offerMsg', data.reason==='not_approved'
+      ? 'That person has not been screened yet. Approve them in the work pool first.'
+      : 'Could not add them.', false);
+  }
+  msg('offerMsg', data.already? data.name+' was already on the roster.' : data.name+' added.', true);
+  await refresh();
+}
+
+/* ---------------- the QR code ---------------- */
+function joinUrl(){
+  const base=location.href.replace(/[^/]*$/,'');
+  return base+'join.html?e='+current.join_token;
+}
+function toggleQr(){
+  const w=$('qrWrap');
+  if(w.style.display==='block'){ w.style.display='none'; return; }
+  const url=joinUrl();
+  $('qrUrl').textContent=url;
+  w.style.display='block';
+  if(typeof QRious!=='undefined'){
+    new QRious({element:$('qrCanvas'), value:url, size:240, level:'M',
+                background:'#ffffff', foreground:'#000000'});
+  }
+}
+
+/* ---------------- the list a venue asks for ---------------- */
+/* KCC and venues like it require, for every officer on site: ID,
+   names, phone and the address in full. This is that list, in their
+   columns, with anyone incomplete flagged before it is sent. */
+async function exportManifest(){
+  const {data,error}=await sb.rpc('event_manifest',{p_event:current.id});
+  if(error) return msg('evMsg','Could not build the list: '+(error.message||''),false);
+  const rows=data||[];
+  if(!rows.length) return msg('evMsg','Nobody is on the roster yet.',false);
+
+  const missing=rows.filter(r=>!r.complete);
+  if(missing.length){
+    const names=missing.slice(0,4).map(r=>r.names).join(', ');
+    const more=missing.length>4 ? ' and '+(missing.length-4)+' more' : '';
+    if(!confirm(missing.length+' of '+rows.length+' records are incomplete ('+names+more+
+        ').\n\nA venue will send the list back. Export anyway?')) return;
+  }
+
+  const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+  const head=['No','Names','ID Number','Telephone','Province','District','Sector','Cell','Village','Role'];
+  const lines=[head.map(q).join(',')];
+  rows.forEach(function(r,i){
+    lines.push([i+1, r.names, r.id_number, r.phone, r.province, r.district,
+                r.sector, r.cell, r.village, r.role].map(q).join(','));
+  });
+  lines.push('');
+  lines.push([q(''),q('KAGOMA PROTECTIONS SERVICES LTD'),q('TIN 156478327'),
+              q('+250 788 225 262')].join(','));
+  lines.push([q(''),q(current.name||''),q(current.venue||''),q(current.starts_on||'')].join(','));
+
+  const blob=new Blob(['\uFEFF'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='kagoma-staff-list-'+(current.name||'event')
+    .replace(/[^A-Za-z0-9]+/g,'-').toLowerCase()+'.csv';
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },2000);
+
+  msg('evMsg','Staff list downloaded'+(missing.length?' \u2014 '+missing.length+' record(s) incomplete.':'.'),
+      missing.length===0);
+}
+
+/* ---------------- payroll out ---------------- */
+function exportPayroll(){
+  if(!roster.length) return alert('Nothing to export yet.');
+  const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+  const rows=[['Name','Role','Phone','In','Out','Hours','Rate','Amount RWF','Edited']
+    .map(q).join(',')];
+  roster.forEach(s=>rows.push([s.name,s.role,s.phone,
+    s.in?new Date(s.in).toLocaleString():'', s.out?new Date(s.out).toLocaleString():'',
+    Number(s.hours||0).toFixed(2), s.rate||'', Math.round(s.amount||0),
+    s.edited?'yes':''].map(q).join(',')));
+  rows.push(''); rows.push([q('TOTAL'),'','','','',
+    q(Number(payroll?.hours||0).toFixed(2)),'',q(Math.round(payroll?.total||0)),''].join(','));
+
+  const blob=new Blob(['\uFEFF'+rows.join('\r\n')],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='kagoma-'+(current.name||'event').replace(/[^A-Za-z0-9]+/g,'-').toLowerCase()+'-payroll.csv';
+  document.body.appendChild(a); a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href); a.remove();},2000);
+}
+
+boot();
+
+
+function kgTheme(){ try{ return localStorage.getItem('kg-theme') || 'dark'; }catch(e){ return 'dark'; } }
+function kgApplyTheme(t){
+  document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+  document.querySelectorAll('.kg-theme').forEach(b=>{
+    const light = t === 'light';
+    b.textContent = light ? '\u263D' : '\u2600';          /* moon when light, sun when dark */
+    b.setAttribute('aria-pressed', light ? 'true' : 'false');
+    b.setAttribute('title', light ? 'Switch to dark' : 'Switch to light');
+    b.setAttribute('aria-label', light ? 'Switch to dark' : 'Switch to light');
+  });
+}
+function kgToggleTheme(){
+  const next = kgTheme() === 'light' ? 'dark' : 'light';
+  try{ localStorage.setItem('kg-theme', next); }catch(e){}
+  kgApplyTheme(next);
+}
+kgApplyTheme(kgTheme());
+</script>
+</body>
+</html>

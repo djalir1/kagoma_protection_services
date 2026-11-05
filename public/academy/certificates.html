@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kagoma — Impamyabushobozi (Certificates)</title>
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="var(--kg-bg)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Kagoma">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=EB+Garamond:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+@font-face{
+  font-family:'Bricolage Grotesque';
+  src:url('fonts/BricolageGrotesque.woff2') format('woff2-variations');
+  font-weight:200 800;
+  font-stretch:75% 100%;
+  font-display:swap;
+}
+
+/* ============================================================
+   KAGOMA — theme tokens
+
+   One scale, two settings. Gold and red never move: a brand that
+   changes colour is not a brand. What flips is the ground and the
+   type on it.
+
+   Dark is the default. Light exists because an officer reading
+   forty lessons in Kigali daylight cannot see a dark screen.
+   ============================================================ */
+:root{
+  --kg-gold:#f4d332;
+  --kg-gold-dim:#c9a227;
+  --kg-red:#c90000;
+  --kg-red-dim:#8e0000;
+
+  --kg-bg:#000000;
+  --kg-surface:#0d0d0d;
+  --kg-surface-2:#151515;
+  --kg-border:#262626;
+  --kg-border-2:#3a3a3a;
+  --kg-text:#ffffff;
+  --kg-text-dim:#9c9c9c;
+  --kg-shadow:rgba(0,0,0,.55);
+}
+[data-theme="light"]{
+  --kg-bg:#ffffff;
+  --kg-surface:#f6f4ef;
+  --kg-surface-2:#ece9e1;
+  --kg-border:#ddd8cc;
+  --kg-border-2:#bdb6a5;
+  --kg-text:#141210;
+  --kg-text-dim:#5f5b54;
+  --kg-shadow:rgba(0,0,0,.14);
+  /* the brand red is too light-on-light for small type; the deeper
+     one keeps the hue and stays readable */
+  --kg-red:#b00000;
+  --kg-gold-dim:#8a6f10;
+}
+html,body{background:var(--kg-bg);color:var(--kg-text)}
+
+  :root{
+    --ink:var(--kg-bg);
+    --panel:var(--kg-surface);
+    --panel-2:var(--kg-surface-2);
+    --fog:var(--kg-text);
+    --fog-dim:var(--kg-text-dim);
+    --gold:var(--kg-gold);
+    --gold-bright:var(--kg-gold);
+    --red:var(--kg-red);
+    --line:rgba(255,255,255,0.10);
+    --line-strong:rgba(255,255,255,0.18);
+    --ok:var(--kg-gold);
+    --bad:var(--kg-red);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--fog);
+    font-family:Arial, Helvetica, sans-serif;
+    line-height:1.55;
+    padding-bottom:60px;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:0 20px;}
+
+  header{
+    border-bottom:1px solid var(--line);
+    padding:22px 0;
+    position:sticky;top:0;
+    background:rgba(10,10,10,0.94);
+    backdrop-filter:blur(8px);
+    z-index:10;
+  }
+  header .wrap{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  header .backlink{font-size:12.5px;color:var(--fog-dim);border:1px solid var(--line-strong);padding:9px 14px;border-radius:3px;}
+  header .backlink:hover{color:var(--gold-bright);border-color:var(--gold);}
+  .lang-toggle{
+    font-family:inherit;font-size:12px;font-weight:700;letter-spacing:0.08em;
+    color:var(--fog);background:transparent;border:1px solid var(--line-strong);
+    padding:9px 12px;border-radius:3px;cursor:pointer;margin-left:auto;
+  }
+  .lang-toggle:hover{border-color:var(--gold);color:var(--gold-bright);}
+  header img{height:42px;width:auto;}
+  header .htitle{font-size:17px;font-weight:700;color:var(--kg-text);letter-spacing:0.01em;}
+  header .hsub{font-size:11.5px;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;margin-top:2px;}
+
+  .tabs{display:flex;gap:2px;margin:30px 0 26px;border:1px solid var(--line);width:fit-content;border-radius:3px;overflow:hidden;}
+  .tab-btn{
+    padding:12px 22px;
+    background:var(--panel);
+    color:var(--fog-dim);
+    font-weight:700;
+    font-size:13.5px;
+    border:none;
+    cursor:pointer;
+    letter-spacing:0.02em;
+  }
+  .tab-btn.active{background:var(--gold);color:var(--kg-gold-dim);}
+
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  h2{font-size:20px;color:var(--kg-text);margin-bottom:6px;letter-spacing:0.01em;}
+  .lead{font-size:14px;color:var(--fog-dim);margin-bottom:26px;max-width:600px;}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:26px;}
+
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:12px;font-weight:700;letter-spacing:0.04em;color:var(--gold);text-transform:uppercase;margin-bottom:7px;}
+  .field input, .field select{
+    width:100%;
+    background:var(--ink);
+    border:1px solid var(--line-strong);
+    color:var(--kg-text);
+    padding:11px 13px;
+    font-size:14.5px;
+    border-radius:3px;
+    font-family:inherit;
+  }
+  .field input:focus, .field select:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
+  .note{font-size:12px;color:var(--fog-dim);margin-top:16px;padding-top:16px;border-top:1px solid var(--line);}
+
+  .btn{
+    font-weight:700;
+    font-size:14px;
+    padding:13px 22px;
+    border-radius:3px;
+    border:none;
+    cursor:pointer;
+    letter-spacing:0.02em;
+  }
+  .btn-primary{background:var(--gold);color:var(--kg-gold-dim);}
+  .btn-primary:hover{background:var(--gold-bright);}
+  .btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+  .btn-outline{background:transparent;border:1px solid var(--line-strong);color:var(--kg-text);}
+  .btn-outline:hover{border-color:var(--gold);color:var(--gold-bright);}
+
+  .status-msg{font-size:13px;margin-top:14px;padding:10px 12px;border-radius:3px;display:none;}
+  .status-msg.show{display:block;}
+  .status-msg.ok{background:rgba(47,168,79,0.12);color:var(--kg-gold);border:1px solid rgba(47,168,79,0.35);}
+  .status-msg.err{background:rgba(201,0,0,0.12);color:var(--kg-red);border:1px solid rgba(201,0,0,0.35);}
+
+  .cert-output{margin-top:30px;display:none;}
+  .cert-output.show{display:block;}
+  .cert-frame{
+    background:linear-gradient(160deg,var(--kg-surface-2),var(--kg-surface));
+    padding:34px;
+    border-radius:6px;
+    box-shadow:0 30px 70px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.04);
+  }
+  .cert-frame canvas{width:100%;height:auto;display:block;border-radius:2px;box-shadow:0 10px 30px rgba(0,0,0,0.5);}
+  .cert-actions{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;}
+  .cert-meta{font-size:12.5px;color:var(--fog-dim);margin-top:12px;font-family:'Courier New',monospace;}
+  .cert-meta b{color:var(--gold);}
+
+  .recent{margin-top:34px;}
+  .recent h3{font-size:14px;color:var(--kg-text);margin-bottom:12px;}
+  .recent-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:12px 14px;border:1px solid var(--line);border-radius:3px;margin-bottom:8px;background:var(--panel);
+    gap:12px;flex-wrap:wrap;
+  }
+  .recent-row .who{font-size:13.5px;color:var(--kg-text);}
+  .recent-row .meta{font-size:11.5px;color:var(--fog-dim);font-family:'Courier New',monospace;margin-top:3px;}
+  .recent-row .rbtns{display:flex;gap:8px;}
+  .recent-row .rbtns button{
+    font-size:11.5px;padding:7px 12px;background:transparent;border:1px solid var(--line-strong);color:var(--fog);border-radius:3px;cursor:pointer;
+  }
+  .recent-row .rbtns button:hover{border-color:var(--gold);color:var(--gold-bright);}
+
+  .verify-box{display:flex;gap:10px;}
+  .verify-box input{flex:1;}
+  .result{margin-top:26px;border-radius:4px;padding:22px;display:none;}
+  .result.show{display:block;}
+  .result.valid{background:rgba(29,166,92,0.07);border:1px solid rgba(29,166,92,0.45);}
+  .result.invalid{background:rgba(201,0,0,0.08);border:1px solid rgba(201,0,0,0.4);}
+  .result .badge{font-size:12px;font-weight:700;letter-spacing:0.08em;padding:5px 10px;border-radius:3px;display:inline-block;}
+  .result.valid .badge{background:transparent;}
+  .result.invalid .badge{background:var(--bad);color:var(--kg-text);}
+  .result .rname{font-size:24px;color:var(--kg-text);font-weight:700;margin-top:14px;}
+  .result .rline{font-size:14px;color:var(--fog-dim);margin-top:6px;}
+  .result .rline b{color:var(--fog);}
+
+  footer{border-top:1px solid var(--line);margin-top:60px;padding:24px 0;text-align:center;font-size:11.5px;color:var(--fog-dim);}
+
+  /* ---------------- Auth gate ---------------- */
+  .gate-card{
+    max-width:420px;
+    margin:20px auto 0;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:30px 28px;
+    text-align:center;
+  }
+  .gate-card .gicon{font-size:28px;margin-bottom:6px;}
+  .gate-card h3{font-size:17px;color:var(--kg-text);margin-bottom:6px;}
+  .gate-card p.gate-lead{font-size:13px;color:var(--fog-dim);margin-bottom:22px;}
+  .gate-card .field{text-align:left;}
+  .gate-card .gate-error{
+    display:none;font-size:12.5px;color:var(--kg-red);margin-top:10px;
+    background:rgba(201,0,0,0.12);border:1px solid rgba(201,0,0,0.35);
+    padding:9px 11px;border-radius:3px;
+  }
+  .gate-card .gate-error.show{display:block;}
+  .gate-card .gate-ok{
+    display:none;font-size:12.5px;color:var(--kg-gold);margin-top:10px;
+    background:rgba(47,168,79,0.12);border:1px solid rgba(47,168,79,0.35);
+    padding:9px 11px;border-radius:3px;
+  }
+  .gate-card .gate-ok.show{display:block;}
+  .gate-card .gate-note{font-size:11px;color:var(--fog-dim);margin-top:18px;padding-top:16px;border-top:1px solid var(--line);text-align:left;}
+  .gate-card button.btn{width:100%;margin-top:6px;}
+  .gate-card .gate-cancel{
+    margin-top:10px;background:transparent;border:none;color:var(--fog-dim);font-size:12.5px;cursor:pointer;text-decoration:underline;
+  }
+  @media (max-width:640px){
+    header .wrap{row-gap:10px}
+    header .backlink{font-size:11.5px;padding:8px 10px}
+    header .lang-toggle{order:3}
+  }
+  /* the crest doubles as the way home, as on the public site */
+  .homelink{display:inline-flex;align-items:center;border-radius:4px;
+    transition:opacity .15s ease,transform .15s ease}
+  .homelink:hover{opacity:.85;transform:translateY(-1px)}
+  .homelink:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  .homelink img{display:block}
+  /* ---------- Brand palette ----------
+     var(--kg-red)  var(--kg-text)  var(--kg-gold)  var(--kg-bg)
+     Red now carries both the brand and "not valid", so status is never
+     signalled by colour alone: a mark is added in front of the label.
+  ------------------------------------------------------------------ */
+  .tag.ok::before, .badge.ok::before, .status-msg.ok::before{content:"\2713 "}
+  .tag.bad::before, .badge.bad::before, .status-msg.err::before{content:"\2715 "}
+  .tag.warn::before, .badge.warn::before{content:"\25CF "}
+  /* ---------- Brand ground ----------
+     The portals sat on var(--kg-bg) while the front page sat on var(--kg-bg).
+     Close is not the same: side by side the difference shows, and the
+     palette names one black. */
+  body{background:var(--kg-bg)}
+  header{background:var(--kg-bg)!important;border-bottom:2px solid var(--kg-red)}
+  .card,.pane .card{background:var(--kg-surface);border-color:var(--kg-border)}
+  .row,.list-row{background:var(--kg-surface);border-color:var(--kg-border)}
+
+  /* ---------- Theme switch ---------- */
+  .kg-theme{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:36px;height:34px;padding:0;cursor:pointer;
+    background:transparent;border:1px solid var(--kg-border-2);border-radius:3px;
+    color:var(--kg-text);font-size:15px;line-height:1;
+  }
+  .kg-theme:hover{border-color:var(--kg-gold);color:var(--kg-gold)}
+  .kg-theme:focus-visible{outline:2px solid var(--kg-gold);outline-offset:2px}
+  @media (prefers-reduced-motion:no-preference){
+    html{transition:background-color .18s ease}
+  }
+
+  /* ---------- Readability in both settings ----------
+     Gold on black is a brand mark, not a reading colour: at 1.6:1 the
+     button labels and the small caps were hard to read. Buttons take
+     black type on gold; small labels take the dimmed gold, which is
+     dark enough on white and bright enough on black. */
+  .btn-primary,.btn.btn-primary,button.btn-primary,.vb-row button{
+    background:var(--kg-gold);color:#000000;border-color:var(--kg-gold);
+  }
+  [data-theme="light"] .btn-primary,[data-theme="light"] .vb-row button{
+    background:var(--kg-gold);color:#000000;
+  }
+  .hsub,.brand-sub,header .hsub{color:var(--kg-gold-dim)}
+  [data-theme="light"] .hsub,[data-theme="light"] header .hsub{color:var(--kg-gold-dim)}
+  label,.field label,.fgrid label{color:var(--kg-text-dim)}
+  [data-theme="light"] label,[data-theme="light"] .field label{color:#4a463f}
+  [data-theme="light"] .hero-title .accent{color:var(--kg-gold-dim)}
+  [data-theme="light"] .verify-bar label{color:#3d3320}
+
+  /* the tab strip kept a fixed dark surface, so light mode put dim type
+     on it; and the verify-bar label colour was reaching form labels */
+  .auth-tabs{background:var(--kg-surface);border-color:var(--kg-border)}
+  .auth-tab-btn{color:var(--kg-text-dim);background:transparent}
+  .auth-tab-btn.active{background:var(--kg-gold);color:#000000}
+  form label,.contact-form label,.field > label{color:var(--kg-text-dim)}
+  .verify-bar > .wrap > label{color:#3d3320}
+  /* ---------- Social ---------- */
+  .social{display:flex;gap:10px;margin:22px 0 18px;flex-wrap:wrap}
+  .social a{display:flex;align-items:center;justify-content:center;
+    width:42px;height:42px;border:1px solid var(--kg-border-2);border-radius:5px;
+    color:var(--kg-text-dim);transition:.15s}
+  .social a svg{width:19px;height:19px;fill:currentColor;display:block}
+  .social a:hover{border-color:var(--kg-gold);color:var(--kg-gold);
+    background:rgba(244,211,50,.07)}
+  .social a:focus-visible{outline:2px solid var(--kg-gold);outline-offset:2px}
+  /* an account Kagoma does not have yet is dimmed, not pretended */
+  .social a[href="#"]{opacity:.4;cursor:default}
+  .social a[href="#"]:hover{border-color:var(--kg-border-2);color:var(--kg-text-dim);background:none}
+  .kg-foot{border-top:1px solid var(--kg-border);margin-top:48px;padding:26px 20px 34px}
+  .kg-foot-in{max-width:1180px;margin:0 auto}
+  .kg-foot-r{font-size:11.5px;color:var(--kg-text-dim);letter-spacing:.04em}
+  /* ---------- Verified mark ----------
+     Green is outside the four brand colours, and that is the point: it
+     is the one thing on the site that is not Kagoma speaking about
+     itself. It is the register answering. */
+  .vbadge{width:26px;height:26px;flex:none}
+  .vb-seal{fill:#1DA65C}
+  .vb-tick{fill:#ffffff}
+
+  /* the seal is the statement; the word beside it names what was
+     checked. A second tick said the same thing twice. */
+  .result.valid .badge{display:inline-flex;align-items:center;gap:10px;
+    background:transparent;padding:0;margin-bottom:4px;
+    color:#2FD07A;font-size:13px;font-weight:700;letter-spacing:.14em}
+  .result.valid .badge::before{content:none}
+
+  /* a green edge down the side reads before any word does */
+  .result.valid{background:rgba(29,166,92,0.06);
+    border:1px solid rgba(29,166,92,0.42);border-left:4px solid #1DA65C}
+  .result.invalid{border-left:4px solid var(--kg-red)}
+
+  @media print{ .vb-seal{fill:#1DA65C !important;-webkit-print-color-adjust:exact} }
+
+  /* ---------- Phone ----------
+     Measured on a 390px screen, not guessed:
+
+     · a field under 16px makes iOS zoom the whole page the moment it
+       is focused, and the visitor then has to pinch back out
+     · a tap target under about 44px is missed as often as it is hit
+     · anything under 12px is unreadable outdoors, which is where a
+       security officer reads it
+  ------------------------------------------------------------------ */
+  @media (max-width: 900px){
+    input, select, textarea{
+      font-size:16px!important;
+      min-height:46px;
+      padding:12px 14px;
+    }
+    textarea{min-height:96px;line-height:1.55}
+
+    button, .btn, a.btn, .chips button, .pick button,
+    header .navlinks a, header .navlinks button,
+    .kg-theme, #langToggle, #langBtn{
+      min-height:44px;
+      display:inline-flex;align-items:center;justify-content:center;
+    }
+
+    /* links inside running text keep their size; standalone ones grow */
+    .nav a, .navlinks a, .flink, .hb-btn, .course-more, .social a{
+      min-height:44px;
+    }
+
+    /* nothing on a phone should be smaller than this */
+    .small, .muted.small, .meta, .rline, .note, .ftag, .rights,
+    .field label, .f label{font-size:13px!important;line-height:1.6}
+
+    /* room between things a finger has to choose between */
+    .chips{gap:10px}
+    .pick{gap:10px}
+    .actions, .hb-act{gap:10px}
+  }
+
+  @media (max-width: 900px){
+    /* A footer link and a portal link are things a thumb has to hit,
+       not words in a sentence. They were 22px and 36px tall. */
+    .fcontact a, .flink, footer a,
+    header .navlinks a, header .navlinks button,
+    .contact-direct .cd{
+      min-height:44px;
+      display:inline-flex;align-items:center;
+      font-size:13.5px!important;
+    }
+    .contact-direct .cd{display:block;padding:18px}
+    .fcontact{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center}
+
+    /* the eye that shows a password sits inside the field; give the
+       whole thing a finger's width */
+    .pw-eye{min-width:44px;min-height:44px;
+      display:inline-flex;align-items:center;justify-content:center;font-size:17px}
+
+    /* the theme and language buttons are square by design; make them
+       square at a size a thumb can find */
+    .kg-theme, #langToggle, #langBtn{min-width:44px}
+  }
+
+  @media (max-width: 900px){
+    /* the last few measured below the line: a nav built with a
+       different class name, a section label, and the logo link */
+    .toollinks a, .tool-nav a, header a[href$=".html"]{
+      min-height:44px;display:inline-flex;align-items:center;
+      font-size:13.5px!important;
+    }
+    .homelink{min-width:44px;min-height:44px;
+      display:inline-flex;align-items:center;justify-content:center}
+    #l_roles, .field > label[id]{font-size:13px!important}
+  }
+
+  /* ---------- Kagoma type ----------
+     Bricolage Grotesque, one variable file, weights 200–800.
+     It replaces Archivo, EB Garamond and the Arial fallbacks the
+     portal pages were using, so every page reads as one company. */
+  :root{
+    --display:'Bricolage Grotesque', system-ui, sans-serif;
+    --body:'Bricolage Grotesque', system-ui, sans-serif;
+    --mono:'Bricolage Grotesque', system-ui, sans-serif;
+  }
+  html, body, button, input, select, textarea, .btn{
+    font-family:'Bricolage Grotesque', system-ui, -apple-system, sans-serif;
+  }
+  body{font-variation-settings:'wght' 400,'wdth' 100,'opsz' 14;
+       -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+  h1,.hero h1{font-variation-settings:'wght' 800,'wdth' 100,'opsz' 96;letter-spacing:-.025em}
+  h2,.sec-title{font-variation-settings:'wght' 700,'wdth' 100,'opsz' 48;letter-spacing:-.015em}
+  h3{font-variation-settings:'wght' 600,'opsz' 24}
+  h4{font-variation-settings:'wght' 600,'opsz' 24}
+  strong,b{font-variation-settings:'wght' 700}
+
+  /* anything that is a number lines up in a column */
+  .ref,.rf,.num,.n,.money,.cnum,code,
+  input[inputmode="numeric"],input[type="number"],input[type="tel"]{
+    font-variant-numeric:tabular-nums}
+  @media (max-width:420px){
+    /* the field and its button share a line down to about 360px; below
+       that the button drops under the field rather than off the screen */
+    .verify-box{flex-wrap:wrap;gap:10px}
+    .verify-box input{flex:1 1 100%;min-width:0;width:100%}
+    .verify-box .btn{flex:1 1 100%;width:100%}
+    .result, .card{min-width:0}
+  }
+  /* the staff door: present for people who work here, not offered to
+     visitors. It does not compete with anything a client came for. */
+  .staff-link{opacity:.45}
+  .staff-link:hover{opacity:1}
+  /* the footer links took the browser default blue on pages whose own
+     stylesheet never defined .flink */
+  .kg-foot a, .flink{color:var(--kg-text-dim,#9c9c9c);text-decoration:none}
+  .kg-foot a:hover, .flink:hover{color:var(--kg-gold,#f4d332)}
+  .kg-foot .sep{color:var(--kg-border-2,#3a3a3a)}
+  .staff-link{opacity:.45}
+  .staff-link:hover{opacity:1}
+  [data-theme="light"] .kg-foot a,[data-theme="light"] .flink{color:#5f5b54}
+</style>
+<script>
+  /* set the ground before the first paint, so the page never flashes
+     the wrong colour on the way in */
+  try{ document.documentElement.setAttribute('data-theme',
+       localStorage.getItem('kg-theme') || 'dark'); }catch(e){}
+</script>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a href="/" class="homelink" title="Kagoma Protection Services" aria-label="Back to the Kagoma home page"><img src="img/crest-60e57097.webp" alt="Kagoma Protection Services"></a>
+    <div>
+      <div class="htitle">KAGOMA PROTECTION SERVICES</div>
+      <div class="hsub" data-i18n="hsub">Uburyo bwo Gutanga no Kugenzura Impamyabushobozi</div>
+    </div>
+    <button class="kg-theme" onclick="kgToggleTheme()" aria-pressed="false" title="Switch to light">☀</button>
+      <button class="lang-toggle" id="langToggle" onclick="toggleLang()">EN</button>
+    <a href="student.html" class="backlink" data-i18n="nav_student_link">Student Portal</a>
+    <a href="employer.html" class="backlink" data-i18n="nav_employer_link">Employer Portal</a>
+    <a href="/" class="backlink" data-i18n="backlink">← Kagoma Website</a>
+  </div>
+</header>
+
+<div class="wrap">
+  <!-- Issuing lives in admin.html only. Two issuing paths meant two
+       different certificate designs, and the one here wrote rows that
+       had no KAGOMA-CERT number, no QR token and no verification level. -->
+    <div class="panel active" id="panelVerify">
+    <h2 data-i18n="verify_h2">Kugenzura Impamyabushobozi</h2>
+    <p class="lead" data-i18n="verify_lead">Andika Numero y'Impamyabushobozi (Certificate ID) cyangwa ukore scan kuri QR code iri ku mpamyabushobozi kugira ngo urebe niba ari nyayo.</p>
+
+
+    <div class="card">
+      <div class="verify-box">
+        <input type="text" id="verifyInput" placeholder="urugero: KAGOMA-CERT-2026-000125" name="verifyInput">
+        <button class="btn btn-primary" onclick="runVerify()" data-i18n="btn_verify">Genzura</button>
+      </div>
+    </div>
+
+    <div class="result" id="resultBox"></div>
+  </div>
+</div>
+
+
+<footer class="kg-foot">
+  <div class="kg-foot-in">
+    <div class="social" aria-label="Kagoma Protection Services on social media">
+      <a href="#" data-net="linkedin" aria-label="LinkedIn" title="LinkedIn" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.63-1.85 3.36-1.85 3.59 0 4.26 2.36 4.26 5.44v6.3zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
+      </a>
+      <a href="#" data-net="instagram" aria-label="Instagram" title="Instagram" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.3-1.46.72-2.13 1.38C1.35 2.68.93 3.35.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.38 2.13.67.66 1.34 1.08 2.13 1.38.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.3 1.46-.72 2.13-1.38.66-.67 1.08-1.34 1.38-2.13.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.3-.79-.72-1.46-1.38-2.13C21.32 1.35 20.65.93 19.86.63 19.1.33 18.22.13 16.95.07 15.67.01 15.26 0 12 0zm0 5.84a6.16 6.16 0 1 0 0 12.32 6.16 6.16 0 0 0 0-12.32zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm7.85-10.4a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z"/></svg>
+      </a>
+      <a href="#" data-net="youtube" aria-label="YouTube" title="YouTube" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19C0 8.08 0 12 0 12s0 3.92.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14C24 15.92 24 12 24 12s0-3.92-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg>
+      </a>
+      <a href="#" data-net="facebook" aria-label="Facebook" title="Facebook" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07z"/></svg>
+      </a>
+      <a href="#" data-net="x" aria-label="X" title="X" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.41l-5.8-7.58-6.64 7.58H.46l8.6-9.83L0 1.15h7.59l5.24 6.93 6.07-6.93zm-1.29 19.5h2.04L6.49 3.24H4.3l13.31 17.41z"/></svg>
+      </a>
+    </div>
+    <div style="margin:14px 0 10px;font-size:12.5px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <a href="privacy.html" class="flink">Privacy Notice</a>
+      <span class="sep">&middot;</span>
+      <a href="terms.html" class="flink">Terms &amp; Conditions</a>
+      <span class="sep">&middot;</span>
+      <a href="faq.html" class="flink">FAQ</a>
+      <span class="sep">&middot;</span>
+      <a href="certificates.html" class="flink">Certificate Verification</a>
+      <span class="sep">&middot;</span>
+      <a href="/contact" class="flink">Contact</a>
+      <span class="sep">&middot;</span>
+      <a href="admin.html" class="flink staff-link" rel="nofollow">Staff</a>
+      </div>
+      <div class="kg-foot-r">&copy; 2026 KAGOMA PROTECTIONS SERVICES LTD</div>
+  </div>
+</footer>
+<script>
+/* ---------------- Bilingual UI (tool chrome only — the certificate itself stays in English) ---------------- */
+let toolLang = 'en';
+
+const TT = {
+  hsub: {rw:"Uburyo bwo Gutanga no Kugenzura Impamyabushobozi", en:"Certificate Issuance & Verification System"},
+  backlink: {rw:"← Kagoma Website", en:"← Kagoma Website"},
+  nav_student_link: {rw:"Umwanya w'Abanyeshuri", en:"Student Portal"},
+  nav_employer_link: {rw:"Umwanya w'Ibigo", en:"Employer Portal"},
+  tab_issue: {rw:"Tanga Impamyabushobozi", en:"Issue Certificate"},
+  tab_verify: {rw:"Kugenzura Impamyabushobozi", en:"Verify Certificate"},
+  issue_h2: {rw:"Tanga Impamyabushobozi Nshya", en:"Issue a New Certificate"},
+  issue_lead: {rw:"Uzuza amakuru y'uwarangije isomo. Sisitemu izahita ikora impamyabushobozi ifite QR code n'inzira yo kuyigenzura, ikanabikwa mu bubiko kugira ngo igenzurwa igihe cyose bikenewe.",
+               en:"Enter the graduate's details. The system will generate a certificate with a QR code and a verification link, and store it so it can be checked at any time."},
+  btn_change_pw: {rw:"Hindura Ijambobanga", en:"Change Password"},
+  btn_logout: {rw:"Sohoka", en:"Log Out"},
+  lbl_name: {rw:"Amazina Yombi y'Uwize", en:"Graduate's Full Name"},
+  lbl_course: {rw:"Isomo Yarangije", en:"Course Completed"},
+  lbl_date: {rw:"Itariki Yarangirijeho Isomo", en:"Completion Date"},
+  btn_issue: {rw:"Tanga Impamyabushobozi", en:"Issue Certificate"},
+  note_issue: {rw:"Amazina, isomo n'itariki bibikwa mu bubiko rusange (shared storage) kugira ngo uwo wese ufite numero y'impamyabushobozi cyangwa akoze scan kuri QR code ashobore kuyigenzura. Ntawundi mwirondoro ubikwa.",
+               en:"The name, course and date are stored so that anyone with the certificate ID or QR code can verify it. No other personal details are stored."},
+  btn_download: {rw:"Kuramo nka PNG", en:"Download as PNG"},
+  btn_copy_link: {rw:"Koporora Link yo Kugenzura", en:"Copy Verification Link"},
+  recent_title: {rw:"Izatanzwe muri iyi Session", en:"Issued This Session"},
+  verify_h2: {rw:"Kugenzura Impamyabushobozi", en:"Verify a Certificate"},
+  verify_lead: {rw:"Andika Numero y'Impamyabushobozi (Certificate ID) cyangwa ukore scan kuri QR code iri ku mpamyabushobozi kugira ngo urebe niba ari nyayo.",
+                en:"Enter the Certificate ID, or scan the QR code on the certificate, to check whether it is genuine."},
+  btn_verify: {rw:"Genzura", en:"Verify"},
+  footer_text: {rw:"Kagoma Protection Services — Sisitemu yo Kugenzura Impamyabushobozi", en:"Kagoma Protection Services — Certificate Verification System"},
+  reba_btn: {rw:"Reba", en:"View"},
+  genzura_btn: {rw:"Genzura", en:"Verify"},
+
+  gate_login_title: {rw:"Injira nka Umukozi", en:"Staff Sign In"},
+  gate_login_lead: {rw:"Iyi paji igenewe abakozi bemerewe gutanga impamyabushobozi gusa.", en:"This page is for authorized staff only."},
+  lbl_email: {rw:"Email", en:"Email"},
+  lbl_password: {rw:"Ijambobanga", en:"Password"},
+  btn_signin: {rw:"Injira", en:"Sign In"},
+  err_fill_fields: {rw:"Uzuza email n'ijambobanga.", en:"Please fill in email and password."},
+  err_bad_login: {rw:"Email cyangwa ijambobanga sibyo.", en:"Incorrect email or password."},
+  err_not_admin: {rw:"Iyi konti ntabwo yemerewe gutanga impamyabushobozi.", en:"This account is not authorized to issue certificates."},
+
+  gate_change_title: {rw:"Hindura Ijambobanga", en:"Change Password"},
+  lbl_new_pw: {rw:"Ijambobanga Rishya", en:"New Password"},
+  lbl_new_pw_hint: {rw:"byibuze inyuguti 6", en:"at least 6 characters"},
+  lbl_confirm_pw: {rw:"Ongera Wandike Ijambobanga Rishya", en:"Confirm New Password"},
+  btn_change: {rw:"Hindura", en:"Change"},
+  btn_cancel: {rw:"Reka, subira inyuma", en:"Cancel, go back"},
+  err_pw_short: {rw:"Ijambobanga rishya rigomba kuba byibuze inyuguti 6.", en:"New password must be at least 6 characters."},
+  err_pw_mismatch: {rw:"Amajambobanga mashya ntabwo ahuye.", en:"New passwords do not match."},
+  err_generic: {rw:"Habaye ikibazo. Ongera ugerageze.", en:"Something went wrong. Please try again."},
+  ok_pw_changed: {rw:"Ijambobanga ryahinduwe neza.", en:"Password changed successfully."},
+
+  err_fill_name_date: {rw:"Uzuza amazina n'itariki mbere yo gukomeza.", en:"Please enter the name and date first."},
+  err_loading: {rw:"Tegereza gato, ibikoresho biracyapakira...", en:"Please wait, resources are still loading..."},
+  ok_issued: {rw:"Impamyabushobozi yatanzwe kandi ibitswe neza.", en:"Certificate issued and saved successfully."},
+  err_save_failed: {rw:"Habaye ikibazo mu kubika impamyabushobozi. Ongera ugerageze.", en:"There was a problem saving the certificate. Please try again."},
+  btn_issuing: {rw:"Turimo gutegura...", en:"Generating..."},
+  ok_link_copied: {rw:"Link yo kugenzura yakoporowe.", en:"Verification link copied."},
+
+  badge_type_again: {rw:"ONGERA WANDIKE", en:"TRY AGAIN"},
+  v_valid: {rw:"✓ CYEMEJWE", en:"✓ VERIFIED"},
+  v_expired: {rw:"IGIHE CYARANGIYE", en:"EXPIRED"},
+  v_suspended: {rw:"CYAHAGARITSWE", en:"SUSPENDED"},
+  v_revoked: {rw:"CYAKUWEHO", en:"REVOKED"},
+  v_notfound_badge: {rw:"NTIKIBONETSE", en:"NOT FOUND"},
+  v_notfound: {rw:"Nta cyemezo gifite iyi nimero cyabonetse muri Kagoma.",
+               en:"No Kagoma certificate matches that reference."},
+  v_expired_note: {rw:"Iki cyemezo cyari nyacyo ariko igihe cyacyo cyararangiye.",
+                   en:"This certificate was genuine but has passed its expiry date."},
+  v_suspended_note: {rw:"Iki cyemezo cyahagaritswe by'agateganyo na Kagoma.",
+                     en:"This certificate has been suspended by Kagoma."},
+  v_revoked_note: {rw:"Iki cyemezo cyakuweho na Kagoma. Ntikigifite agaciro.",
+                   en:"This certificate has been revoked by Kagoma and is no longer valid."},
+  v_expires: {rw:"Kirangira:", en:"Expires:"},
+  v_level: {rw:"Urwego:", en:"Level:"},
+  v_offline: {rw:"Ntibishoboye guhuza na seriveri. Ongera ugerageze.",
+              en:"Could not reach the server. Please try again."},
+  lv_trained: {rw:"Kagoma Trained", en:"Kagoma Trained"},
+  lv_certified: {rw:"Kagoma Certified", en:"Kagoma Certified"},
+  lv_verified: {rw:"Kagoma Verified Professional", en:"Kagoma Verified Professional"},
+  staff_h: {rw:"Ku bakozi ba Kagoma", en:"For Kagoma staff"},
+  staff_lead: {rw:"Gutanga ibyemezo bikorerwa mu biro by'ubuyobozi. Buri cyemezo gitangwa aho gihabwa nimero yihariye, QR code n'urwego rw'ukwemezwa.",
+               en:"Certificates are issued from the admin desk. Every certificate issued there receives a unique number, a QR code and a verification level."},
+  staff_btn: {rw:"Fungura Ibiro by'Ubuyobozi", en:"Open the Admin Desk"},
+  msg_enter_id: {rw:"Andika Numero y'Impamyabushobozi mbere yo kugenzura.", en:"Enter a Certificate ID before verifying."},
+  badge_checking: {rw:"TURIMO KUGENZURA...", en:"VERIFYING..."},
+  badge_valid: {rw:"IYEMEJWE — ICYEMEZO CY'UKURI", en:"VERIFIED — VALID CERTIFICATE"},
+  lbl_course_colon: {rw:"Isomo:", en:"Course:"},
+  lbl_completion_date: {rw:"Itariki Yarangirijeho:", en:"Completion Date:"},
+  lbl_issued_by: {rw:"Yatanzwe na:", en:"Issued by:"},
+  badge_invalid: {rw:"NTA CYEMEZO CYABONETSE", en:"CERTIFICATE NOT FOUND"},
+  msg_invalid_prefix: {rw:"Numero", en:"The number"},
+  msg_invalid_suffix: {rw:"ntabwo ihuye n'impamyabushobozi iri mu bubiko bwacu. Reba niba wayanditse neza.", en:"does not match any certificate in our records. Please check that you typed it correctly."},
+  meta_cert_id: {rw:"Certificate ID:", en:"Certificate ID:"},
+  meta_verify_link: {rw:"Verification Link:", en:"Verification Link:"}
+};
+
+function applyStaticI18n(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(TT[key]) el.textContent = TT[key][toolLang];
+  });
+  /* fName belonged to the issuing panel, which moved to admin.html */
+  const vi=document.getElementById('verifyInput');
+  if(vi) vi.placeholder = toolLang==='rw'
+    ? "urugero: KAGOMA-CERT-2026-000125" : "e.g. KAGOMA-CERT-2026-000125";
+  const lt=document.getElementById('langToggle');
+  if(lt) lt.textContent = toolLang==='rw' ? 'EN' : 'RW';
+}
+
+function toggleLang(){
+  toolLang = toolLang === 'rw' ? 'en' : 'rw';
+  applyStaticI18n();
+  renderRecent();
+  checkAuthAndRender();
+}
+
+/* ---------------- Course catalogue ---------------- */
+const COURSES = [
+  {code:"KG-101", name:"Event Security Management"},
+  {code:"KG-102", name:"Crowd Management and Crowd Safety"},
+  {code:"KG-103", name:"Loss Prevention Management"},
+  {code:"KG-104", name:"Hospitality Security Management"},
+  {code:"KG-105", name:"International Security and Risk Management Professional"},
+  {code:"KG-106", name:"Executive Protection"},
+  {code:"KG-107", name:"First Aid for Security Professionals"},
+  {code:"KG-108", name:"Advanced Security Guard Course"},
+  {code:"KG-109", name:"Security Professional Etiquette"},
+  {code:"KG-110", name:"Security Risk Assessment and Security Planning"},
+  {code:"KG-111", name:"Security Operations and Incident Management"},
+  {code:"KG-112", name:"Close Protection / PSD Training Manager"},
+  {code:"EP-V1", name:"Executive Protection — Volume 1 — EP Fundamentals"},
+  {code:"EP-V2", name:"Executive Protection — Volume 2 — Protective Intelligence"},
+  {code:"EP-V3", name:"Executive Protection — Volume 3 — Information Security"},
+  {code:"EP-V4", name:"Executive Protection — Volume 4 — Planning"},
+  {code:"EP-V5", name:"Executive Protection — Volume 5 — Operations"},
+  {code:"EP-V6", name:"Executive Protection — Volume 6 — Legal"},
+  {code:"EP-V7", name:"Executive Protection — Volume 7 — Business and Administrative"},
+  {code:"EP-V8", name:"Executive Protection — Volume 8 — EP Leadership"},
+];
+/* The course picker and date field lived in the issuing panel, which
+   now lives in admin.html. The COURSES list above is kept because the
+   verification result still uses it to resolve a course name. */
+const courseSelect = document.getElementById('fCourse');
+if(courseSelect){
+  courseSelect.innerHTML = COURSES.map(c=>`<option value="${c.code}">${c.code} — ${c.name}</option>`).join('');
+}
+const fDateEl = document.getElementById('fDate');
+if(fDateEl) fDateEl.value = new Date().toISOString().slice(0,10);
+
+/* ---------------- Tabs ---------------- */
+function switchTab(tab){
+  /* the issue panel was removed; keep the verify view up and bail out */
+  const pi=document.getElementById('panelIssue');
+  if(!pi){ const pv=document.getElementById('panelVerify'); if(pv) pv.classList.add('active'); return; }
+  document.getElementById('panelIssue').classList.toggle('active', tab==='issue');
+  document.getElementById('panelVerify').classList.toggle('active', tab==='verify');
+  document.getElementById('tabIssueBtn').classList.toggle('active', tab==='issue');
+  document.getElementById('tabVerifyBtn').classList.toggle('active', tab==='verify');
+  if(tab==='issue'){ checkAuthAndRender(); }
+}
+
+/* ---------------- Supabase client ---------------- */
+const SUPABASE_URL = 'https://gebydcdxxuysrhlxehwf.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdlYnlkY2R4eHV5c3JobHhlaHdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIxNDkwNzYsImV4cCI6MjEwNzcyNTA3Nn0.HPSRhB0j6Rh-tJn9Woc-Y_pb9slkK6XmF5YB2Jl6VWI';
+const sb = (typeof supabase !== 'undefined' && supabase.createClient)
+  ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,       // keep the session across pages
+        autoRefreshToken: true,     // don't drop the learner mid-lesson
+        detectSessionInUrl: true    // needed for e-mail confirmation links
+      }
+    })
+  : null;
+if(!sb) console.warn('Supabase unavailable — offline mode.');
+
+/* ---------------- Admin authentication (real Supabase Auth) ----------------
+   The admin session lives only in memory for this page load (no browser
+   storage is used, per platform rules), so staff sign in again each visit.
+   Access to issue certificates requires role='admin' in the profiles table,
+   enforced both here and by the database's Row Level Security policies. */
+let currentUser = null;
+let isAuthenticated = false;
+
+async function checkAuthAndRender(){
+  /* This page no longer issues certificates — that moved to admin.html,
+     so there is no gate and no issue panel to show or hide. */
+  return;
+}
+
+function renderLoginGate(){
+  const t = TT;
+  document.getElementById('authGate').innerHTML = `
+    <div class="gate-card">
+      <div class="gicon">🔒</div>
+      <h3>${t.gate_login_title[toolLang]}</h3>
+      <p class="gate-lead">${t.gate_login_lead[toolLang]}</p>
+      <div class="field"><label>${t.lbl_email[toolLang]}</label><input type="email" id="loginEmail" name="email" autocomplete="email"></div>
+      <div class="field"><label>${t.lbl_password[toolLang]}</label><input type="password" id="loginPw" onkeydown="if(event.key==='Enter')submitLogin();" name="password" autocomplete="current-password"></div>
+      <button class="btn btn-primary" onclick="submitLogin()">${t.btn_signin[toolLang]}</button>
+      <div class="gate-error" id="loginErr"></div>
+    </div>`;
+  document.getElementById('loginEmail').focus();
+}
+
+async function submitLogin(){
+  const email = document.getElementById('loginEmail').value.trim();
+  const pw = document.getElementById('loginPw').value;
+  const errEl = document.getElementById('loginErr');
+  errEl.className = 'gate-error';
+
+  if(!email || !pw){
+    errEl.textContent = TT.err_fill_fields[toolLang];
+    errEl.classList.add('show');
+    return;
+  }
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pw });
+  if(error){
+    errEl.textContent = TT.err_bad_login[toolLang];
+    errEl.classList.add('show');
+    return;
+  }
+
+  const { data: profile, error: profErr } = await sb
+    .from('profiles')
+    .select('role, full_name')
+    .eq('id', data.user.id)
+    .single();
+
+  if(profErr || !profile || profile.role !== 'admin'){
+    errEl.textContent = TT.err_not_admin[toolLang];
+    errEl.classList.add('show');
+    await sb.auth.signOut();
+    return;
+  }
+
+  currentUser = { id: data.user.id, email: data.user.email, name: profile.full_name || data.user.email };
+  isAuthenticated = true;
+  checkAuthAndRender();
+}
+
+async function logoutAdmin(){
+  await sb.auth.signOut();
+  currentUser = null;
+  isAuthenticated = false;
+  checkAuthAndRender();
+}
+
+function showChangePassword(){
+  const t = TT;
+  document.getElementById('issueContent').style.display = 'none';
+  document.getElementById('authGate').style.display = 'block';
+  document.getElementById('authGate').innerHTML = `
+    <div class="gate-card">
+      <div class="gicon">🔑</div>
+      <h3>${t.gate_change_title[toolLang]}</h3>
+      <div class="field"><label>${t.lbl_new_pw[toolLang]}</label><input type="password" id="newPw1" placeholder="${t.lbl_new_pw_hint[toolLang]}" name="newPw1"></div>
+      <div class="field"><label>${t.lbl_confirm_pw[toolLang]}</label><input type="password" id="newPw2" name="new_password" autocomplete="new-password"></div>
+      <button class="btn btn-primary" onclick="submitChangePassword()">${t.btn_change[toolLang]}</button>
+      <div class="gate-error" id="changeErr"></div>
+      <div class="gate-ok" id="changeOk"></div>
+      <button class="gate-cancel" onclick="checkAuthAndRender();">${t.btn_cancel[toolLang]}</button>
+    </div>`;
+}
+
+async function submitChangePassword(){
+  const p1 = document.getElementById('newPw1').value;
+  const p2 = document.getElementById('newPw2').value;
+  const errEl = document.getElementById('changeErr');
+  const okEl = document.getElementById('changeOk');
+  errEl.className = 'gate-error'; okEl.className = 'gate-ok';
+
+  if(p1.length < 6){ errEl.textContent=TT.err_pw_short[toolLang]; errEl.classList.add('show'); return; }
+  if(p1 !== p2){ errEl.textContent=TT.err_pw_mismatch[toolLang]; errEl.classList.add('show'); return; }
+
+  const { error } = await sb.auth.updateUser({ password: p1 });
+  if(error){
+    errEl.textContent = TT.err_generic[toolLang];
+    errEl.classList.add('show');
+    return;
+  }
+  okEl.textContent = TT.ok_pw_changed[toolLang];
+  okEl.classList.add('show');
+  setTimeout(()=>{ checkAuthAndRender(); }, 1200);
+}
+
+
+/* ---------------- Logo + font preload ---------------- */
+const logoImg = new Image();
+let logoReady = false;
+let fontsReady = false;
+logoImg.onload = ()=>{ logoReady = true; };
+logoImg.src = "img/crest-60e57097.webp";
+
+const fontLoadPromise = Promise.all([
+  document.fonts.load('700 90px "Playfair Display"'),
+  document.fonts.load('italic 700 90px "Playfair Display"'),
+  document.fonts.load('900 60px "Playfair Display"'),
+  document.fonts.load('400 26px "EB Garamond"'),
+  document.fonts.load('italic 400 26px "EB Garamond"'),
+  document.fonts.load('600 18px "EB Garamond"'),
+  document.fonts.load('italic 600 18px "EB Garamond"'),
+  document.fonts.ready
+]).then(()=>{ fontsReady = true; }).catch(()=>{ fontsReady = true; });
+
+/* ---------------- Helpers ---------------- */
+function genCertId(){
+  const year = new Date().getFullYear();
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let rand = '';
+  for(let i=0;i<6;i++) rand += chars[Math.floor(Math.random()*chars.length)];
+  return `KG-CERT-${year}-${rand}`;
+}
+function fitText(ctx, text, maxWidth, startSize, minSize, fontBuilder){
+  let size = startSize;
+  ctx.font = fontBuilder(size);
+  while(ctx.measureText(text).width > maxWidth && size > minSize){
+    size -= 2;
+    ctx.font = fontBuilder(size);
+  }
+  return size;
+}
+function formatDate(iso){
+  const d = new Date(iso + 'T00:00:00');
+  return d.toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
+}
+function verifyUrlFor(id){
+  return `${location.origin}${location.pathname}?cert=${encodeURIComponent(id)}`;
+}
+
+/* ---------------- Certificate drawing ---------------- */
+let lastCanvas = null;
+let lastRecord = null;
+
+function drawCertificate(record){
+  const canvas = document.getElementById('certCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W/2;
+
+  const PAPER = 'var(--kg-gold)';
+  const INK = '#211C14';
+  const INK_SOFT = 'var(--kg-border-2)';
+  const BRONZE = 'var(--kg-gold-dim)';
+  const BRONZE_DEEP = 'var(--kg-gold-dim)';
+  const OXBLOOD = 'var(--kg-red-dim)';
+  const GOLD_LINE = 'var(--kg-gold)';
+
+  // ---- paper base ----
+  ctx.fillStyle = PAPER;
+  ctx.fillRect(0,0,W,H);
+
+  // ---- subtle vignette for depth ----
+  const vg = ctx.createRadialGradient(cx,H/2, H*0.25, cx,H/2, H*0.75);
+  vg.addColorStop(0,'rgba(0,0,0,0)');
+  vg.addColorStop(1,'rgba(60,45,20,0.10)');
+  ctx.fillStyle = vg;
+  ctx.fillRect(0,0,W,H);
+
+  // ---- fine paper grain ----
+  drawGrain(ctx, W, H);
+
+  // ---- ghost watermark of the seal/logo ----
+  if(logoReady){
+    ctx.save();
+    ctx.globalAlpha = 0.05;
+    ctx.filter = 'grayscale(100%)';
+    const wm = 760;
+    ctx.drawImage(logoImg, cx - wm/2, H/2 - wm/2 + 40, wm, wm);
+    ctx.restore();
+  }
+
+  // ---- ornamental border: double gold rule + red hairline ----
+  ctx.strokeStyle = GOLD_LINE;
+  ctx.lineWidth = 2.5;
+  ctx.strokeRect(46,46,W-92,H-92);
+  ctx.lineWidth = 1;
+  ctx.strokeRect(60,60,W-120,H-120);
+
+  ctx.strokeStyle = OXBLOOD;
+  ctx.lineWidth = 1.4;
+  ctx.strokeRect(94,94,W-188,H-188);
+
+  // ---- corner ornaments ----
+  drawCornerOrnament(ctx, 94, 94, 1, 1, GOLD_LINE);
+  drawCornerOrnament(ctx, W-94, 94, -1, 1, GOLD_LINE);
+  drawCornerOrnament(ctx, 94, H-94, 1, -1, GOLD_LINE);
+  drawCornerOrnament(ctx, W-94, H-94, -1, -1, GOLD_LINE);
+
+  // ================= SEAL =================
+  const sealCx = cx, sealCy = 250, outerR = 122, innerR = 108;
+  ctx.strokeStyle = GOLD_LINE;
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(sealCx, sealCy, outerR, 0, Math.PI*2); ctx.stroke();
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.arc(sealCx, sealCy, innerR, 0, Math.PI*2); ctx.stroke();
+
+  curvedText(ctx, 'KAGOMA PROTECTION SERVICES', sealCx, sealCy, (outerR+innerR)/2 + 1,
+    -Math.PI/2, '700 15px "EB Garamond"', BRONZE_DEEP, 2.4);
+
+  if(logoReady){
+    const ls = 176;
+    ctx.drawImage(logoImg, sealCx - ls/2, sealCy - ls/2 + 4, ls, ls);
+  }
+
+  // ---- identity block under seal ----
+  ctx.textAlign = 'center';
+  ctx.fillStyle = BRONZE_DEEP;
+  letterSpacedText(ctx, 'KAGOMA PROTECTION SERVICES', cx, 424, '700 22px "EB Garamond"', 3.2);
+  ctx.fillStyle = INK_SOFT;
+  letterSpacedText(ctx, 'PROFESSIONAL TRAINING DIVISION', cx, 452, '600 14px "EB Garamond"', 3.6);
+
+  // ---- title ----
+  smallFlourishRule(ctx, cx, 496, GOLD_LINE);
+  ctx.fillStyle = INK;
+  letterSpacedText(ctx, 'CERTIFICATE OF COMPLETION', cx, 552, '700 52px "Playfair Display"', 2.2);
+  smallFlourishRule(ctx, cx, 590, GOLD_LINE);
+
+  // ---- certify line ----
+  ctx.fillStyle = INK_SOFT;
+  ctx.font = 'italic 400 25px "EB Garamond"';
+  ctx.fillText('This is to certify that', cx, 648);
+
+  // ---- name ----
+  const nameMaxW = 1580;
+  const nameSize = fitText(ctx, record.name, nameMaxW, 78, 40, s=>`italic 700 ${s}px "Playfair Display"`);
+  ctx.fillStyle = INK;
+  ctx.font = `italic 700 ${nameSize}px "Playfair Display"`;
+  ctx.fillText(record.name, cx, 748);
+
+  const nameWidth = Math.min(ctx.measureText(record.name).width + 90, 1240);
+  drawFlourishUnderline(ctx, cx, 774, nameWidth, GOLD_LINE);
+
+  // ---- completion line ----
+  ctx.fillStyle = INK_SOFT;
+  ctx.font = 'italic 400 23px "EB Garamond"';
+  ctx.fillText('has successfully completed the professional training course of', cx, 826);
+
+  // ---- course name ----
+  const courseMaxW = 1580;
+  const courseSize = fitText(ctx, record.courseName, courseMaxW, 44, 26, s=>`700 ${s}px "Playfair Display"`);
+  ctx.fillStyle = OXBLOOD;
+  ctx.font = `700 ${courseSize}px "Playfair Display"`;
+  ctx.fillText(record.courseName, cx, 882);
+
+  ctx.fillStyle = BRONZE_DEEP;
+  letterSpacedText(ctx, `COURSE CODE ${record.courseCode}`, cx, 916, '600 14px "EB Garamond"', 2.4);
+
+  // ================= FOOTER =================
+  ctx.strokeStyle = 'rgba(33,28,20,0.18)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(150, 1010); ctx.lineTo(W-150, 1010); ctx.stroke();
+
+  // -- left: date --
+  ctx.textAlign = 'left';
+  ctx.fillStyle = BRONZE_DEEP;
+  letterSpacedText(ctx, 'DATE OF COMPLETION', 150, 1064, '700 14px "EB Garamond"', 2.4, 'left');
+  ctx.fillStyle = INK;
+  ctx.font = 'italic 400 27px "EB Garamond"';
+  ctx.fillText(record.dateLabel, 150, 1102);
+
+  // -- center: signature --
+  ctx.textAlign = 'center';
+  drawSignatureFlourish(ctx, cx, 1078, GOLD_LINE);
+  ctx.strokeStyle = 'rgba(33,28,20,0.45)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(cx-140, 1096); ctx.lineTo(cx+140, 1096); ctx.stroke();
+  ctx.fillStyle = INK_SOFT;
+  ctx.font = '400 15px "EB Garamond"';
+  ctx.fillText('Director, Training Division', cx, 1122);
+  ctx.fillStyle = INK;
+  letterSpacedText(ctx, 'KAGOMA PROTECTION SERVICES', cx, 1150, '700 15px "EB Garamond"', 1.6);
+
+  // -- right: authentication / QR --
+  const qrSize = 176;
+  const qrX = W-150-qrSize, qrY = 986;
+  ctx.textAlign = 'center';
+  ctx.fillStyle = BRONZE_DEEP;
+  letterSpacedText(ctx, 'VERIFY AUTHENTICITY', qrX+qrSize/2, 968, '700 12px "EB Garamond"', 2.2);
+
+  ctx.strokeStyle = GOLD_LINE;
+  ctx.lineWidth = 1.4;
+  ctx.strokeRect(qrX-14, qrY-14, qrSize+28, qrSize+28);
+  ctx.fillStyle = 'var(--kg-text)';
+  ctx.fillRect(qrX-8, qrY-8, qrSize+16, qrSize+16);
+
+  const qrCanvasSrc = new QRious({
+    value: verifyUrlFor(record.id),
+    size: 260,
+    background: 'var(--kg-text)',
+    backgroundAlpha: 1,
+    foreground: '#211C14',
+    level: 'H'
+  }).canvas;
+  ctx.drawImage(qrCanvasSrc, qrX, qrY, qrSize, qrSize);
+
+  ctx.fillStyle = INK_SOFT;
+  ctx.font = '400 13px "Courier New"';
+  ctx.fillText(record.id, qrX+qrSize/2, qrY+qrSize+38);
+
+  // ---- bottom brand strap ----
+  ctx.fillStyle = BRONZE_DEEP;
+  letterSpacedText(ctx, 'DISCIPLINE  ·  VIGILANCE  ·  PROTECTION', cx, H-108, '600 13px "EB Garamond"', 3.2);
+
+  return canvas;
+}
+
+/* ---------------- Certificate drawing helpers ---------------- */
+function letterSpacedText(ctx, text, x, y, font, spacing, align){
+  align = align || 'center';
+  ctx.font = font;
+  const chars = text.split('');
+  let total = 0;
+  chars.forEach((c,i)=>{ total += ctx.measureText(c).width + (i<chars.length-1 ? spacing : 0); });
+  let startX;
+  if(align==='left') startX = x;
+  else if(align==='right') startX = x - total;
+  else startX = x - total/2;
+  const prevAlign = ctx.textAlign;
+  ctx.textAlign = 'left';
+  let cx = startX;
+  for(const c of chars){
+    ctx.fillText(c, cx, y);
+    cx += ctx.measureText(c).width + spacing;
+  }
+  ctx.textAlign = prevAlign;
+}
+
+function curvedText(ctx, str, centerX, centerY, radius, startAngle, font, color, spacing){
+  spacing = spacing || 0;
+  ctx.save();
+  ctx.font = font;
+  ctx.fillStyle = color;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  let total = 0;
+  for(const ch of str){ total += ctx.measureText(ch).width + spacing; }
+  const totalAngle = total / radius;
+  ctx.translate(centerX, centerY);
+  ctx.rotate(startAngle - totalAngle/2);
+  for(const ch of str){
+    const w = ctx.measureText(ch).width + spacing;
+    const theta = w / radius;
+    ctx.rotate(theta/2);
+    ctx.save();
+    ctx.rotate(Math.PI/2);
+    ctx.fillText(ch, 0, -radius);
+    ctx.restore();
+    ctx.rotate(theta/2);
+  }
+  ctx.restore();
+}
+
+function smallFlourishRule(ctx, cx, y, color){
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.4;
+  ctx.beginPath(); ctx.moveTo(cx-150, y); ctx.lineTo(cx-16, y); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx+16, y); ctx.lineTo(cx+150, y); ctx.stroke();
+  ctx.save();
+  ctx.translate(cx, y);
+  ctx.rotate(Math.PI/4);
+  ctx.fillStyle = color;
+  ctx.fillRect(-5,-5,10,10);
+  ctx.restore();
+}
+
+function drawFlourishUnderline(ctx, cx, y, width, color){
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  ctx.moveTo(cx - width/2, y);
+  ctx.quadraticCurveTo(cx, y+10, cx + width/2, y);
+  ctx.stroke();
+}
+
+function drawSignatureFlourish(ctx, cx, y, color){
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.2;
+  ctx.beginPath();
+  ctx.moveTo(cx-60, y+10);
+  ctx.bezierCurveTo(cx-30,y-16, cx-10,y+18, cx+20,y-6);
+  ctx.bezierCurveTo(cx+38,y-18, cx+50,y+6, cx+60,y-2);
+  ctx.stroke();
+}
+
+function drawCornerOrnament(ctx, x, y, dx, dy, color){
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  const len = 30;
+  ctx.beginPath();
+  ctx.moveTo(x, y + dy*len);
+  ctx.lineTo(x, y);
+  ctx.lineTo(x + dx*len, y);
+  ctx.stroke();
+  ctx.save();
+  ctx.translate(x + dx*14, y + dy*14);
+  ctx.rotate(Math.PI/4);
+  ctx.fillStyle = color;
+  ctx.fillRect(-4,-4,8,8);
+  ctx.restore();
+}
+
+let grainPattern = null;
+function drawGrain(ctx, W, H){
+  if(!grainPattern){
+    const gCanvas = document.createElement('canvas');
+    gCanvas.width = 220; gCanvas.height = 220;
+    const gctx = gCanvas.getContext('2d');
+    const imgData = gctx.createImageData(220,220);
+    for(let i=0;i<imgData.data.length;i+=4){
+      const v = 200 + Math.floor(Math.random()*40);
+      const a = Math.random()*10;
+      imgData.data[i]=v; imgData.data[i+1]=v-10; imgData.data[i+2]=v-30; imgData.data[i+3]=a;
+    }
+    gctx.putImageData(imgData,0,0);
+    grainPattern = ctx.createPattern(gCanvas, 'repeat');
+  }
+  ctx.save();
+  ctx.globalAlpha = 0.5;
+  ctx.fillStyle = grainPattern;
+  ctx.fillRect(0,0,W,H);
+  ctx.restore();
+}
+
+/* ---------------- Issue flow ---------------- */
+let sessionCerts = [];
+
+async function issueCertificate(){
+  const name = document.getElementById('fName').value.trim();
+  const courseCode = document.getElementById('fCourse').value;
+  const dateVal = document.getElementById('fDate').value;
+  const statusEl = document.getElementById('issueStatus');
+  statusEl.className = 'status-msg';
+
+  if(!name || !dateVal){
+    statusEl.textContent = TT.err_fill_name_date[toolLang];
+    statusEl.classList.add('show','err');
+    return;
+  }
+  if(!logoReady || !fontsReady){
+    await fontLoadPromise;
+    if(!logoReady || !fontsReady){
+      statusEl.textContent = TT.err_loading[toolLang];
+      statusEl.classList.add('show','err');
+      return;
+    }
+  }
+
+  const course = COURSES.find(c=>c.code===courseCode);
+  const id = genCertId();
+  const record = {
+    id,
+    name,
+    courseCode,
+    courseName: course.name,
+    dateISO: dateVal,
+    dateLabel: formatDate(dateVal),
+    issuedAt: new Date().toISOString()
+  };
+
+  const btn = document.getElementById('issueBtn');
+  btn.disabled = true;
+  btn.textContent = TT.btn_issuing[toolLang];
+
+  try{
+    const { error: insertErr } = await sb.from('certificates').insert({
+      id,
+      student_id: currentUser ? currentUser.id : null,
+      course_id: courseCode,
+      student_name: name,
+      course_name: course.name,
+      issue_date: dateVal,
+      issued_by: currentUser ? currentUser.id : null
+    });
+    if(insertErr){ throw insertErr; }
+
+    lastRecord = record;
+    lastCanvas = drawCertificate(record);
+
+    document.getElementById('certOutput').classList.add('show');
+    document.getElementById('certMeta').innerHTML =
+      `<b>${TT.meta_cert_id ? TT.meta_cert_id[toolLang] : 'Certificate ID:'}</b> ${record.id} &nbsp;·&nbsp; <b>${TT.meta_verify_link ? TT.meta_verify_link[toolLang] : 'Verification Link:'}</b> ${verifyUrlFor(record.id)}`;
+
+    statusEl.textContent = TT.ok_issued[toolLang];
+    statusEl.classList.add('show','ok');
+
+    sessionCerts.unshift(record);
+    renderRecent();
+
+    document.getElementById('certOutput').scrollIntoView({behavior:'smooth', block:'nearest'});
+  }catch(e){
+    console.error(e);
+    statusEl.textContent = TT.err_save_failed[toolLang];
+    statusEl.classList.add('show','err');
+  }finally{
+    btn.disabled = false;
+    btn.textContent = TT.btn_issue[toolLang];
+  }
+}
+
+function renderRecent(){
+  const wrap = document.getElementById('recentWrap');
+  const list = document.getElementById('recentList');
+  /* the recent-issues strip belonged to the issuing panel, which is gone */
+  if(!wrap || !list) return;
+  if(sessionCerts.length===0){ wrap.style.display='none'; return; }
+  wrap.style.display = 'block';
+  list.innerHTML = sessionCerts.map((r,i)=>`
+    <div class="recent-row">
+      <div>
+        <div class="who">${r.name} — ${r.courseName}</div>
+        <div class="meta">${r.id} · ${r.dateLabel}</div>
+      </div>
+      <div class="rbtns">
+        <button onclick="reshow(${i})">${TT.reba_btn[toolLang]}</button>
+        <button onclick="goVerify('${r.id}')">${TT.genzura_btn[toolLang]}</button>
+      </div>
+    </div>
+  `).join('');
+}
+function reshow(i){
+  const record = sessionCerts[i];
+  lastRecord = record;
+  lastCanvas = drawCertificate(record);
+  document.getElementById('certOutput').classList.add('show');
+  document.getElementById('certMeta').innerHTML =
+    `<b>${TT.meta_cert_id[toolLang]}</b> ${record.id} &nbsp;·&nbsp; <b>${TT.meta_verify_link[toolLang]}</b> ${verifyUrlFor(record.id)}`;
+  document.getElementById('certOutput').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+function goVerify(id){
+  switchTab('verify');
+  document.getElementById('verifyInput').value = id;
+  runVerify();
+}
+
+function downloadCert(){
+  if(!lastCanvas || !lastRecord) return;
+  const link = document.createElement('a');
+  link.download = `Kagoma-Certificate-${lastRecord.id}.png`;
+  link.href = lastCanvas.toDataURL('image/png');
+  link.click();
+}
+function copyVerifyLink(){
+  if(!lastRecord) return;
+  const url = verifyUrlFor(lastRecord.id);
+  navigator.clipboard.writeText(url).then(()=>{
+    const statusEl = document.getElementById('issueStatus');
+    statusEl.textContent = TT.ok_link_copied[toolLang];
+    statusEl.className = 'status-msg show ok';
+  }).catch(()=>{});
+}
+
+/* ---------------- Verify flow ---------------- */
+async function runVerify(ref){
+  const box = document.getElementById('resultBox');
+  const raw = (ref || document.getElementById('verifyInput').value || '').trim();
+
+  if(!raw){
+    box.className = 'result show invalid';
+    box.innerHTML = `<span class="badge">${TT.badge_type_again[toolLang]}</span><div class="rline" style="margin-top:12px;">${TT.msg_enter_id[toolLang]}</div>`;
+    return;
+  }
+  if(!sb){
+    box.className = 'result show invalid';
+    box.innerHTML = `<span class="badge">${TT.badge_type_again[toolLang]}</span><div class="rline" style="margin-top:12px;">${TT.v_offline[toolLang]}</div>`;
+    return;
+  }
+
+  box.className = 'result show';
+  box.innerHTML = `<span class="badge" style="background:var(--kg-border-2);color:var(--kg-text);">${TT.badge_checking[toolLang]}</span>`;
+
+  /* Public verification goes through verify_certificate(): it returns only
+     the fields an employer may see and computes the live status, so a
+     revoked or expired certificate can never show as valid. */
+  const { data, error } = await sb.rpc('verify_certificate', { p_ref: raw });
+
+  if(error || !data || !data.found){
+    box.className = 'result show invalid';
+    box.innerHTML = `
+      <span class="badge">${TT.v_notfound_badge[toolLang]}</span>
+      <div class="rline" style="margin-top:12px;">${TT.v_notfound[toolLang]}</div>
+      <div class="rline"><b>${TT.meta_cert_id[toolLang]}</b> ${escHtml(raw)}</div>`;
+    return;
+  }
+
+  const S = {
+    valid:     {cls:'valid',   badge:`<svg class="vbadge" viewBox="0 0 24 24" aria-hidden="true"><path class="vb-seal" d="M12 .5l2.6 2.06 3.3-.36 1.05 3.15 3 1.42-.86 3.2 1.9 2.72-2.36 2.35.2 3.31-3.2.87-1.6 2.9-3.13-1.1-3.13 1.1-1.6-2.9-3.2-.87.2-3.31L.8 12.69l1.9-2.72L1.84 6.77l3-1.42L5.9 2.2l3.3.36L12 .5z"/><path class="vb-tick" d="M10.62 15.9l-3.2-3.2 1.42-1.42 1.78 1.78 4.55-4.55 1.41 1.42-5.96 5.97z"/></svg>${TT.v_valid[toolLang]}`, note:''},
+    expired:   {cls:'invalid', badge:TT.v_expired[toolLang],   note:TT.v_expired_note[toolLang]},
+    suspended: {cls:'invalid', badge:TT.v_suspended[toolLang], note:TT.v_suspended_note[toolLang]},
+    revoked:   {cls:'invalid', badge:TT.v_revoked[toolLang],   note:TT.v_revoked_note[toolLang]}
+  }[data.status] || {cls:'invalid', badge:data.status, note:''};
+
+  const LV = {
+    trained:   TT.lv_trained[toolLang],
+    certified: TT.lv_certified[toolLang],
+    verified:  TT.lv_verified[toolLang]
+  }[data.level] || '';
+
+  box.className = 'result show ' + S.cls;
+  box.innerHTML = `
+    <span class="badge">${S.badge}</span>
+    <div class="rname">${escHtml(rwName(data.holder))}</div>
+    <div class="rline"><b>${TT.lbl_course_colon[toolLang]}</b> ${escHtml(data.course)}</div>
+    <div class="rline"><b>${TT.lbl_completion_date[toolLang]}</b> ${formatDate(data.issued)}</div>
+    ${data.expires ? `<div class="rline"><b>${TT.v_expires[toolLang]}</b> ${formatDate(data.expires)}</div>` : ''}
+    <div class="rline"><b>${TT.meta_cert_id[toolLang]}</b> ${escHtml(data.certificate_number)}</div>
+    ${LV ? `<div class="rline"><b>${TT.v_level[toolLang]}</b> ${LV}</div>` : ''}
+    <div class="rline"><b>${TT.lbl_issued_by[toolLang]}</b> Kagoma Protection Services</div>
+    ${S.note ? `<div class="rline" style="margin-top:10px;opacity:.85">${S.note}</div>` : ''}`;
+}
+
+function escHtml(s){
+  return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+
+/* ---------------- Auto-verify from QR link ---------------- */
+window.addEventListener('DOMContentLoaded', ()=>{
+  const params = new URLSearchParams(location.search);
+  const certParam = params.get('cert');
+  if(certParam){
+    switchTab('verify');
+    document.getElementById('verifyInput').value = certParam;
+    runVerify(certParam);
+  }else{
+    checkAuthAndRender();
+  }
+});
+applyStaticI18n();
+
+/* ---------------------------------------------------------------
+   Light and dark.
+
+   The setting follows the reader, not the page: it is stored once
+   and read on every page, so a choice made in the course player is
+   still in force on the certificate register.
+
+   It is applied before first paint (see the inline script in <head>)
+   so nobody sees a flash of the wrong ground.
+---------------------------------------------------------------- */
+function kgTheme(){ try{ return localStorage.getItem('kg-theme') || 'dark'; }catch(e){ return 'dark'; } }
+function kgApplyTheme(t){
+  document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+  document.querySelectorAll('.kg-theme').forEach(b=>{
+    const light = t === 'light';
+    b.textContent = light ? '\u263D' : '\u2600';          /* moon when light, sun when dark */
+    b.setAttribute('aria-pressed', light ? 'true' : 'false');
+    b.setAttribute('title', light ? 'Switch to dark' : 'Switch to light');
+    b.setAttribute('aria-label', light ? 'Switch to dark' : 'Switch to light');
+  });
+}
+function kgToggleTheme(){
+  const next = kgTheme() === 'light' ? 'dark' : 'light';
+  try{ localStorage.setItem('kg-theme', next); }catch(e){}
+  kgApplyTheme(next);
+}
+kgApplyTheme(kgTheme());
+
+/* Rwandan names are written family name first, in full capitals, with
+   the given names in ordinary case: KIRENGA Eric, MUKAMANA Jeanne d'Arc.
+   Typing is inconsistent, so the sheet formats what it is given rather
+   than printing it as typed. Particles keep their small letter, and a
+   letter after an apostrophe or a hyphen is capitalised: d'Arc, Jean-Paul. */
+function rwName(raw){
+  const s = String(raw || '').trim().replace(/\s+/g, ' ');
+  if (!s) return '';
+
+  const SMALL = ['d','de','du','da','van','von','der','den','bin','al','la','le'];
+
+  const titled = (w) => w
+    .toLocaleLowerCase()
+    .replace(/(^|[\s'\u2019-])([a-z\u00e0-\u00ff])/g, (m, sep, ch) => sep + ch.toLocaleUpperCase());
+
+  const parts = s.split(' ');
+  return parts.map((w, i) => {
+    if (i === 0) return w.toLocaleUpperCase();          // family name
+    const bare = w.replace(/[.'\u2019-].*$/, '').toLocaleLowerCase();
+
+    /* d'Arc keeps its small d, the way the name is written. A particle
+       standing alone stays small too: de la Croix, van der Berg. */
+    if (SMALL.includes(bare)) {
+      return /['\u2019]/.test(w)
+        ? w.toLocaleLowerCase().replace(/(['\u2019])([a-z\u00e0-\u00ff])/,
+            (m, ap, ch) => ap + ch.toLocaleUpperCase())
+        : w.toLocaleLowerCase();
+    }
+    return titled(w);
+  }).join(' ');
+}
+
+</script>
+</body>
+</html>

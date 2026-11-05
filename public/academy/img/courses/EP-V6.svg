@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 270" role="img" aria-label="Executive Protection — Volume 6">
+<defs>
+  <linearGradient id="gEP-V6" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#111"/><stop offset="1" stop-color="#000"/>
+  </linearGradient>
+  <clipPath id="cEP-V6"><rect width="480" height="270"/></clipPath>
+</defs>
+<rect width="480" height="270" fill="url(#gEP-V6)"/>
+<g clip-path="url(#cEP-V6)" opacity=".85"><g fill="none" opacity=".5"><path d="M300 62 L300 208" stroke="#f4d332" stroke-width="1"/><path d="M322 62 L322 208" stroke="#f4d332" stroke-width="1"/><path d="M344 62 L344 208" stroke="#f4d332" stroke-width="1"/><path d="M366 62 L366 208" stroke="#f4d332" stroke-width="1"/><path d="M388 62 L388 208" stroke="#f4d332" stroke-width="1"/><path d="M410 62 L410 208" stroke="#f4d332" stroke-width="1"/><path d="M432 62 L432 208" stroke="#f4d332" stroke-width="1"/><path d="M454 62 L454 208" stroke="#f4d332" stroke-width="1"/><rect x="396" y="58" width="20" height="154" fill="#c90000" opacity=".5"/></g></g>
+<rect x="0" y="266" width="480" height="4" fill="#c90000"/>
+<text x="28" y="48" fill="#f4d332" font-family="'Bricolage Grotesque',sans-serif"
+      font-size="13" font-weight="700" letter-spacing="3.4">EP-V6</text>
+</svg>

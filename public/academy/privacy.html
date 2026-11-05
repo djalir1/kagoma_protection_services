@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Notice — Kagoma Protection Services</title>
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#000000">
+<style>
+@font-face{
+  font-family:'Bricolage Grotesque';
+  src:url('fonts/BricolageGrotesque.woff2') format('woff2-variations');
+  font-weight:200 800;
+  font-stretch:75% 100%;
+  font-display:swap;
+}
+
+/* ============================================================
+   KAGOMA — theme tokens
+
+   One scale, two settings. Gold and red never move: a brand that
+   changes colour is not a brand. What flips is the ground and the
+   type on it.
+
+   Dark is the default. Light exists because an officer reading
+   forty lessons in Kigali daylight cannot see a dark screen.
+   ============================================================ */
+:root{
+  --kg-gold:#f4d332;
+  --kg-gold-dim:#c9a227;
+  --kg-red:#c90000;
+  --kg-red-dim:#8e0000;
+
+  --kg-bg:#000000;
+  --kg-surface:#0d0d0d;
+  --kg-surface-2:#151515;
+  --kg-border:#262626;
+  --kg-border-2:#3a3a3a;
+  --kg-text:#ffffff;
+  --kg-text-dim:#9c9c9c;
+  --kg-shadow:rgba(0,0,0,.55);
+}
+[data-theme="light"]{
+  --kg-bg:#ffffff;
+  --kg-surface:#f6f4ef;
+  --kg-surface-2:#ece9e1;
+  --kg-border:#ddd8cc;
+  --kg-border-2:#bdb6a5;
+  --kg-text:#141210;
+  --kg-text-dim:#5f5b54;
+  --kg-shadow:rgba(0,0,0,.14);
+  /* the brand red is too light-on-light for small type; the deeper
+     one keeps the hue and stays readable */
+  --kg-red:#b00000;
+  --kg-gold-dim:#8a6f10;
+}
+html,body{background:var(--kg-bg);color:var(--kg-text)}
+
+  :root{
+    --ink:var(--kg-bg);
+    --panel:var(--kg-surface);
+    --panel-2:var(--kg-surface-2);
+    --fog:var(--kg-text);
+    --fog-dim:var(--kg-text-dim);
+    --gold:var(--kg-gold);
+    --gold-bright:var(--kg-gold);
+    --red:var(--kg-red);
+    --line:rgba(255,255,255,0.10);
+    --line-strong:rgba(255,255,255,0.18);
+    --ok:var(--kg-gold);
+    --bad:var(--kg-red);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--fog);
+    font-family:Arial, Helvetica, sans-serif;
+    line-height:1.55;
+    padding-bottom:60px;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:0 20px;}
+
+  header{
+    border-bottom:1px solid var(--line);
+    padding:22px 0;
+    position:sticky;top:0;
+    background:rgba(10,10,10,0.94);
+    backdrop-filter:blur(8px);
+    z-index:10;
+  }
+  header .wrap{display:flex;align-items:center;gap:14px;}
+  header img{height:42px;width:auto;}
+  header .htitle{font-size:17px;font-weight:700;color:var(--kg-text);letter-spacing:0.01em;}
+  header .hsub{font-size:11.5px;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;margin-top:2px;}
+  header .navlinks{margin-left:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;}
+  header .navlinks a, header .navlinks button{
+    font-size:12.5px;color:var(--fog-dim);border:1px solid var(--line-strong);padding:9px 14px;border-radius:3px;background:transparent;cursor:pointer;
+  }
+  header .navlinks a:hover, header .navlinks button:hover{color:var(--gold-bright);border-color:var(--gold);}
+
+  h2{font-size:20px;color:var(--kg-text);margin-bottom:6px;letter-spacing:0.01em;}
+  h3{font-size:16px;color:var(--kg-text);margin-bottom:10px;}
+  .lead{font-size:14px;color:var(--fog-dim);margin-bottom:26px;max-width:600px;}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:26px;}
+
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:12px;font-weight:700;letter-spacing:0.04em;color:var(--gold);text-transform:uppercase;margin-bottom:7px;}
+  .field input, .field select{
+    width:100%;
+    background:var(--ink);
+    border:1px solid var(--line-strong);
+    color:var(--kg-text);
+    padding:11px 13px;
+    font-size:14.5px;
+    border-radius:3px;
+    font-family:inherit;
+  }
+  .field input:focus{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
+
+  .btn{
+    font-weight:700;font-size:14px;padding:13px 22px;border-radius:3px;border:none;cursor:pointer;letter-spacing:0.02em;
+  }
+  .btn-primary{background:var(--gold);color:var(--kg-gold-dim);}
+  .btn-primary:hover{background:var(--gold-bright);}
+  .btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+  .btn-outline{background:transparent;border:1px solid var(--line-strong);color:var(--kg-text);}
+  .btn-outline:hover{border-color:var(--gold);color:var(--gold-bright);}
+  .btn-small{font-size:12px;padding:8px 14px;}
+
+  .status-msg{font-size:13px;margin-top:14px;padding:10px 12px;border-radius:3px;display:none;}
+  .status-msg.show{display:block;}
+  .status-msg.ok{background:rgba(47,168,79,0.12);color:var(--kg-gold);border:1px solid rgba(47,168,79,0.35);}
+  .status-msg.err{background:rgba(201,0,0,0.12);color:var(--kg-red);border:1px solid rgba(201,0,0,0.35);}
+
+  /* auth tabs */
+  .auth-tabs{display:flex;gap:2px;margin:30px 0 26px;border:1px solid var(--line);width:fit-content;border-radius:3px;overflow:hidden;}
+  .auth-tab-btn{padding:12px 22px;background:var(--panel);color:var(--fog-dim);font-weight:700;font-size:13.5px;border:none;cursor:pointer;letter-spacing:0.02em;}
+  .auth-tab-btn.active{background:var(--gold);color:var(--kg-gold-dim);}
+  .auth-panel{display:none;max-width:420px;}
+  .auth-panel.active{display:block;}
+
+  /* dashboard */
+  #dashboardSection{display:none;}
+  .welcome-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:8px;}
+  section.d-section{margin-top:44px;}
+
+  .course-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px;}
+  @media (max-width:700px){.course-grid{grid-template-columns:1fr;}}
+  .course-card{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:18px 20px;}
+  .course-card .ccode{font-family:'Courier New',monospace;font-size:11px;color:var(--gold);}
+  .course-card h4{font-size:15.5px;color:var(--kg-text);margin:8px 0 6px;}
+  .course-card p{font-size:13px;color:var(--fog-dim);margin-bottom:14px;}
+  .badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:0.05em;padding:5px 10px;border-radius:3px;text-transform:uppercase;}
+  .badge-enrolled{background:rgba(244,211,50,0.15);color:var(--gold-bright);}
+  .badge-progress{background:rgba(90,140,255,0.15);color:var(--kg-gold);}
+  .badge-completed{background:rgba(47,168,79,0.15);color:var(--kg-gold);}
+
+  .list-row{
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+    padding:16px 18px;border:1px solid var(--line);border-radius:3px;margin-bottom:10px;background:var(--panel);
+  }
+  .list-row .who{font-size:14.5px;color:var(--kg-text);}
+  .list-row .meta{font-size:12px;color:var(--fog-dim);margin-top:4px;font-family:'Courier New',monospace;}
+  .list-row .actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+
+  .empty-note{font-size:13.5px;color:var(--fog-dim);padding:20px;text-align:center;border:1px dashed var(--line-strong);border-radius:4px;margin-top:14px;}
+
+  footer{border-top:1px solid var(--line);margin-top:60px;padding:24px 0;text-align:center;font-size:11.5px;color:var(--fog-dim);}
+  /* ---------- Account type chooser ---------- */
+  .role-pick{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  @media (max-width:520px){ .role-pick{grid-template-columns:1fr;} }
+  .role-opt{
+    display:block;cursor:pointer;position:relative;
+    border:1px solid var(--line-strong);border-radius:var(--radius);
+    padding:12px 13px;transition:border-color .16s ease,background .16s ease;
+  }
+  .role-opt:hover{border-color:var(--signal);}
+  .role-opt input{position:absolute;opacity:0;pointer-events:none;}
+  .role-opt:has(input:checked){border-color:var(--signal);background:rgba(244,211,50,.07);}
+  .role-opt:has(input:focus-visible){outline:2px solid var(--signal);outline-offset:2px;}
+  .role-t{display:block;font-weight:700;font-size:14px;color:var(--kg-text);}
+  .role-opt:has(input:checked) .role-t{color:var(--signal);}
+  .role-d{display:block;margin-top:3px;font-size:12px;color:var(--fog-dim);line-height:1.4;}
+  .auto-badge{display:inline-block;margin-left:8px;font-size:9.5px;font-weight:bold;
+    letter-spacing:.14em;padding:2px 7px;border-radius:2px;
+    border:1px solid var(--ok);color:var(--ok);vertical-align:middle}
+  .btn-block{width:100%;display:flex;align-items:center;justify-content:center;gap:9px}
+  .pw-wrap{position:relative}
+  .pw-wrap input{width:100%;padding-right:44px}
+  .pw-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);
+    background:none;border:0;cursor:pointer;font-size:15px;line-height:1;
+    padding:7px 9px;border-radius:3px;color:var(--fog-dim);opacity:.7}
+  .pw-eye:hover{opacity:1;color:var(--gold)}
+  .pw-eye[aria-pressed="true"]{color:var(--gold);opacity:1}
+  .linkish{background:none;border:0;color:var(--fog-dim);font-size:13px;cursor:pointer;
+    padding:12px 0 0;text-decoration:underline;text-underline-offset:3px}
+  .linkish:hover{color:var(--gold)}
+  .linkish.inline{padding:0;color:var(--gold);font-weight:bold;text-decoration:none}
+  .linkish.inline:hover{text-decoration:underline}
+  .or{display:flex;align-items:center;gap:12px;margin:22px 0 18px;
+    font-size:10.5px;letter-spacing:.2em;color:var(--fog-dim)}
+  .or::before,.or::after{content:'';flex:1;height:1px;background:var(--line)}
+  .btn-google{background:var(--kg-text);color:var(--kg-border-2);border:1px solid var(--kg-text);font-weight:bold}
+  .btn-google:hover{background:var(--kg-text);border-color:var(--kg-text)}
+  .switch-line{margin-top:20px;padding-top:16px;border-top:1px solid var(--line);
+    font-size:13px;color:var(--fog-dim);text-align:center}
+  @media (max-width:640px){
+    header .wrap{flex-wrap:wrap;row-gap:10px}
+    header .navlinks{width:100%;margin-left:0;justify-content:flex-start}
+    header .navlinks a, header .navlinks button{font-size:11.5px;padding:8px 10px}
+  }
+  /* the crest doubles as the way home, as on the public site */
+  .homelink{display:inline-flex;align-items:center;border-radius:4px;
+    transition:opacity .15s ease,transform .15s ease}
+  .homelink:hover{opacity:.85;transform:translateY(-1px)}
+  .homelink:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+  .homelink img{display:block}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:520px){.row2{grid-template-columns:1fr}}
+  .vet{border-radius:4px;padding:16px 18px;margin:0 0 22px;border:1px solid}
+  .vet.pending{border-color:var(--gold);background:rgba(244,211,50,.07)}
+  .vet.bad{border-color:var(--bad);background:rgba(201,0,0,.07)}
+  .vet b{display:block;font-size:14px;margin-bottom:5px}
+  .vet.pending b{color:var(--gold)} .vet.bad b{color:var(--bad)}
+  .vet span{font-size:13px;color:var(--fog-dim);line-height:1.55}
+  .pw-meter{margin-top:8px}
+  .pw-bar{height:6px;border-radius:3px;background:var(--panel-2);overflow:hidden}
+  .pw-bar i{display:block;height:100%;width:0;border-radius:3px;transition:width .25s ease,background .25s ease}
+  .pw-bar i.s0{background:var(--kg-text-dim)} .pw-bar i.s1{background:var(--bad)}
+  .pw-bar i.s2{background:var(--kg-gold)} .pw-bar i.s3{background:var(--gold)} .pw-bar i.s4{background:var(--ok)}
+  .pw-lbl{font-size:12px;color:var(--fog-dim);margin-top:5px;line-height:1.5}
+  .pw-lbl b{color:var(--fog)}
+  .paybox{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.72);
+    display:flex;align-items:center;justify-content:center;padding:20px;overflow:auto}
+  .paybox-inner{background:var(--panel);border:1px solid var(--line-strong);border-radius:6px;
+    padding:24px;max-width:460px;width:100%}
+  .paybox-inner h3{color:var(--gold);font-size:16px;margin:0 0 8px}
+  .payrow{display:flex;justify-content:space-between;gap:12px;padding:9px 0;
+    border-bottom:1px solid var(--line);font-size:13.5px;color:var(--fog-dim)}
+  .payrow b{color:var(--kg-text)}
+  .paybox-inner .field{margin-top:14px}
+  .pay-pending{font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    border:1px solid var(--gold);color:var(--gold);padding:2px 7px;border-radius:2px;margin-left:8px}
+  .paymethods{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:16px 0 4px}
+  @media(max-width:420px){.paymethods{grid-template-columns:1fr}}
+  .paym{background:var(--panel-2);border:1px solid var(--line-strong);border-radius:4px;
+    padding:12px 13px;cursor:pointer;text-align:left;transition:.15s}
+  .paym:hover{border-color:var(--gold)}
+  .paym.on{border-color:var(--gold);background:rgba(244,211,50,.08)}
+  .paym b{display:block;font-size:13px;color:var(--kg-text);margin-bottom:3px}
+  .paym span{font-size:11.5px;color:var(--fog-dim);line-height:1.45}
+  /* ---------- Brand palette ----------
+     var(--kg-red)  var(--kg-text)  var(--kg-gold)  var(--kg-bg)
+     Red now carries both the brand and "not valid", so status is never
+     signalled by colour alone: a mark is added in front of the label.
+  ------------------------------------------------------------------ */
+  .tag.ok::before, .badge.ok::before, .status-msg.ok::before{content:"\2713 "}
+  .tag.bad::before, .badge.bad::before, .status-msg.err::before{content:"\2715 "}
+  .tag.warn::before, .badge.warn::before{content:"\25CF "}
+  /* ---------- Brand ground ----------
+     The portals sat on var(--kg-bg) while the front page sat on var(--kg-bg).
+     Close is not the same: side by side the difference shows, and the
+     palette names one black. */
+  body{background:var(--kg-bg)}
+  header{background:var(--kg-bg)!important;border-bottom:2px solid var(--kg-red)}
+  .card,.pane .card{background:var(--kg-surface);border-color:var(--kg-border)}
+  .row,.list-row{background:var(--kg-surface);border-color:var(--kg-border)}
+  .wanted{border-left:3px solid var(--gold);background:rgba(244,211,50,.07);
+    border-radius:0 4px 4px 0;padding:14px 16px;margin:24px 0 4px}
+  .wanted b{display:block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:5px}
+  .wanted span{font-size:14px;color:var(--fog);line-height:1.55}
+
+  /* ---------- Theme switch ---------- */
+  .kg-theme{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:36px;height:34px;padding:0;cursor:pointer;
+    background:transparent;border:1px solid var(--kg-border-2);border-radius:3px;
+    color:var(--kg-text);font-size:15px;line-height:1;
+  }
+  .kg-theme:hover{border-color:var(--kg-gold);color:var(--kg-gold)}
+  .kg-theme:focus-visible{outline:2px solid var(--kg-gold);outline-offset:2px}
+  @media (prefers-reduced-motion:no-preference){
+    html{transition:background-color .18s ease}
+  }
+
+  /* ---------- Readability in both settings ----------
+     Gold on black is a brand mark, not a reading colour: at 1.6:1 the
+     button labels and the small caps were hard to read. Buttons take
+     black type on gold; small labels take the dimmed gold, which is
+     dark enough on white and bright enough on black. */
+  .btn-primary,.btn.btn-primary,button.btn-primary,.vb-row button{
+    background:var(--kg-gold);color:#000000;border-color:var(--kg-gold);
+  }
+  [data-theme="light"] .btn-primary,[data-theme="light"] .vb-row button{
+    background:var(--kg-gold);color:#000000;
+  }
+  .hsub,.brand-sub,header .hsub{color:var(--kg-gold-dim)}
+  [data-theme="light"] .hsub,[data-theme="light"] header .hsub{color:var(--kg-gold-dim)}
+  label,.field label,.fgrid label{color:var(--kg-text-dim)}
+  [data-theme="light"] label,[data-theme="light"] .field label{color:#4a463f}
+  [data-theme="light"] .hero-title .accent{color:var(--kg-gold-dim)}
+  [data-theme="light"] .verify-bar label{color:#3d3320}
+
+  /* the auth tabs and the verify label carried gold at small sizes;
+     the active tab reads as black on gold, the inactive one as plain type */
+  .auth-tab-btn{color:var(--kg-text-dim);background:transparent}
+  .auth-tab-btn.active{background:var(--kg-gold);color:#000000}
+  [data-theme="light"] .auth-tab-btn{color:#4a463f}
+  .verify-bar label{color:#3d3320}
+
+  /* the tab strip kept a fixed dark surface, so light mode put dim type
+     on it; and the verify-bar label colour was reaching form labels */
+  .auth-tabs{background:var(--kg-surface);border-color:var(--kg-border)}
+  .auth-tab-btn{color:var(--kg-text-dim);background:transparent}
+  .auth-tab-btn.active{background:var(--kg-gold);color:#000000}
+  form label,.contact-form label,.field > label{color:var(--kg-text-dim)}
+  .verify-bar > .wrap > label{color:#3d3320}
+  .ussd{margin:16px 0 4px;padding:14px 16px;border-radius:4px;
+    border:1px solid var(--kg-gold);background:rgba(244,211,50,.08);text-align:center}
+  .ussd > span{display:block;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--kg-gold);margin-bottom:8px}
+  .ussd b{display:block;font-size:21px;font-weight:700;letter-spacing:.02em;
+    color:var(--kg-text);word-break:break-all;line-height:1.3}
+  .ussd-copy{margin-top:10px;font-size:12px;font-weight:700;padding:7px 16px;cursor:pointer;
+    background:var(--kg-gold);color:#000;border:0;border-radius:3px}
+  .ussd-copy:hover{background:#ffe14d}
+  .wrap{max-width:600px;margin:0 auto;padding:0 20px}
+  .top{text-align:center;padding:34px 0 24px}
+  .top img{width:70px;height:auto;margin-bottom:16px}
+  .top h1{font-size:24px;letter-spacing:-.01em;margin:0 0 10px;color:var(--kg-text);line-height:1.25}
+  .top p{font-size:14.5px;color:var(--kg-text-dim);line-height:1.7;margin:0}
+  .card{background:var(--kg-surface);border:1px solid var(--kg-border);border-radius:6px;
+    padding:24px;margin-bottom:16px}
+  .card h3{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--kg-gold);
+    margin:0 0 16px;padding-bottom:9px;border-bottom:1px solid var(--kg-border)}
+  .field{margin-bottom:15px}
+  .field label{display:block;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+    color:var(--kg-text-dim);margin-bottom:6px;font-weight:bold}
+  .field input,.field select,.field textarea{width:100%;padding:13px 14px;font-size:16px;
+    font-family:inherit;background:var(--kg-surface-2);color:var(--kg-text);
+    border:1px solid var(--kg-border-2);border-radius:4px}
+  .field textarea{resize:vertical;line-height:1.55;font-size:15px}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--kg-gold);outline-offset:1px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:460px){.two{grid-template-columns:1fr}}
+  .pick{display:flex;flex-wrap:wrap;gap:8px}
+  .pick button{font-family:inherit;font-size:13px;padding:9px 14px;border-radius:20px;
+    border:1px solid var(--kg-border-2);background:transparent;color:var(--kg-text-dim);cursor:pointer}
+  .pick button.on{border-color:var(--kg-gold);background:rgba(244,211,50,.12);color:var(--kg-gold);font-weight:bold}
+  .yn{display:flex;align-items:center;gap:10px;padding:11px 0;font-size:14px;color:var(--kg-text)}
+  .yn input{width:19px;height:19px;accent-color:var(--kg-gold);flex:none}
+  .btn-go{width:100%;padding:16px;font-size:15px;font-weight:bold;font-family:inherit;
+    background:var(--kg-gold);color:#000;border:0;border-radius:4px;cursor:pointer}
+  .btn-go:disabled{opacity:.55}
+  .msg{margin-top:12px;font-size:13.5px;line-height:1.6;display:none}
+  .msg.show{display:block} .msg.err{color:#ff6b6b} .msg.ok{color:var(--kg-gold)}
+  .note{font-size:12.5px;color:var(--kg-text-dim);line-height:1.65;margin-top:16px;
+    padding-top:14px;border-top:1px solid var(--kg-border)}
+  .done{text-align:center;padding:38px 20px}
+  .done .tick{width:64px;height:64px;border-radius:50%;background:var(--kg-gold);
+    color:#000;font-size:34px;line-height:64px;margin:0 auto 18px}
+  .done h2{font-size:20px;margin:0 0 10px;color:var(--kg-text)}
+  .done p{font-size:14px;color:var(--kg-text-dim);line-height:1.7;margin:0 0 8px}
+  .back{display:inline-block;margin-top:18px;font-size:13px;color:var(--kg-text-dim);
+    text-decoration:none;border-bottom:1px solid var(--kg-border-2)}
+  .back:hover{color:var(--kg-gold);border-color:var(--kg-gold)}
+  .shift{border:1px solid var(--kg-border);border-radius:5px;padding:15px;
+    background:var(--kg-surface-2);margin-bottom:10px}
+  .shift h4{margin:0 0 5px;font-size:15px;color:#fff}
+  .shift .when{font-size:13px;color:var(--kg-gold);font-weight:bold;margin-bottom:4px}
+  .shift .meta{font-size:12.5px;color:var(--kg-text-dim);line-height:1.6}
+  .shift .roles{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+  .shift .roles span{font-size:11.5px;padding:4px 10px;border-radius:14px;
+    border:1px solid var(--kg-border-2);color:var(--kg-text-dim)}
+  .shift .act{margin-top:12px}
+  .shift button{font-family:inherit;font-size:13.5px;font-weight:bold;padding:11px 18px;
+    border-radius:4px;border:0;background:var(--kg-gold);color:#000;cursor:pointer;width:100%}
+  .shift button:disabled{opacity:.55}
+  .shift .said{margin-top:10px;font-size:12.5px;color:var(--kg-gold)}
+  /* ---------- Social ---------- */
+  .social{display:flex;gap:10px;margin:22px 0 18px;flex-wrap:wrap}
+  .social a{display:flex;align-items:center;justify-content:center;
+    width:42px;height:42px;border:1px solid var(--kg-border-2);border-radius:5px;
+    color:var(--kg-text-dim);transition:.15s}
+  .social a svg{width:19px;height:19px;fill:currentColor;display:block}
+  .social a:hover{border-color:var(--kg-gold);color:var(--kg-gold);
+    background:rgba(244,211,50,.07)}
+  .social a:focus-visible{outline:2px solid var(--kg-gold);outline-offset:2px}
+  /* an account Kagoma does not have yet is dimmed, not pretended */
+  .social a[href="#"]{opacity:.4;cursor:default}
+  .social a[href="#"]:hover{border-color:var(--kg-border-2);color:var(--kg-text-dim);background:none}
+  .kg-theme{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:36px;height:34px;padding:0;cursor:pointer;
+    background:transparent;border:1px solid var(--kg-border-2);border-radius:3px;
+    color:var(--kg-text);font-size:15px;line-height:1;
+  }
+  /* Gold on paper is a highlighter, not a heading. On the light ground
+     the card titles take the ink colour and keep a red rule to mark a
+     new section. */
+  [data-theme="light"] .card h3,
+  [data-theme="light"] #shiftsCard h3{
+    color:#141210;
+    border-bottom-color:#e2ded3;
+  }
+  [data-theme="light"] .card h3::before{
+    content:'';display:inline-block;width:16px;height:2px;
+    background:var(--kg-red);vertical-align:middle;margin-right:9px
+  }
+
+  /* ---------- Phone ----------
+     Measured on a 390px screen, not guessed:
+
+     · a field under 16px makes iOS zoom the whole page the moment it
+       is focused, and the visitor then has to pinch back out
+     · a tap target under about 44px is missed as often as it is hit
+     · anything under 12px is unreadable outdoors, which is where a
+       security officer reads it
+  ------------------------------------------------------------------ */
+  @media (max-width: 900px){
+    input, select, textarea{
+      font-size:16px!important;
+      min-height:46px;
+      padding:12px 14px;
+    }
+    textarea{min-height:96px;line-height:1.55}
+
+    button, .btn, a.btn, .chips button, .pick button,
+    header .navlinks a, header .navlinks button,
+    .kg-theme, #langToggle, #langBtn{
+      min-height:44px;
+      display:inline-flex;align-items:center;justify-content:center;
+    }
+
+    /* links inside running text keep their size; standalone ones grow */
+    .nav a, .navlinks a, .flink, .hb-btn, .course-more, .social a{
+      min-height:44px;
+    }
+
+    /* nothing on a phone should be smaller than this */
+    .small, .muted.small, .meta, .rline, .note, .ftag, .rights,
+    .field label, .f label{font-size:13px!important;line-height:1.6}
+
+    /* room between things a finger has to choose between */
+    .chips{gap:10px}
+    .pick{gap:10px}
+    .actions, .hb-act{gap:10px}
+  }
+
+  @media (max-width: 900px){
+    /* A footer link and a portal link are things a thumb has to hit,
+       not words in a sentence. They were 22px and 36px tall. */
+    .fcontact a, .flink, footer a,
+    header .navlinks a, header .navlinks button,
+    .contact-direct .cd{
+      min-height:44px;
+      display:inline-flex;align-items:center;
+      font-size:13.5px!important;
+    }
+    .contact-direct .cd{display:block;padding:18px}
+    .fcontact{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center}
+
+    /* the eye that shows a password sits inside the field; give the
+       whole thing a finger's width */
+    .pw-eye{min-width:44px;min-height:44px;
+      display:inline-flex;align-items:center;justify-content:center;font-size:17px}
+
+    /* the theme and language buttons are square by design; make them
+       square at a size a thumb can find */
+    .kg-theme, #langToggle, #langBtn{min-width:44px}
+  }
+
+  @media (max-width: 900px){
+    /* the last few measured below the line: a nav built with a
+       different class name, a section label, and the logo link */
+    .toollinks a, .tool-nav a, header a[href$=".html"]{
+      min-height:44px;display:inline-flex;align-items:center;
+      font-size:13.5px!important;
+    }
+    .homelink{min-width:44px;min-height:44px;
+      display:inline-flex;align-items:center;justify-content:center}
+    #l_roles, .field > label[id]{font-size:13px!important}
+  }
+  .wrap{max-width:820px;margin:0 auto;padding:0 20px}
+  .doc-top{padding:34px 0 10px}
+  .doc-top img{width:56px;height:auto;margin-bottom:14px}
+  .doc-top h1{font-size:27px;line-height:1.25;margin:0 0 8px;color:var(--kg-text)}
+  .doc-top .sub{font-size:13.5px;color:var(--kg-text-dim);line-height:1.6}
+  .doc-nav{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 26px}
+  .doc-nav a{font-size:13px;padding:10px 15px;border:1px solid var(--kg-border-2);
+    border-radius:20px;color:var(--kg-text-dim);text-decoration:none}
+  .doc-nav a:hover{border-color:var(--kg-gold);color:var(--kg-gold)}
+  .doc-nav a.on{border-color:var(--kg-gold);background:rgba(244,211,50,.12);
+    color:var(--kg-gold);font-weight:bold}
+  .doc h2{font-size:15px;letter-spacing:.02em;color:var(--kg-gold);
+    margin:34px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--kg-border)}
+  .doc h2 span{color:var(--kg-text-dim);font-weight:400;margin-right:9px}
+  .doc p{font-size:14.5px;line-height:1.8;color:var(--kg-text-dim);margin:0 0 13px}
+  .doc p strong, .doc li strong{color:var(--kg-text)}
+  .doc ul,.doc ol{margin:0 0 14px;padding-left:22px}
+  .doc li{font-size:14.5px;line-height:1.8;color:var(--kg-text-dim);margin-bottom:7px}
+  .doc table{width:100%;border-collapse:collapse;margin:6px 0 18px;font-size:14px}
+  .doc th,.doc td{border:1px solid var(--kg-border);padding:11px 13px;
+    text-align:left;vertical-align:top;color:var(--kg-text-dim)}
+  .doc th{background:var(--kg-surface-2);color:var(--kg-text);width:36%;font-weight:600}
+  .qa{border-bottom:1px solid var(--kg-border)}
+  .qa summary{cursor:pointer;padding:16px 40px 16px 2px;font-size:15px;
+    color:var(--kg-text);font-weight:600;position:relative;list-style:none;line-height:1.5}
+  .qa summary::-webkit-details-marker{display:none}
+  .qa summary::after{content:'+';position:absolute;right:6px;top:14px;
+    font-size:20px;color:var(--kg-gold);font-weight:400}
+  .qa[open] summary::after{content:'\2212'}
+  .qa summary:hover{color:var(--kg-gold)}
+  .qa .a{padding:0 2px 18px;font-size:14.5px;line-height:1.8;color:var(--kg-text-dim)}
+  .qa .a p{margin:0 0 11px} .qa .a p:last-child{margin:0}
+  .doc-foot{margin:40px 0 10px;padding-top:18px;border-top:1px solid var(--kg-border);
+    font-size:12.5px;color:var(--kg-text-dim);line-height:1.7}
+  [data-theme="light"] .doc h2{color:#141210}
+  [data-theme="light"] .doc h2 span{color:#8a857b}
+  /* gold on paper reads as a highlighter; on the light ground these
+     take the ink colour and keep the gold only as the active marker */
+  [data-theme="light"] .doc-nav a{color:#5f5b54;border-color:#cfc9bb}
+  [data-theme="light"] .doc-nav a.on{color:#141210;background:rgba(244,211,50,.28);
+    border-color:#c9a227;font-weight:700}
+  [data-theme="light"] .doc a{color:#8a6d00}
+  [data-theme="light"] .qa summary{color:#141210}
+  [data-theme="light"] .qa summary::after{color:#c9a227}
+  /* the page you are on: gold text on a gold tint was too close to
+     read on the dark ground */
+  .doc-nav a.on{background:var(--kg-gold);color:#000;border-color:var(--kg-gold);font-weight:700}
+  [data-theme="light"] .doc-nav a.on{background:var(--kg-gold);color:#141210;border-color:#c9a227}
+
+  /* ---------- Kagoma type ----------
+     Bricolage Grotesque, one variable file, weights 200–800.
+     It replaces Archivo, EB Garamond and the Arial fallbacks the
+     portal pages were using, so every page reads as one company. */
+  :root{
+    --display:'Bricolage Grotesque', system-ui, sans-serif;
+    --body:'Bricolage Grotesque', system-ui, sans-serif;
+    --mono:'Bricolage Grotesque', system-ui, sans-serif;
+  }
+  html, body, button, input, select, textarea, .btn{
+    font-family:'Bricolage Grotesque', system-ui, -apple-system, sans-serif;
+  }
+  body{font-variation-settings:'wght' 400,'wdth' 100,'opsz' 14;
+       -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+
+  h1,.hero h1{font-variation-settings:'wght' 800,'wdth' 100,'opsz' 96;letter-spacing:-.025em}
+  h2,.sec-title{font-variation-settings:'wght' 700,'wdth' 100,'opsz' 48;letter-spacing:-.015em}
+  h3{font-variation-settings:'wght' 600,'opsz' 24}
+  h4{font-variation-settings:'wght' 600,'opsz' 24}
+  strong,b{font-variation-settings:'wght' 700}
+
+  /* anything that is a number lines up in a column */
+  .ref,.rf,.num,.n,.money,.cnum,code,
+  input[inputmode="numeric"],input[type="number"],input[type="tel"]{
+    font-variant-numeric:tabular-nums}
+  @media (max-width:420px){
+    /* on a narrow phone a two-column table will not hold; the label
+       stacks above its value rather than squeezing both */
+    .doc table, .doc tbody, .doc tr, .doc th, .doc td{display:block;width:auto}
+    .doc tr{border:1px solid var(--kg-border);border-radius:5px;
+      margin-bottom:10px;overflow:hidden}
+    .doc th{width:auto!important;border:0;padding:11px 13px 4px;
+      font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+    .doc td{border:0;padding:0 13px 12px}
+    .doc table{border:0}
+  }
+  /* the footer links took the browser default blue on pages whose own
+     stylesheet never defined .flink */
+  .kg-foot a, .flink{color:var(--kg-text-dim,#9c9c9c);text-decoration:none}
+  .kg-foot a:hover, .flink:hover{color:var(--kg-gold,#f4d332)}
+  .kg-foot .sep{color:var(--kg-border-2,#3a3a3a)}
+  .staff-link{opacity:.45}
+  .staff-link:hover{opacity:1}
+  [data-theme="light"] .kg-foot a,[data-theme="light"] .flink{color:#5f5b54}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="doc-top">
+    <a href="/" class="homelink" aria-label="Back to the Kagoma home page">
+      <img src="img/crest-60e57097.webp" alt="Kagoma Protection Services"></a>
+    <h1>Privacy Notice</h1>
+    <div class="sub">KAGOMA PROTECTIONS SERVICES LTD &middot; Kigali, Rwanda</div>
+  </div>
+
+  <div class="doc-nav">
+      <a href="faq.html" class="">FAQ</a>
+      <a href="terms.html" class="">Terms &amp; Conditions</a>
+      <a href="privacy.html" class="on">Privacy Notice</a>
+      <a href="/">&larr; Kagoma</a>
+      <button onclick="toggleLang()" id="langBtn"
+              style="font-size:13px;padding:10px 15px;border:1px solid var(--kg-border-2);
+                     border-radius:20px;background:transparent;color:var(--kg-text-dim);
+                     font-family:inherit;cursor:pointer;min-height:44px">RW</button>
+      <button class="kg-theme" onclick="kgToggleTheme()" aria-pressed="false"
+              title="Switch to light" aria-label="Switch to light">&#9728;</button>
+  </div>
+
+  <div class="doc">
+    <p><strong>Effective date:</strong> 11 September 2026 &nbsp;&middot;&nbsp;
+       <strong>Version:</strong> 1.1 &nbsp;&middot;&nbsp; Kigali, Rwanda</p>
+
+    <p>This Privacy Notice explains how <strong>KAGOMA PROTECTIONS SERVICES LTD</strong>
+    (&ldquo;Kagoma&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;, or &ldquo;our&rdquo;)
+    collects, uses, stores, shares and protects personal data.</p>
+
+    <p>Kagoma is committed to protecting personal data and privacy in accordance with
+    <strong>Law N&deg; 058/2021 of 13 October 2021</strong> relating to the Protection of
+    Personal Data and Privacy in Rwanda, together with other applicable laws and
+    regulations.</p>
+
+    <h2><span>1.</span> Who is responsible for your data</h2>
+    <table>
+      <tr><th>Controller</th><td>KAGOMA PROTECTIONS SERVICES LTD</td></tr>
+      <tr><th>Registered address</th><td>Mushumbamwiza, Rwimbogo, Nyarugunga, Kicukiro, Kigali, Rwanda</td></tr>
+      <tr><th>Contact</th><td>info@kagomaprotection.com</td></tr>
+    </table>
+    <p>Use that address for any question, request or complaint concerning your personal data.</p>
+
+    <h2><span>2.</span> What personal data we collect</h2>
+    <p>Depending on how you use Kagoma&rsquo;s services, we may collect:</p>
+    <table>
+      <tr><th>Name</th><td>Account management, identification and service delivery</td></tr>
+      <tr><th>Email address</th><td>Account management and communication</td></tr>
+      <tr><th>Phone number</th><td>Communication and operational contact</td></tr>
+      <tr><th>Date of birth</th><td>To confirm age eligibility where applicable</td></tr>
+      <tr><th>National ID information</th><td>Identity verification, vetting and site or event accreditation where required</td></tr>
+      <tr><th>Address information</th><td>Site or event accreditation where required</td></tr>
+      <tr><th>Course enrolment and progress</th><td>To administer training and assess completion</td></tr>
+      <tr><th>Course results</th><td>Assessment and certificate decisions</td></tr>
+      <tr><th>Certificate information</th><td>To issue and verify certificates</td></tr>
+      <tr><th>Payment reference</th><td>To confirm applicable payments</td></tr>
+      <tr><th>Event attendance and hours</th><td>Workforce management and payment calculations</td></tr>
+      <tr><th>Anything you send us</th><td>To respond to your request or provide the relevant service</td></tr>
+    </table>
+    <p>We aim to collect only the personal data reasonably necessary for the specific
+    purpose for which it is used.</p>
+
+    <h2><span>3.</span> Why we use your data</h2>
+    <ul>
+      <li>To create and manage user accounts</li>
+      <li>To provide training and other Kagoma services</li>
+      <li>To verify identity and eligibility</li>
+      <li>To conduct lawful vetting and accreditation</li>
+      <li>To manage event personnel and assignments</li>
+      <li>To communicate with users, staff, clients and venues</li>
+      <li>To monitor course progress and assessments</li>
+      <li>To issue and verify certificates</li>
+      <li>To calculate working hours and applicable payments</li>
+      <li>To maintain operational, accounting and tax records</li>
+      <li>To protect the security of our systems, personnel and clients</li>
+      <li>To comply with applicable legal and regulatory obligations</li>
+      <li>To respond to legitimate requests, complaints or disputes</li>
+    </ul>
+    <p>Kagoma does <strong>not</strong> sell personal data to advertisers.</p>
+
+    <h2><span>4.</span> National ID and other identification information</h2>
+    <p>Where National ID or other identification information is requested, Kagoma uses it
+    only for a defined and legitimate purpose: identity verification, lawful vetting,
+    accreditation, or a requirement imposed by a client, a venue or applicable law.</p>
+    <p>We do not use identification information for unrelated purposes without an
+    appropriate lawful basis.</p>
+
+    <h2><span>5.</span> Who may receive your data</h2>
+    <p>Access is restricted to people or organisations that reasonably need it for a
+    legitimate purpose.</p>
+
+    <p><strong>Kagoma personnel.</strong> Authorised staff may access the information
+    required for their assigned responsibilities. Access is granted according to role and
+    withdrawn when it is no longer required.</p>
+
+    <p><strong>Clients and venues.</strong> Where you are assigned to work at a client or
+    venue and that organisation legitimately requires information for site or event
+    accreditation, Kagoma provides the minimum required for that purpose: name,
+    identification information, phone number and relevant address information.</p>
+    <p>The client or venue does not receive unrelated information such as your course
+    results, account information or payment history, unless there is a separate lawful
+    reason to provide it.</p>
+
+    <p><strong>Certificate verification.</strong> Someone verifying a certificate receives
+    only what is necessary to confirm it is genuine: the holder&rsquo;s name, the course,
+    the certificate information and the date of issue.</p>
+    <p>Verification does <strong>not</strong> disclose your email address, phone number,
+    National ID, address, assessment marks or payment information.</p>
+
+    <h2><span>6.</span> Service providers and data processors</h2>
+    <p>Kagoma uses trusted third-party providers &mdash; hosting, email, payment,
+    authentication and technology services &mdash; to operate its services.</p>
+    <p>Where such providers process personal data on Kagoma&rsquo;s behalf, Kagoma takes
+    reasonable steps to ensure they are subject to appropriate confidentiality, security
+    and data-protection obligations.</p>
+
+    <h2><span>7.</span> International transfers</h2>
+    <p>Some technology or service providers used by Kagoma may process or store
+    information outside Rwanda.</p>
+    <p>Where personal data is transferred outside Rwanda, Kagoma takes reasonable steps to
+    ensure the transfer and processing comply with applicable Rwandan data-protection
+    requirements, and that appropriate safeguards are applied where required.</p>
+
+    <h2><span>8.</span> Payment information</h2>
+    <p>Kagoma may retain a payment reference or transaction confirmation where necessary
+    to confirm a payment, issue a certificate, maintain accounting records or comply with
+    applicable tax requirements.</p>
+    <p><strong>Kagoma does not collect or store your card PIN, mobile-money PIN or any
+    other payment authentication credential.</strong></p>
+    <p>Where payment is processed by a third-party provider, that provider&rsquo;s own
+    terms and privacy practices may also apply.</p>
+
+    <h2><span>9.</span> How we protect your data</h2>
+    <p>Kagoma uses reasonable technical and organisational measures designed to protect
+    personal data against unauthorised access, unauthorised disclosure, loss, alteration,
+    misuse and destruction.</p>
+    <p>Access to systems and records is limited according to a person&rsquo;s role and
+    operational need.</p>
+    <p>No internet-based system can be guaranteed completely secure. Kagoma takes
+    reasonable measures to protect the information entrusted to it.</p>
+
+    <h2><span>10.</span> How long we keep your data</h2>
+    <p>Kagoma keeps personal data only for as long as reasonably necessary for the purpose
+    for which it was collected, unless a longer period is required or permitted by law.</p>
+    <table>
+      <tr><th>Account and course information</th><td>While the account remains active, and for any further period reasonably required for operational, legal or dispute-resolution purposes</td></tr>
+      <tr><th>Certificate records</th><td>Retained longer, including after an account is deleted, because a certificate may need to remain verifiable for employment, professional or educational purposes</td></tr>
+      <tr><th>Event accreditation information</th><td>Deleted, returned or otherwise disposed of when no longer required, subject to legal or contractual requirements</td></tr>
+      <tr><th>Payment and accounting records</th><td>For the period required by applicable tax, accounting and financial-record obligations</td></tr>
+    </table>
+
+    <h2><span>11.</span> Your rights</h2>
+    <p>Subject to applicable law and its exceptions, you may:</p>
+    <ul>
+      <li>Ask what personal data Kagoma holds about you</li>
+      <li>Ask for a copy of it</li>
+      <li>Ask for inaccurate or incomplete information to be corrected</li>
+      <li>Ask for deletion where the law allows</li>
+      <li>Object to certain processing</li>
+      <li>Ask for certain processing to be restricted</li>
+      <li>Withdraw consent where processing is based on consent</li>
+      <li>Raise a complaint about how your personal data is handled</li>
+    </ul>
+    <p>Write to <strong>info@kagomaprotection.com</strong>. Kagoma responds within the
+    period required by law, and in any case within <strong>30 days</strong>, subject to
+    lawful extensions or exceptions.</p>
+
+    <h2><span>12.</span> Certificate records and account deletion</h2>
+    <p>Deleting your Kagoma account does not necessarily mean every record connected with
+    it can be deleted.</p>
+    <p>Kagoma may retain a limited certificate record where reasonably necessary to
+    establish that a certificate was genuinely issued and to allow future verification.
+    What is retained is limited to what that purpose requires.</p>
+    <p>You may also ask for your name to be withheld from any public or professional
+    directory operated by Kagoma.</p>
+
+    <h2><span>13.</span> Cookies and similar technologies</h2>
+    <p>The Kagoma website uses limited browser storage necessary to operate the service:
+    whether you are signed in, your selected language, and your light or dark display
+    preference.</p>
+    <p>Kagoma does not use this website for advertising-based behavioural tracking. If
+    that changes, this notice will be updated and any required information or choices
+    provided.</p>
+
+    <h2><span>14.</span> Children</h2>
+    <p>Kagoma&rsquo;s training and account services are intended for adults. Kagoma does
+    not knowingly provide services requiring an adult account to anyone under 18.</p>
+    <p>If you believe Kagoma holds personal data relating to a person under 18 without an
+    appropriate lawful basis, write to <strong>info@kagomaprotection.com</strong>.</p>
+
+    <h2><span>15.</span> Data breaches and security incidents</h2>
+    <p>If Kagoma becomes aware of a personal-data security incident, it assesses the
+    incident and takes appropriate measures in accordance with applicable law, including
+    any required notification to the relevant authority or to affected individuals.</p>
+
+    <h2><span>16.</span> Changes to this Privacy Notice</h2>
+    <p>Kagoma may update this notice to reflect changes in its services, technology, legal
+    requirements or data-processing practices.</p>
+    <p>Where a change materially affects your rights or how your personal data is used,
+    Kagoma provides appropriate notice before it takes effect where required. The latest
+    version is published on this site.</p>
+
+    <h2><span>17.</span> Contact us</h2>
+    <table>
+      <tr><th>KAGOMA PROTECTIONS SERVICES LTD</th><td>Mushumbamwiza, Rwimbogo, Nyarugunga, Kicukiro, Kigali, Rwanda</td></tr>
+      <tr><th>Email</th><td>info@kagomaprotection.com</td></tr>
+    </table>
+  </div>
+
+  <div class="doc-foot">Privacy Notice &mdash; Version 1.1 &middot; Last updated 11 September 2026<br>KAGOMA PROTECTIONS SERVICES LTD, registered in Rwanda &middot; info@kagomaprotection.com<br><br>This notice is a website and business policy. It is not a legal opinion, nor a certification that Kagoma meets every requirement of Law N&deg; 058/2021. It should be reviewed by a data protection officer or legal adviser before Kagoma operates National ID verification, payments, a public certificate directory, or international hosting at scale.</div>
+
+  <footer class="kg-foot">
+    <div class="kg-foot-in">
+    <div class="social" aria-label="Kagoma Protection Services on social media">
+      <a href="#" data-net="linkedin" aria-label="LinkedIn" title="LinkedIn" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.63-1.85 3.36-1.85 3.59 0 4.26 2.36 4.26 5.44v6.3zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.55V9h3.57v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
+      </a>
+      <a href="#" data-net="instagram" aria-label="Instagram" title="Instagram" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.3-1.46.72-2.13 1.38C1.35 2.68.93 3.35.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.38 2.13.67.66 1.34 1.08 2.13 1.38.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.3 1.46-.72 2.13-1.38.66-.67 1.08-1.34 1.38-2.13.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.3-.79-.72-1.46-1.38-2.13C21.32 1.35 20.65.93 19.86.63 19.1.33 18.22.13 16.95.07 15.67.01 15.26 0 12 0zm0 5.84a6.16 6.16 0 1 0 0 12.32 6.16 6.16 0 0 0 0-12.32zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm7.85-10.4a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z"/></svg>
+      </a>
+      <a href="#" data-net="youtube" aria-label="YouTube" title="YouTube" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19C0 8.08 0 12 0 12s0 3.92.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14C24 15.92 24 12 24 12s0-3.92-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg>
+      </a>
+      <a href="#" data-net="facebook" aria-label="Facebook" title="Facebook" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07z"/></svg>
+      </a>
+      <a href="#" data-net="x" aria-label="X" title="X" rel="noopener" target="_blank">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.9 1.15h3.68l-8.04 9.19L24 22.85h-7.41l-5.8-7.58-6.64 7.58H.46l8.6-9.83L0 1.15h7.59l5.24 6.93 6.07-6.93zm-1.29 19.5h2.04L6.49 3.24H4.3l13.31 17.41z"/></svg>
+      </a>
+    </div>
+      <div class="kg-foot-r">&copy; 2026 KAGOMA PROTECTIONS SERVICES LTD</div>
+    </div>
+  </footer>
+</div>
+<script>
+function kgTheme(){ try{ return localStorage.getItem('kg-theme') || 'dark'; }catch(e){ return 'dark'; } }
+function kgApplyTheme(t){
+  document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+  document.querySelectorAll('.kg-theme').forEach(b=>{
+    const light = t === 'light';
+    b.textContent = light ? '\u263D' : '\u2600';          /* moon when light, sun when dark */
+    b.setAttribute('aria-pressed', light ? 'true' : 'false');
+    b.setAttribute('title', light ? 'Switch to dark' : 'Switch to light');
+    b.setAttribute('aria-label', light ? 'Switch to dark' : 'Switch to light');
+  });
+}
+function kgToggleTheme(){
+  const next = kgTheme() === 'light' ? 'dark' : 'light';
+  try{ localStorage.setItem('kg-theme', next); }catch(e){}
+  kgApplyTheme(next);
+}
+kgApplyTheme(kgTheme());
+
+/* ---------------- language ----------------
+   These pages were written in English only. Rather than translate a
+   legal notice line by line in code, each Kinyarwanda string sits
+   beside its English one in the markup, and the switch shows one or
+   the other. A policy has to read correctly in both, so nothing is
+   machine-translated at display time. */
+let lang = (function(){
+  try{ return localStorage.getItem('kg-lang') || 'en'; }catch(e){ return 'en'; }
+})();
+
+function paintLang(){
+  document.querySelectorAll('[data-en]').forEach(function(e){
+    const v = e.getAttribute('data-' + lang);
+    if(v) e.innerHTML = v;
+  });
+  document.querySelectorAll('.rw-only').forEach(function(e){
+    e.style.display = lang === 'rw' ? '' : 'none';
+  });
+  document.querySelectorAll('.en-only').forEach(function(e){
+    e.style.display = lang === 'en' ? '' : 'none';
+  });
+  const b = document.getElementById('langBtn');
+  if(b) b.textContent = lang === 'en' ? 'RW' : 'EN';
+  document.documentElement.lang = lang;
+}
+function toggleLang(){
+  lang = lang === 'en' ? 'rw' : 'en';
+  try{ localStorage.setItem('kg-lang', lang); }catch(e){}
+  paintLang();
+}
+paintLang();
+
+</script>
+</body>
+</html>
