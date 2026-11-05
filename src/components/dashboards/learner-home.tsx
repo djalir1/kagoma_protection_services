@@ -94,7 +94,7 @@ export function LearnerHome() {
                 <img
                   src={courseCover(next.course_id)}
                   alt=""
-                  className="h-full max-h-48 w-full object-cover sm:max-h-none"
+                  className="aspect-video h-full w-full object-cover object-right sm:aspect-auto"
                 />
                 <div className="p-6">
                   <div className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary">
@@ -151,7 +151,7 @@ export function LearnerHome() {
                     <img
                       src={courseCover(e.course_id)}
                       alt=""
-                      className="h-12 w-20 shrink-0 rounded-lg object-cover"
+                      className="h-12 w-20 shrink-0 rounded-lg object-cover object-right"
                     />
                     <div className="min-w-0 flex-1">
                       <div className="truncate text-sm font-semibold">{e.courses?.title}</div>
