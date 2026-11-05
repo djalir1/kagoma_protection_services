@@ -12,10 +12,50 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as CareersRouteImport } from './routes/careers'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as FaqRouteImport } from './routes/faq'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as IndustriesRouteImport } from './routes/industries'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ServicesRouteImport } from './routes/services'
-import { Route as TrainingRouteImport } from './routes/training'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as VerifyRouteImport } from './routes/verify'
+import { Route as CertificateRefRouteImport } from './routes/certificate.$ref'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as DashboardAccountRouteImport } from './routes/dashboard/account'
+import { Route as DashboardApplicationsRouteImport } from './routes/dashboard/applications'
+import { Route as DashboardCareerRouteImport } from './routes/dashboard/career'
+import { Route as DashboardCatalogRouteImport } from './routes/dashboard/catalog'
+import { Route as DashboardCertificatesRouteImport } from './routes/dashboard/certificates'
+import { Route as DashboardClientsRouteImport } from './routes/dashboard/clients'
+import { Route as DashboardDataRouteImport } from './routes/dashboard/data'
+import { Route as DashboardJobsRouteImport } from './routes/dashboard/jobs'
+import { Route as DashboardLearningRouteImport } from './routes/dashboard/learning'
+import { Route as DashboardMessagesRouteImport } from './routes/dashboard/messages'
+import { Route as DashboardPaymentsRouteImport } from './routes/dashboard/payments'
+import { Route as DashboardPoolRouteImport } from './routes/dashboard/pool'
+import { Route as DashboardPracticalRouteImport } from './routes/dashboard/practical'
+import { Route as DashboardRecruitmentRouteImport } from './routes/dashboard/recruitment'
+import { Route as DashboardReportsRouteImport } from './routes/dashboard/reports'
+import { Route as DashboardRequestsRouteImport } from './routes/dashboard/requests'
+import { Route as DashboardSettingsRouteImport } from './routes/dashboard/settings'
+import { Route as DashboardTalentRouteImport } from './routes/dashboard/talent'
+import { Route as DashboardTeamRouteImport } from './routes/dashboard/team'
+import { Route as DashboardTranslationsRouteImport } from './routes/dashboard/translations'
+import { Route as DashboardVettingRouteImport } from './routes/dashboard/vetting'
+import { Route as JoinTokenRouteImport } from './routes/join.$token'
+import { Route as TrainingIndexRouteImport } from './routes/training.index'
+import { Route as TrainingCourseIdRouteImport } from './routes/training.$courseId'
+import { Route as DashboardDocumentsIndexRouteImport } from './routes/dashboard/documents.index'
+import { Route as DashboardDocumentsDocIdRouteImport } from './routes/dashboard/documents.$docId'
+import { Route as DashboardEventsIndexRouteImport } from './routes/dashboard/events.index'
+import { Route as DashboardEventsEventIdRouteImport } from './routes/dashboard/events.$eventId'
+import { Route as DashboardLearnCourseIdRouteImport } from './routes/dashboard/learn.$courseId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -32,9 +72,29 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CareersRoute = CareersRouteImport.update({
+  id: '/careers',
+  path: '/careers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndustriesRoute = IndustriesRouteImport.update({
@@ -42,44 +102,343 @@ const IndustriesRoute = IndustriesRouteImport.update({
   path: '/industries',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TrainingRoute = TrainingRouteImport.update({
-  id: '/training',
-  path: '/training',
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
   getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VerifyRoute = VerifyRouteImport.update({
+  id: '/verify',
+  path: '/verify',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CertificateRefRoute = CertificateRefRouteImport.update({
+  id: '/certificate/$ref',
+  path: '/certificate/$ref',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAccountRoute = DashboardAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardApplicationsRoute = DashboardApplicationsRouteImport.update({
+  id: '/applications',
+  path: '/applications',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardCareerRoute = DashboardCareerRouteImport.update({
+  id: '/career',
+  path: '/career',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardCatalogRoute = DashboardCatalogRouteImport.update({
+  id: '/catalog',
+  path: '/catalog',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardCertificatesRoute = DashboardCertificatesRouteImport.update({
+  id: '/certificates',
+  path: '/certificates',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardClientsRoute = DashboardClientsRouteImport.update({
+  id: '/clients',
+  path: '/clients',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardDataRoute = DashboardDataRouteImport.update({
+  id: '/data',
+  path: '/data',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardJobsRoute = DashboardJobsRouteImport.update({
+  id: '/jobs',
+  path: '/jobs',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardLearningRoute = DashboardLearningRouteImport.update({
+  id: '/learning',
+  path: '/learning',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardMessagesRoute = DashboardMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardPaymentsRoute = DashboardPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardPoolRoute = DashboardPoolRouteImport.update({
+  id: '/pool',
+  path: '/pool',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardPracticalRoute = DashboardPracticalRouteImport.update({
+  id: '/practical',
+  path: '/practical',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardRecruitmentRoute = DashboardRecruitmentRouteImport.update({
+  id: '/recruitment',
+  path: '/recruitment',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardReportsRoute = DashboardReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardRequestsRoute = DashboardRequestsRouteImport.update({
+  id: '/requests',
+  path: '/requests',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardTalentRoute = DashboardTalentRouteImport.update({
+  id: '/talent',
+  path: '/talent',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardTeamRoute = DashboardTeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardTranslationsRoute = DashboardTranslationsRouteImport.update({
+  id: '/translations',
+  path: '/translations',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardVettingRoute = DashboardVettingRouteImport.update({
+  id: '/vetting',
+  path: '/vetting',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const JoinTokenRoute = JoinTokenRouteImport.update({
+  id: '/join/$token',
+  path: '/join/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrainingIndexRoute = TrainingIndexRouteImport.update({
+  id: '/training/',
+  path: '/training/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrainingCourseIdRoute = TrainingCourseIdRouteImport.update({
+  id: '/training/$courseId',
+  path: '/training/$courseId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardDocumentsIndexRoute = DashboardDocumentsIndexRouteImport.update({
+  id: '/documents/',
+  path: '/documents/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardDocumentsDocIdRoute = DashboardDocumentsDocIdRouteImport.update({
+  id: '/documents/$docId',
+  path: '/documents/$docId',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardEventsIndexRoute = DashboardEventsIndexRouteImport.update({
+  id: '/events/',
+  path: '/events/',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardEventsEventIdRoute = DashboardEventsEventIdRouteImport.update({
+  id: '/events/$eventId',
+  path: '/events/$eventId',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardLearnCourseIdRoute = DashboardLearnCourseIdRouteImport.update({
+  id: '/learn/$courseId',
+  path: '/learn/$courseId',
+  getParentRoute: () => DashboardRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
+  '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
+  '/dashboard': typeof DashboardRouteWithChildren
+  '/faq': typeof FaqRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/industries': typeof IndustriesRoute
+  '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/services': typeof ServicesRoute
-  '/training': typeof TrainingRoute
+  '/signup': typeof SignupRoute
+  '/terms': typeof TermsRoute
+  '/verify': typeof VerifyRoute
+  '/certificate/$ref': typeof CertificateRefRoute
+  '/dashboard/account': typeof DashboardAccountRoute
+  '/dashboard/applications': typeof DashboardApplicationsRoute
+  '/dashboard/career': typeof DashboardCareerRoute
+  '/dashboard/catalog': typeof DashboardCatalogRoute
+  '/dashboard/certificates': typeof DashboardCertificatesRoute
+  '/dashboard/clients': typeof DashboardClientsRoute
+  '/dashboard/data': typeof DashboardDataRoute
+  '/dashboard/jobs': typeof DashboardJobsRoute
+  '/dashboard/learning': typeof DashboardLearningRoute
+  '/dashboard/messages': typeof DashboardMessagesRoute
+  '/dashboard/payments': typeof DashboardPaymentsRoute
+  '/dashboard/pool': typeof DashboardPoolRoute
+  '/dashboard/practical': typeof DashboardPracticalRoute
+  '/dashboard/recruitment': typeof DashboardRecruitmentRoute
+  '/dashboard/reports': typeof DashboardReportsRoute
+  '/dashboard/requests': typeof DashboardRequestsRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
+  '/dashboard/talent': typeof DashboardTalentRoute
+  '/dashboard/team': typeof DashboardTeamRoute
+  '/dashboard/translations': typeof DashboardTranslationsRoute
+  '/dashboard/vetting': typeof DashboardVettingRoute
+  '/join/$token': typeof JoinTokenRoute
+  '/training/$courseId': typeof TrainingCourseIdRoute
+  '/dashboard/': typeof DashboardIndexRoute
+  '/training/': typeof TrainingIndexRoute
+  '/dashboard/documents/$docId': typeof DashboardDocumentsDocIdRoute
+  '/dashboard/events/$eventId': typeof DashboardEventsEventIdRoute
+  '/dashboard/learn/$courseId': typeof DashboardLearnCourseIdRoute
+  '/dashboard/documents/': typeof DashboardDocumentsIndexRoute
+  '/dashboard/events/': typeof DashboardEventsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
+  '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
+  '/faq': typeof FaqRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/industries': typeof IndustriesRoute
+  '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/services': typeof ServicesRoute
-  '/training': typeof TrainingRoute
+  '/signup': typeof SignupRoute
+  '/terms': typeof TermsRoute
+  '/verify': typeof VerifyRoute
+  '/certificate/$ref': typeof CertificateRefRoute
+  '/dashboard/account': typeof DashboardAccountRoute
+  '/dashboard/applications': typeof DashboardApplicationsRoute
+  '/dashboard/career': typeof DashboardCareerRoute
+  '/dashboard/catalog': typeof DashboardCatalogRoute
+  '/dashboard/certificates': typeof DashboardCertificatesRoute
+  '/dashboard/clients': typeof DashboardClientsRoute
+  '/dashboard/data': typeof DashboardDataRoute
+  '/dashboard/jobs': typeof DashboardJobsRoute
+  '/dashboard/learning': typeof DashboardLearningRoute
+  '/dashboard/messages': typeof DashboardMessagesRoute
+  '/dashboard/payments': typeof DashboardPaymentsRoute
+  '/dashboard/pool': typeof DashboardPoolRoute
+  '/dashboard/practical': typeof DashboardPracticalRoute
+  '/dashboard/recruitment': typeof DashboardRecruitmentRoute
+  '/dashboard/reports': typeof DashboardReportsRoute
+  '/dashboard/requests': typeof DashboardRequestsRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
+  '/dashboard/talent': typeof DashboardTalentRoute
+  '/dashboard/team': typeof DashboardTeamRoute
+  '/dashboard/translations': typeof DashboardTranslationsRoute
+  '/dashboard/vetting': typeof DashboardVettingRoute
+  '/join/$token': typeof JoinTokenRoute
+  '/training/$courseId': typeof TrainingCourseIdRoute
+  '/dashboard': typeof DashboardIndexRoute
+  '/training': typeof TrainingIndexRoute
+  '/dashboard/documents/$docId': typeof DashboardDocumentsDocIdRoute
+  '/dashboard/events/$eventId': typeof DashboardEventsEventIdRoute
+  '/dashboard/learn/$courseId': typeof DashboardLearnCourseIdRoute
+  '/dashboard/documents': typeof DashboardDocumentsIndexRoute
+  '/dashboard/events': typeof DashboardEventsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRoute
+  '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
+  '/dashboard': typeof DashboardRouteWithChildren
+  '/faq': typeof FaqRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/industries': typeof IndustriesRoute
+  '/login': typeof LoginRoute
+  '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/services': typeof ServicesRoute
-  '/training': typeof TrainingRoute
+  '/signup': typeof SignupRoute
+  '/terms': typeof TermsRoute
+  '/verify': typeof VerifyRoute
+  '/certificate/$ref': typeof CertificateRefRoute
+  '/dashboard/account': typeof DashboardAccountRoute
+  '/dashboard/applications': typeof DashboardApplicationsRoute
+  '/dashboard/career': typeof DashboardCareerRoute
+  '/dashboard/catalog': typeof DashboardCatalogRoute
+  '/dashboard/certificates': typeof DashboardCertificatesRoute
+  '/dashboard/clients': typeof DashboardClientsRoute
+  '/dashboard/data': typeof DashboardDataRoute
+  '/dashboard/jobs': typeof DashboardJobsRoute
+  '/dashboard/learning': typeof DashboardLearningRoute
+  '/dashboard/messages': typeof DashboardMessagesRoute
+  '/dashboard/payments': typeof DashboardPaymentsRoute
+  '/dashboard/pool': typeof DashboardPoolRoute
+  '/dashboard/practical': typeof DashboardPracticalRoute
+  '/dashboard/recruitment': typeof DashboardRecruitmentRoute
+  '/dashboard/reports': typeof DashboardReportsRoute
+  '/dashboard/requests': typeof DashboardRequestsRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
+  '/dashboard/talent': typeof DashboardTalentRoute
+  '/dashboard/team': typeof DashboardTeamRoute
+  '/dashboard/translations': typeof DashboardTranslationsRoute
+  '/dashboard/vetting': typeof DashboardVettingRoute
+  '/join/$token': typeof JoinTokenRoute
+  '/training/$courseId': typeof TrainingCourseIdRoute
+  '/dashboard/': typeof DashboardIndexRoute
+  '/training/': typeof TrainingIndexRoute
+  '/dashboard/documents/$docId': typeof DashboardDocumentsDocIdRoute
+  '/dashboard/events/$eventId': typeof DashboardEventsEventIdRoute
+  '/dashboard/learn/$courseId': typeof DashboardLearnCourseIdRoute
+  '/dashboard/documents/': typeof DashboardDocumentsIndexRoute
+  '/dashboard/events/': typeof DashboardEventsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -87,38 +446,170 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/admin'
+    | '/careers'
     | '/contact'
+    | '/dashboard'
+    | '/faq'
+    | '/forgot-password'
     | '/industries'
+    | '/login'
+    | '/privacy'
+    | '/reset-password'
     | '/services'
-    | '/training'
+    | '/signup'
+    | '/terms'
+    | '/verify'
+    | '/certificate/$ref'
+    | '/dashboard/account'
+    | '/dashboard/applications'
+    | '/dashboard/career'
+    | '/dashboard/catalog'
+    | '/dashboard/certificates'
+    | '/dashboard/clients'
+    | '/dashboard/data'
+    | '/dashboard/jobs'
+    | '/dashboard/learning'
+    | '/dashboard/messages'
+    | '/dashboard/payments'
+    | '/dashboard/pool'
+    | '/dashboard/practical'
+    | '/dashboard/recruitment'
+    | '/dashboard/reports'
+    | '/dashboard/requests'
+    | '/dashboard/settings'
+    | '/dashboard/talent'
+    | '/dashboard/team'
+    | '/dashboard/translations'
+    | '/dashboard/vetting'
+    | '/join/$token'
+    | '/training/$courseId'
+    | '/dashboard/'
+    | '/training/'
+    | '/dashboard/documents/$docId'
+    | '/dashboard/events/$eventId'
+    | '/dashboard/learn/$courseId'
+    | '/dashboard/documents/'
+    | '/dashboard/events/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/admin'
+    | '/careers'
     | '/contact'
+    | '/faq'
+    | '/forgot-password'
     | '/industries'
+    | '/login'
+    | '/privacy'
+    | '/reset-password'
     | '/services'
+    | '/signup'
+    | '/terms'
+    | '/verify'
+    | '/certificate/$ref'
+    | '/dashboard/account'
+    | '/dashboard/applications'
+    | '/dashboard/career'
+    | '/dashboard/catalog'
+    | '/dashboard/certificates'
+    | '/dashboard/clients'
+    | '/dashboard/data'
+    | '/dashboard/jobs'
+    | '/dashboard/learning'
+    | '/dashboard/messages'
+    | '/dashboard/payments'
+    | '/dashboard/pool'
+    | '/dashboard/practical'
+    | '/dashboard/recruitment'
+    | '/dashboard/reports'
+    | '/dashboard/requests'
+    | '/dashboard/settings'
+    | '/dashboard/talent'
+    | '/dashboard/team'
+    | '/dashboard/translations'
+    | '/dashboard/vetting'
+    | '/join/$token'
+    | '/training/$courseId'
+    | '/dashboard'
     | '/training'
+    | '/dashboard/documents/$docId'
+    | '/dashboard/events/$eventId'
+    | '/dashboard/learn/$courseId'
+    | '/dashboard/documents'
+    | '/dashboard/events'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/admin'
+    | '/careers'
     | '/contact'
+    | '/dashboard'
+    | '/faq'
+    | '/forgot-password'
     | '/industries'
+    | '/login'
+    | '/privacy'
+    | '/reset-password'
     | '/services'
-    | '/training'
+    | '/signup'
+    | '/terms'
+    | '/verify'
+    | '/certificate/$ref'
+    | '/dashboard/account'
+    | '/dashboard/applications'
+    | '/dashboard/career'
+    | '/dashboard/catalog'
+    | '/dashboard/certificates'
+    | '/dashboard/clients'
+    | '/dashboard/data'
+    | '/dashboard/jobs'
+    | '/dashboard/learning'
+    | '/dashboard/messages'
+    | '/dashboard/payments'
+    | '/dashboard/pool'
+    | '/dashboard/practical'
+    | '/dashboard/recruitment'
+    | '/dashboard/reports'
+    | '/dashboard/requests'
+    | '/dashboard/settings'
+    | '/dashboard/talent'
+    | '/dashboard/team'
+    | '/dashboard/translations'
+    | '/dashboard/vetting'
+    | '/join/$token'
+    | '/training/$courseId'
+    | '/dashboard/'
+    | '/training/'
+    | '/dashboard/documents/$docId'
+    | '/dashboard/events/$eventId'
+    | '/dashboard/learn/$courseId'
+    | '/dashboard/documents/'
+    | '/dashboard/events/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRoute
+  CareersRoute: typeof CareersRoute
   ContactRoute: typeof ContactRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
+  FaqRoute: typeof FaqRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   IndustriesRoute: typeof IndustriesRoute
+  LoginRoute: typeof LoginRoute
+  PrivacyRoute: typeof PrivacyRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   ServicesRoute: typeof ServicesRoute
-  TrainingRoute: typeof TrainingRoute
+  SignupRoute: typeof SignupRoute
+  TermsRoute: typeof TermsRoute
+  VerifyRoute: typeof VerifyRoute
+  CertificateRefRoute: typeof CertificateRefRoute
+  JoinTokenRoute: typeof JoinTokenRoute
+  TrainingCourseIdRoute: typeof TrainingCourseIdRoute
+  TrainingIndexRoute: typeof TrainingIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -144,11 +635,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/careers': {
+      id: '/careers'
+      path: '/careers'
+      fullPath: '/careers'
+      preLoaderRoute: typeof CareersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/industries': {
@@ -158,6 +677,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndustriesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services': {
       id: '/services'
       path: '/services'
@@ -165,24 +705,332 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ServicesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/training': {
-      id: '/training'
-      path: '/training'
-      fullPath: '/training'
-      preLoaderRoute: typeof TrainingRouteImport
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/verify': {
+      id: '/verify'
+      path: '/verify'
+      fullPath: '/verify'
+      preLoaderRoute: typeof VerifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/certificate/$ref': {
+      id: '/certificate/$ref'
+      path: '/certificate/$ref'
+      fullPath: '/certificate/$ref'
+      preLoaderRoute: typeof CertificateRefRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/account': {
+      id: '/dashboard/account'
+      path: '/account'
+      fullPath: '/dashboard/account'
+      preLoaderRoute: typeof DashboardAccountRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/applications': {
+      id: '/dashboard/applications'
+      path: '/applications'
+      fullPath: '/dashboard/applications'
+      preLoaderRoute: typeof DashboardApplicationsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/career': {
+      id: '/dashboard/career'
+      path: '/career'
+      fullPath: '/dashboard/career'
+      preLoaderRoute: typeof DashboardCareerRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/catalog': {
+      id: '/dashboard/catalog'
+      path: '/catalog'
+      fullPath: '/dashboard/catalog'
+      preLoaderRoute: typeof DashboardCatalogRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/certificates': {
+      id: '/dashboard/certificates'
+      path: '/certificates'
+      fullPath: '/dashboard/certificates'
+      preLoaderRoute: typeof DashboardCertificatesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/clients': {
+      id: '/dashboard/clients'
+      path: '/clients'
+      fullPath: '/dashboard/clients'
+      preLoaderRoute: typeof DashboardClientsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/data': {
+      id: '/dashboard/data'
+      path: '/data'
+      fullPath: '/dashboard/data'
+      preLoaderRoute: typeof DashboardDataRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/jobs': {
+      id: '/dashboard/jobs'
+      path: '/jobs'
+      fullPath: '/dashboard/jobs'
+      preLoaderRoute: typeof DashboardJobsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/learning': {
+      id: '/dashboard/learning'
+      path: '/learning'
+      fullPath: '/dashboard/learning'
+      preLoaderRoute: typeof DashboardLearningRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/messages': {
+      id: '/dashboard/messages'
+      path: '/messages'
+      fullPath: '/dashboard/messages'
+      preLoaderRoute: typeof DashboardMessagesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/payments': {
+      id: '/dashboard/payments'
+      path: '/payments'
+      fullPath: '/dashboard/payments'
+      preLoaderRoute: typeof DashboardPaymentsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/pool': {
+      id: '/dashboard/pool'
+      path: '/pool'
+      fullPath: '/dashboard/pool'
+      preLoaderRoute: typeof DashboardPoolRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/practical': {
+      id: '/dashboard/practical'
+      path: '/practical'
+      fullPath: '/dashboard/practical'
+      preLoaderRoute: typeof DashboardPracticalRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/recruitment': {
+      id: '/dashboard/recruitment'
+      path: '/recruitment'
+      fullPath: '/dashboard/recruitment'
+      preLoaderRoute: typeof DashboardRecruitmentRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/reports': {
+      id: '/dashboard/reports'
+      path: '/reports'
+      fullPath: '/dashboard/reports'
+      preLoaderRoute: typeof DashboardReportsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/requests': {
+      id: '/dashboard/requests'
+      path: '/requests'
+      fullPath: '/dashboard/requests'
+      preLoaderRoute: typeof DashboardRequestsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/settings': {
+      id: '/dashboard/settings'
+      path: '/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof DashboardSettingsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/talent': {
+      id: '/dashboard/talent'
+      path: '/talent'
+      fullPath: '/dashboard/talent'
+      preLoaderRoute: typeof DashboardTalentRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/team': {
+      id: '/dashboard/team'
+      path: '/team'
+      fullPath: '/dashboard/team'
+      preLoaderRoute: typeof DashboardTeamRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/translations': {
+      id: '/dashboard/translations'
+      path: '/translations'
+      fullPath: '/dashboard/translations'
+      preLoaderRoute: typeof DashboardTranslationsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/vetting': {
+      id: '/dashboard/vetting'
+      path: '/vetting'
+      fullPath: '/dashboard/vetting'
+      preLoaderRoute: typeof DashboardVettingRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/join/$token': {
+      id: '/join/$token'
+      path: '/join/$token'
+      fullPath: '/join/$token'
+      preLoaderRoute: typeof JoinTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/training/': {
+      id: '/training/'
+      path: '/training'
+      fullPath: '/training/'
+      preLoaderRoute: typeof TrainingIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/training/$courseId': {
+      id: '/training/$courseId'
+      path: '/training/$courseId'
+      fullPath: '/training/$courseId'
+      preLoaderRoute: typeof TrainingCourseIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/documents/': {
+      id: '/dashboard/documents/'
+      path: '/documents'
+      fullPath: '/dashboard/documents/'
+      preLoaderRoute: typeof DashboardDocumentsIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/documents/$docId': {
+      id: '/dashboard/documents/$docId'
+      path: '/documents/$docId'
+      fullPath: '/dashboard/documents/$docId'
+      preLoaderRoute: typeof DashboardDocumentsDocIdRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/events/': {
+      id: '/dashboard/events/'
+      path: '/events'
+      fullPath: '/dashboard/events/'
+      preLoaderRoute: typeof DashboardEventsIndexRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/events/$eventId': {
+      id: '/dashboard/events/$eventId'
+      path: '/events/$eventId'
+      fullPath: '/dashboard/events/$eventId'
+      preLoaderRoute: typeof DashboardEventsEventIdRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/learn/$courseId': {
+      id: '/dashboard/learn/$courseId'
+      path: '/learn/$courseId'
+      fullPath: '/dashboard/learn/$courseId'
+      preLoaderRoute: typeof DashboardLearnCourseIdRouteImport
+      parentRoute: typeof DashboardRoute
     }
   }
 }
+
+interface DashboardRouteChildren {
+  DashboardAccountRoute: typeof DashboardAccountRoute
+  DashboardApplicationsRoute: typeof DashboardApplicationsRoute
+  DashboardCareerRoute: typeof DashboardCareerRoute
+  DashboardCatalogRoute: typeof DashboardCatalogRoute
+  DashboardCertificatesRoute: typeof DashboardCertificatesRoute
+  DashboardClientsRoute: typeof DashboardClientsRoute
+  DashboardDataRoute: typeof DashboardDataRoute
+  DashboardJobsRoute: typeof DashboardJobsRoute
+  DashboardLearningRoute: typeof DashboardLearningRoute
+  DashboardMessagesRoute: typeof DashboardMessagesRoute
+  DashboardPaymentsRoute: typeof DashboardPaymentsRoute
+  DashboardPoolRoute: typeof DashboardPoolRoute
+  DashboardPracticalRoute: typeof DashboardPracticalRoute
+  DashboardRecruitmentRoute: typeof DashboardRecruitmentRoute
+  DashboardReportsRoute: typeof DashboardReportsRoute
+  DashboardRequestsRoute: typeof DashboardRequestsRoute
+  DashboardSettingsRoute: typeof DashboardSettingsRoute
+  DashboardTalentRoute: typeof DashboardTalentRoute
+  DashboardTeamRoute: typeof DashboardTeamRoute
+  DashboardTranslationsRoute: typeof DashboardTranslationsRoute
+  DashboardVettingRoute: typeof DashboardVettingRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardDocumentsDocIdRoute: typeof DashboardDocumentsDocIdRoute
+  DashboardEventsEventIdRoute: typeof DashboardEventsEventIdRoute
+  DashboardLearnCourseIdRoute: typeof DashboardLearnCourseIdRoute
+  DashboardDocumentsIndexRoute: typeof DashboardDocumentsIndexRoute
+  DashboardEventsIndexRoute: typeof DashboardEventsIndexRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardAccountRoute: DashboardAccountRoute,
+  DashboardApplicationsRoute: DashboardApplicationsRoute,
+  DashboardCareerRoute: DashboardCareerRoute,
+  DashboardCatalogRoute: DashboardCatalogRoute,
+  DashboardCertificatesRoute: DashboardCertificatesRoute,
+  DashboardClientsRoute: DashboardClientsRoute,
+  DashboardDataRoute: DashboardDataRoute,
+  DashboardJobsRoute: DashboardJobsRoute,
+  DashboardLearningRoute: DashboardLearningRoute,
+  DashboardMessagesRoute: DashboardMessagesRoute,
+  DashboardPaymentsRoute: DashboardPaymentsRoute,
+  DashboardPoolRoute: DashboardPoolRoute,
+  DashboardPracticalRoute: DashboardPracticalRoute,
+  DashboardRecruitmentRoute: DashboardRecruitmentRoute,
+  DashboardReportsRoute: DashboardReportsRoute,
+  DashboardRequestsRoute: DashboardRequestsRoute,
+  DashboardSettingsRoute: DashboardSettingsRoute,
+  DashboardTalentRoute: DashboardTalentRoute,
+  DashboardTeamRoute: DashboardTeamRoute,
+  DashboardTranslationsRoute: DashboardTranslationsRoute,
+  DashboardVettingRoute: DashboardVettingRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
+  DashboardDocumentsDocIdRoute: DashboardDocumentsDocIdRoute,
+  DashboardEventsEventIdRoute: DashboardEventsEventIdRoute,
+  DashboardLearnCourseIdRoute: DashboardLearnCourseIdRoute,
+  DashboardDocumentsIndexRoute: DashboardDocumentsIndexRoute,
+  DashboardEventsIndexRoute: DashboardEventsIndexRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AdminRoute: AdminRoute,
+  CareersRoute: CareersRoute,
   ContactRoute: ContactRoute,
+  DashboardRoute: DashboardRouteWithChildren,
+  FaqRoute: FaqRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   IndustriesRoute: IndustriesRoute,
+  LoginRoute: LoginRoute,
+  PrivacyRoute: PrivacyRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   ServicesRoute: ServicesRoute,
-  TrainingRoute: TrainingRoute,
+  SignupRoute: SignupRoute,
+  TermsRoute: TermsRoute,
+  VerifyRoute: VerifyRoute,
+  CertificateRefRoute: CertificateRefRoute,
+  JoinTokenRoute: JoinTokenRoute,
+  TrainingCourseIdRoute: TrainingCourseIdRoute,
+  TrainingIndexRoute: TrainingIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

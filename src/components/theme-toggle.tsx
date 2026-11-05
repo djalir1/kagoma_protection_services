@@ -38,11 +38,7 @@ export function ThemeToggle({ className }: { className?: string }) {
         className,
       )}
     >
-      {mounted && theme === "dark" ? (
-        <Sun className="h-4 w-4" />
-      ) : (
-        <Moon className="h-4 w-4" />
-      )}
+      {mounted && theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
     </button>
   );
 }

@@ -14,6 +14,19 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/lib/auth";
+
+// Pages that bring their own layout (no public header and footer).
+const APP_PREFIXES = [
+  "/dashboard",
+  "/login",
+  "/signup",
+  "/forgot-password",
+  "/reset-password",
+  "/certificate",
+  "/admin",
+];
 
 function NotFoundComponent() {
   return (
@@ -107,7 +120,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700;800&display=swap",
       },
     ],
   }),
@@ -134,24 +147,24 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-
-  if (pathname.startsWith("/admin")) {
-    return (
-      <QueryClientProvider client={queryClient}>
-        <Outlet />
-      </QueryClientProvider>
-    );
-  }
+  const bare = APP_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen flex-col bg-background text-foreground">
-        <SiteHeader />
-        <main className="flex-1">
+      <AuthProvider>
+        {bare ? (
           <Outlet />
-        </main>
-        <SiteFooter />
-      </div>
+        ) : (
+          <div className="flex min-h-screen flex-col bg-background text-foreground">
+            <SiteHeader />
+            <main className="flex-1">
+              <Outlet />
+            </main>
+            <SiteFooter />
+            <Toaster richColors position="top-right" />
+          </div>
+        )}
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

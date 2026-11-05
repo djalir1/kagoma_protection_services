@@ -21,12 +21,8 @@ export function PageHero({
             {eyebrow}
           </div>
         )}
-        <h1 className="mt-4 max-w-4xl text-5xl font-bold leading-[1.05] md:text-7xl">
-          {title}
-        </h1>
-        {subtitle && (
-          <p className="mt-6 max-w-2xl text-lg text-muted-foreground">{subtitle}</p>
-        )}
+        <h1 className="mt-4 max-w-4xl text-5xl font-bold leading-[1.05] md:text-7xl">{title}</h1>
+        {subtitle && <p className="mt-6 max-w-2xl text-lg text-muted-foreground">{subtitle}</p>}
         {children && <div className="mt-8">{children}</div>}
       </div>
     </section>

@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Mail, MapPin, Phone, CheckCircle2, Clock } from "lucide-react";
 import { PageHero } from "@/components/page-hero";
-import { Mail, MapPin, Phone, Send, CheckCircle2, Clock } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/lib/auth";
+import { RequestForm } from "@/routes/dashboard/requests";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -11,19 +12,30 @@ export const Route = createFileRoute("/contact")({
       {
         name: "description",
         content:
-          "Get in touch with Kagoma Protection Services for event security, consultancy, and training.",
+          "Request event security, a risk assessment or corporate training from Kagoma Protection Services.",
       },
       { property: "og:title", content: "Contact Kagoma Protection Services" },
-      { property: "og:description", content: "Book a consultation or request a proposal." },
     ],
   }),
   component: ContactPage,
 });
 
+const CONTACTS = [
+  { icon: Phone, title: "Phone", value: "+250 788 225 262", href: "tel:+250788225262" },
+  { icon: Phone, title: "Operations", value: "+250 798 005 444", href: "tel:+250798005444" },
+  {
+    icon: Mail,
+    title: "Email",
+    value: "info@kagomaprotection.com",
+    href: "mailto:info@kagomaprotection.com",
+  },
+  { icon: MapPin, title: "Office", value: "Nyarugunga, Kicukiro, Kigali, Rwanda" },
+  { icon: Clock, title: "Operations desk", value: "24/7 · Ready for deployment" },
+];
+
 function ContactPage() {
+  const { session, user } = useAuth();
   const [sent, setSent] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
 
   return (
     <>
@@ -34,27 +46,21 @@ function ContactPage() {
             Let's plan your <span className="text-gradient-gold">operation.</span>
           </>
         }
-        subtitle="Tell us about your event or requirement. Our team will respond within 24 hours with next steps."
+        subtitle="Tell us about your event or requirement. Our team responds within 24 hours with next steps."
       />
-
-      <section className="mx-auto grid max-w-7xl gap-10 px-4 pb-24 md:px-8 lg:grid-cols-[1fr_1.3fr]">
+      <section className="mx-auto grid max-w-7xl gap-10 px-4 pb-24 md:px-8 lg:grid-cols-[1fr_1.4fr]">
         <div className="space-y-4">
-          {[
-            { icon: Phone, title: "Phone", value: "+250 · Available 24/7", href: "tel:+250" },
-            { icon: Mail, title: "Email", value: "info@kagoma.rw", href: "mailto:info@kagoma.rw" },
-            { icon: MapPin, title: "Head Office", value: "Kigali, Rwanda" },
-            { icon: Clock, title: "Operations", value: "24/7 · Ready for deployment" },
-          ].map(({ icon: Icon, title, value, href }) => {
+          {CONTACTS.map(({ icon: Icon, title, value, href }) => {
             const content = (
               <>
-                <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
                   <Icon className="h-5 w-5" />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <div className="text-xs uppercase tracking-widest text-muted-foreground">
                     {title}
                   </div>
-                  <div className="mt-1 font-semibold">{value}</div>
+                  <div className="mt-1 break-words font-semibold">{value}</div>
                 </div>
               </>
             );
@@ -70,117 +76,51 @@ function ContactPage() {
               </div>
             );
           })}
+          {!session && (
+            <p className="rounded-2xl border border-dashed border-border p-5 text-sm text-muted-foreground">
+              <Link to="/signup" search={{ type: "client" }} className="font-semibold text-primary">
+                Create a client account
+              </Link>{" "}
+              to follow your request through assessment, quotation and deployment, and accept
+              quotations online.
+            </p>
+          )}
         </div>
 
-        <form
-          onSubmit={async (e) => {
-            e.preventDefault();
-            const f = new FormData(e.currentTarget);
-            const v = (k: string) => String(f.get(k) ?? "").trim() || null;
-            setBusy(true);
-            setError("");
-            const { error } = await supabase.from("service_requests").insert({
-              client_name: v("name"),
-              email: v("email"),
-              phone: v("phone"),
-              event_type: v("type"),
-              event_date: v("date"),
-              details: [v("org") && `Organization: ${v("org")}`, v("message")]
-                .filter(Boolean)
-                .join("\n\n"),
-            });
-            setBusy(false);
-            if (error) setError("We could not send your request. Please call or email us instead.");
-            else setSent(true);
-          }}
-          className="rounded-2xl border border-border bg-card p-8"
-        >
+        <div className="rounded-2xl border border-border bg-card p-6 md:p-8">
           {sent ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/15 text-primary">
                 <CheckCircle2 className="h-8 w-8" />
               </div>
-              <h3 className="mt-6 font-display text-2xl font-bold">Message received</h3>
+              <h3 className="mt-6 font-display text-2xl font-bold">Request received</h3>
               <p className="mt-2 max-w-sm text-muted-foreground">
-                Thank you. Our team will get back to you within 24 hours to discuss next steps.
+                Thank you. Our team will contact you within 24 hours.
               </p>
+              {session && (
+                <Link
+                  to="/dashboard/requests"
+                  className="mt-6 rounded-full bg-primary px-6 py-2.5 text-sm font-bold uppercase tracking-widest text-primary-foreground"
+                >
+                  Track it in your dashboard
+                </Link>
+              )}
             </div>
           ) : (
             <>
-              <h2 className="font-display text-2xl font-bold">Request a consultation</h2>
+              <h2 className="font-display text-2xl font-bold">
+                Request security or a consultation
+              </h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                We treat every enquiry with discretion and professionalism.
+                Every enquiry is treated with discretion.
               </p>
-
-              <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                <Field label="Full name" name="name" required />
-                <Field label="Organization" name="org" />
-                <Field label="Email" type="email" name="email" required />
-                <Field label="Phone" name="phone" />
-                <Field
-                  label="Event / Engagement type"
-                  name="type"
-                  placeholder="Concert, corporate, private, consultancy..."
-                />
-                <Field label="Preferred date" type="date" name="date" />
+              <div className="mt-6">
+                <RequestForm requestedBy={user?.id} onDone={() => setSent(true)} />
               </div>
-
-              <div className="mt-4">
-                <label className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-                  Tell us about your requirements
-                </label>
-                <textarea
-                  name="message"
-                  rows={5}
-                  required
-                  className="mt-2 w-full rounded-lg border border-border bg-background/60 p-3 text-sm outline-none focus:border-primary"
-                  placeholder="Venue, expected attendance, dates, specific concerns..."
-                />
-              </div>
-
-              {error && <p className="mt-4 text-sm text-destructive">{error}</p>}
-
-              <button
-                type="submit"
-                disabled={busy}
-                className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-accent to-accent/80 px-7 py-3.5 text-sm font-bold uppercase tracking-widest text-accent-foreground shadow-lg shadow-accent/30 hover:brightness-110 transition sm:w-auto"
-              >
-                Send request <Send className="h-4 w-4" />
-              </button>
             </>
           )}
-        </form>
+        </div>
       </section>
     </>
-  );
-}
-
-function Field({
-  label,
-  name,
-  type = "text",
-  required,
-  placeholder,
-}: {
-  label: string;
-  name: string;
-  type?: string;
-  required?: boolean;
-  placeholder?: string;
-}) {
-  return (
-    <label className="block">
-      <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-        {label}
-        {required && <span className="text-accent"> *</span>}
-      </span>
-      <input
-        type={type}
-        name={name}
-        required={required}
-        placeholder={placeholder}
-        className="mt-2 w-full rounded-lg border border-border bg-background/60 p-3 text-sm outline-none focus:border-primary"
-      />
-    </label>
   );
 }

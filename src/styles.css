@@ -220,3 +220,68 @@
 @utility animate-marquee {
   animation: kagoma-marquee 40s linear infinite;
 }
+
+/* ---------- Kagoma badge: particles converge, the badge turns in, a shine sweeps the eagle ---------- */
+.kps-stage { position: relative; display: flex; align-items: center; justify-content: center; }
+.kps-particles { position: absolute; inset: 0; pointer-events: none; }
+.kps-particles i {
+  position: absolute; left: 50%; top: 50%; width: 3px; height: 3px; border-radius: 50%;
+  background: var(--gold); box-shadow: 0 0 6px 2px color-mix(in oklab, var(--gold) 75%, transparent);
+  opacity: 0; animation: kpsConverge 2.6s ease-out forwards;
+}
+@keyframes kpsConverge {
+  0% { opacity: 0; transform: translate(var(--sx), var(--sy)) scale(1); }
+  15% { opacity: 1; }
+  70% { opacity: .9; transform: translate(calc(var(--sx) * .15), calc(var(--sy) * .15)) scale(.6); }
+  100% { opacity: 0; transform: translate(0, 0) scale(.2); }
+}
+.kps-badge {
+  position: relative; opacity: 0; transform-style: preserve-3d;
+  transform: perspective(1000px) rotateY(-100deg) scale(.7);
+  animation: kpsEntrance 2.6s cubic-bezier(.22, 1, .36, 1) .9s forwards;
+}
+@keyframes kpsEntrance {
+  0% { opacity: 0; transform: perspective(1000px) rotateY(-100deg) scale(.7); }
+  35% { opacity: 1; transform: perspective(1000px) rotateY(-60deg) scale(.86); }
+  100% { opacity: 1; transform: perspective(1000px) rotateY(0deg) scale(1); }
+}
+.kps-badge, .kps-badge-static {
+  /* the shine is clipped to the badge's own silhouette */
+  overflow: hidden;
+  -webkit-mask-image: var(--kps-mask); mask-image: var(--kps-mask);
+  -webkit-mask-size: contain; mask-size: contain;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  -webkit-mask-position: center; mask-position: center;
+}
+.kps-shine {
+  position: absolute; top: 0; left: -60%; width: 40%; height: 100%; pointer-events: none;
+  background: linear-gradient(75deg, transparent 0%, rgba(255, 241, 180, .75) 50%, transparent 100%);
+  mix-blend-mode: screen; opacity: 0; transform: skewX(-18deg);
+  animation: kpsShine 7s ease-in-out 3.4s infinite;
+}
+.kps-badge-static .kps-shine { animation-delay: 1s; }
+@keyframes kpsShine {
+  0% { opacity: 0; left: -60%; }
+  4% { opacity: 1; }
+  14% { opacity: .9; left: 130%; }
+  18%, 100% { opacity: 0; left: 130%; }
+}
+.kps-ring {
+  position: absolute; bottom: 4%; width: 62%; height: 34px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(ellipse, color-mix(in oklab, var(--gold) 45%, transparent) 0%,
+    color-mix(in oklab, var(--gold) 12%, transparent) 45%, transparent 75%);
+  opacity: 0; animation: kpsRing 2.6s ease-out 1.4s forwards;
+}
+@keyframes kpsRing { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .kps-badge, .kps-shine, .kps-ring, .kps-particles i { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .kps-shine { opacity: 0 !important; }
+  .kps-particles { display: none; }
+}
+
+/* ---------- Print: documents and certificates ---------- */
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff !important; color: #000 !important; }
+  .print-sheet { box-shadow: none !important; border: none !important; margin: 0 !important; }
+}
